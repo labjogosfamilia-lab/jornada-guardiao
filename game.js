@@ -830,20 +830,29 @@ class Camera {
   }
 
   update(targetX, targetY, mapWidth, mapHeight, dt) {
+    if (isNaN(targetX) || !isFinite(targetX)) targetX = this.width / 2;
+    if (isNaN(targetY) || !isFinite(targetY)) targetY = this.height / 2;
+
     const targetCamX = targetX - this.width / 2;
     const targetCamY = targetY - this.height / 2;
+
+    if (isNaN(this.x) || !isFinite(this.x)) this.x = targetCamX;
+    if (isNaN(this.y) || !isFinite(this.y)) this.y = targetCamY;
 
     this.x += (targetCamX - this.x) * 8 * dt;
     this.y += (targetCamY - this.y) * 8 * dt;
 
-    this.x = Math.max(0, Math.min(this.x, mapWidth - this.width));
-    this.y = Math.max(0, Math.min(this.y, mapHeight - this.height));
+    this.x = Math.max(0, Math.min(this.x, Math.max(0, mapWidth - this.width)));
+    this.y = Math.max(0, Math.min(this.y, Math.max(0, mapHeight - this.height)));
 
     if (this.shakeIntensity > 0) {
       this.x += (Math.random() - 0.5) * this.shakeIntensity;
       this.y += (Math.random() - 0.5) * this.shakeIntensity;
       this.shakeIntensity = Math.max(0, this.shakeIntensity - 30 * dt);
     }
+
+    if (isNaN(this.x) || !isFinite(this.x)) this.x = 0;
+    if (isNaN(this.y) || !isFinite(this.y)) this.y = 0;
   }
 }
 
@@ -891,13 +900,22 @@ class SpellProjectile extends Entity {
     this.x += this.vx * dt;
     this.y += this.vy * dt;
 
+    const mapW = map ? map.width : (CONFIG.MAP_COLS * CONFIG.TILE_SIZE);
+    const mapH = map ? map.height : (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE);
+    if (this.x < 0 || this.x > mapW || this.y < 0 || this.y > mapH) {
+      this.alive = false;
+      return;
+    }
+
     if (Math.random() < 0.45 && particles && typeof particles.emit === 'function') {
       particles.emit(this.x, this.y, 1, { color: this.hasBurn ? '#fb923c' : this.color, size: 3, life: 0.2 });
     }
 
-    if (this.life <= 0 || map.checkCollision(this.getBounds())) {
+    if (this.life <= 0 || (map && map.checkCollision(this.getBounds()))) {
       this.alive = false;
-      particles.emit(this.x, this.y, 6, { color: this.color, speed: 55 });
+      if (particles && typeof particles.emit === 'function') {
+        particles.emit(this.x, this.y, 6, { color: this.color, speed: 55 });
+      }
     }
   }
 
@@ -966,7 +984,8 @@ class AstralBeamProjectile extends Entity {
     }
 
     // Colisão com paredes sólidas (atravessa abismos e fendas tile 3, colide com parede tile 1)
-    if (map && typeof map.checkWallOnlyCollision === 'function' ? map.checkWallOnlyCollision(this.getBounds()) : map.checkCollision(this.getBounds())) {
+    const hitWall = map && (typeof map.checkWallOnlyCollision === 'function' ? map.checkWallOnlyCollision(this.getBounds()) : map.checkCollision(this.getBounds()));
+    if (hitWall) {
       this.alive = false;
       if (particles && typeof particles.emit === 'function') {
         particles.emit(this.x, this.y, 14, { color: this.color, speed: 90 });
@@ -1137,10 +1156,28 @@ class EnemyProjectile extends Entity {
     this.type = type; // 'SHADOW', 'LIGHTNING', 'METEOR'
   }
 
-  update(player, dt, audio, camera, particles) {
+  update(player, dt, audio, camera, particles, map = null) {
     this.life -= dt;
     this.x += this.vx * dt;
     this.y += this.vy * dt;
+
+    // 1. Elimina ao ultrapassar os limites do mapa / tela
+    const mapW = map ? map.width : (CONFIG.MAP_COLS * CONFIG.TILE_SIZE);
+    const mapH = map ? map.height : (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE);
+    if (this.x < 0 || this.x > mapW || this.y < 0 || this.y > mapH) {
+      this.alive = false;
+      return;
+    }
+
+    // 2. Elimina ao bater em obstáculos e paredes
+    if (map && typeof map.checkCollision === 'function' && map.checkCollision(this.getBounds())) {
+      this.alive = false;
+      if (particles && typeof particles.emit === 'function') {
+        const pColor = this.type === 'METEOR' ? '#f97316' : (this.type === 'LIGHTNING' || this.type === 'FROST' ? '#38bdf8' : '#c084fc');
+        particles.emit(this.x, this.y, 6, { color: pColor, speed: 45 });
+      }
+      return;
+    }
 
     if (this.intersects(player)) {
       player.takeDamage(1, audio, camera);
@@ -1150,6 +1187,7 @@ class EnemyProjectile extends Entity {
         color: pColor,
         speed: 60,
       });
+      return;
     }
 
     if (this.life <= 0) this.alive = false;
@@ -1322,7 +1360,8 @@ class Player extends Entity {
     this.health = CONFIG.MAX_HEALTH;
     this.maxHealth = CONFIG.MAX_HEALTH;
     this.lives = 3;
-    this.maxLives = 5;
+    this.maxLives = 4; // Ajuste de dificuldade: máximo de vidas reduzido
+    this.slowTimer = 0; // Temporizador de lentidão seguro
     this.stamina = CONFIG.MAX_STAMINA;
     this.facing = 'down';
     this.animTime = 0;
@@ -1538,8 +1577,13 @@ class Player extends Entity {
     this.isMoving = input.moveX !== 0 || input.moveY !== 0;
     let currentSpeed = CONFIG.WALK_SPEED;
 
+    if (this.slowTimer > 0) {
+      this.slowTimer -= dt;
+      currentSpeed *= 0.6; // Lentidão segura aplicada por poços do vazio ou feitiços
+    }
+
     if (this.isMoving && input.isSprinting && this.stamina > 5) {
-      currentSpeed = CONFIG.SPRINT_SPEED;
+      currentSpeed = CONFIG.SPRINT_SPEED * (this.slowTimer > 0 ? 0.6 : 1.0);
       this.stamina = Math.max(0, this.stamina - CONFIG.STAMINA_DRAIN_SPRINT * dt);
       if (Math.random() < 0.25) {
         particles.emit(this.x, this.y + 12, 1, { color: '#93c5fd', size: 3, life: 0.2, speed: 20 });
@@ -1565,8 +1609,13 @@ class Player extends Entity {
   }
 
   moveWithCollision(dx, dy, map) {
+    if (isNaN(this.x) || !isFinite(this.x)) this.x = (map && map.spawnX) || 120;
+    if (isNaN(this.y) || !isFinite(this.y)) this.y = (map && map.spawnY) || 120;
+    if (isNaN(dx) || !isFinite(dx)) dx = 0;
+    if (isNaN(dy) || !isFinite(dy)) dy = 0;
+
     // Ejeção preventiva caso o jogador comece sobreposto a uma parede
-    if (map.checkCollision(this.getBounds())) {
+    if (map && map.checkCollision(this.getBounds())) {
       const offsets = [[1,0], [-1,0], [0,1], [0,-1], [2,0], [-2,0], [0,2], [0,-2], [4,0], [-4,0], [0,4], [0,-4]];
       for (const [ox, oy] of offsets) {
         this.x += ox * 4;
@@ -1576,10 +1625,10 @@ class Player extends Entity {
     }
 
     this.x += dx;
-    if (map.checkCollision(this.getBounds())) this.x -= dx;
+    if (map && map.checkCollision(this.getBounds())) this.x -= dx;
 
     this.y += dy;
-    if (map.checkCollision(this.getBounds())) this.y -= dy;
+    if (map && map.checkCollision(this.getBounds())) this.y -= dy;
   }
 
   takeDamage(amount, audio, camera) {
@@ -2041,7 +2090,7 @@ class BossMalakar extends Entity {
     this.shockwaves.forEach(sw => sw.update(player, dt, audio, camera, particles));
     this.shockwaves = this.shockwaves.filter(sw => sw.alive);
 
-    this.orbs.forEach(orb => orb.update(player, dt, audio, camera, particles));
+    this.orbs.forEach(orb => orb.update(player, dt, audio, camera, particles, map));
     this.orbs = this.orbs.filter(orb => orb.alive);
 
     // Atualizar espinhos de sombra sob o jogador
@@ -2393,7 +2442,7 @@ class BossValdor extends Entity {
       }
     }
 
-    this.orbs.forEach(orb => orb.update(player, dt, audio, camera, particles));
+    this.orbs.forEach(orb => orb.update(player, dt, audio, camera, particles, map));
     this.orbs = this.orbs.filter(orb => orb.alive);
 
     this.shockwaves.forEach(sw => sw.update(player, dt, audio, camera, particles));
@@ -2693,7 +2742,7 @@ class BossKharon extends Entity {
       }
     }
 
-    this.meteors.forEach(m => m.update(player, dt, audio, camera, particles));
+    this.meteors.forEach(m => m.update(player, dt, audio, camera, particles, map));
     this.meteors = this.meteors.filter(m => m.alive);
 
     this.shockwaves.forEach(sw => sw.update(player, dt, audio, camera, particles));
@@ -3271,23 +3320,28 @@ class CheckpointMonument extends Entity {
     this.name = name;
     this.activated = false;
     this.glow = 0;
+    this.alive = true;
   }
 
   update(player, dt) {
+    if (!this.alive) return false;
     this.glow += dt * 3;
     return Math.hypot(player.x - this.x, player.y - this.y) < 46;
   }
 
   activate(game) {
     this.activated = true;
+    this.alive = false; // Desaparece imediatamente do mapa ao ser descoberto!
+    if (game.discoveredCheckpoints) game.discoveredCheckpoints.add(this.name);
     game.registerCheckpoint(this.name, this.x, this.y + 24, game.currentArea);
     game.audio.playCheckpoint();
     game.camera.shake(6);
-    game.particles.emit(this.x, this.y - 12, 35, { color: '#facc15', speed: 110, life: 1.2 });
-    game.showNotification('CHECKPOINT ATIVADO!', `🚩 ${this.name} registrado como marco de retorno!`);
+    game.particles.emit(this.x, this.y - 12, 45, { color: '#facc15', speed: 130, life: 1.5 });
+    game.showNotification('CHECKPOINT ATIVADO!', `🚩 ${this.name} gravado nos céus! O monólito transcendeu.`);
   }
 
   draw(ctx, camera, isNear) {
+    if (!this.alive) return;
     const sx = this.x - camera.x;
     const sy = this.y - camera.y;
 
@@ -3831,7 +3885,7 @@ class BossTrinit extends Entity {
     this.y = this.clones[0].y;
 
     // Atualizar projéteis e ondas de choque
-    this.projectiles.forEach(p => p.update(player, dt, audio, camera, particles));
+    this.projectiles.forEach(p => p.update(player, dt, audio, camera, particles, map));
     this.projectiles = this.projectiles.filter(p => p.alive);
     this.shockwaves.forEach(sw => sw.update(player, dt, audio, camera, particles));
     this.shockwaves = this.shockwaves.filter(sw => sw.alive);
@@ -4182,7 +4236,7 @@ class BossMirage extends Entity {
     this.phantoms[1].y += Math.sin(this.animTime * 0.8 + 2) * 15 * dt;
 
     // Atualizar projéteis e ondas de choque
-    this.projectiles.forEach(p => p.update(player, dt, audio, camera, particles));
+    this.projectiles.forEach(p => p.update(player, dt, audio, camera, particles, map));
     this.projectiles = this.projectiles.filter(p => p.alive);
     this.shockwaves.forEach(sw => sw.update(player, dt, audio, camera, particles));
     this.shockwaves = this.shockwaves.filter(sw => sw.alive);
@@ -4257,34 +4311,34 @@ class BossMirage extends Entity {
     this.shockwaves.forEach(sw => sw.draw(ctx, camera));
     this.projectiles.forEach(p => p.draw(ctx, camera));
 
-    // Renderizar Fantasmas
+    // Renderizar Fantasmas (AGORA 100% IDÊNTICOS AO REAL PARA MÁXIMO DESAFIO!)
     for (let ph of this.phantoms) {
       const sx = ph.x - camera.x;
       const sy = ph.y - camera.y;
-      const floatY = Math.sin(this.animTime + ph.id) * 4;
+      const floatY = Math.sin(this.animTime) * 4; // Mesma frequência de flutuação do real
 
       ctx.save();
       ctx.translate(sx, sy + floatY);
 
-      // Sombra
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      // Sombra idêntica
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
       ctx.beginPath();
       ctx.ellipse(0, 24 - floatY, 16, 6, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Ondulação da Ilusão quando golpeado
+      // Ondulação da Ilusão apenas se golpeado
       if (ph.ripple > 0) {
-        ctx.strokeStyle = '#94a3b8';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#facc15';
+        ctx.lineWidth = 2.5;
         ctx.beginPath();
         ctx.arc(0, 0, 28, 0, Math.PI * 2);
         ctx.stroke();
       }
 
-      // Manto Temporal do Fantasma (Prateado / Translúcido Ilusório)
-      ctx.fillStyle = ph.hitTimer > 0 ? '#ffffff' : '#475569';
-      ctx.shadowColor = '#94a3b8';
-      ctx.shadowBlur = 12;
+      // Manto Temporal IDÊNTICO (Mesma cor âmbar/dourada e iluminação)
+      ctx.fillStyle = ph.hitTimer > 0 ? '#ffffff' : '#78350f';
+      ctx.shadowColor = '#d97706';
+      ctx.shadowBlur = 16;
 
       ctx.beginPath();
       ctx.moveTo(0, -24);
@@ -4295,12 +4349,17 @@ class BossMirage extends Entity {
       ctx.closePath();
       ctx.fill();
 
-      // Núcleo Ilusório Pálido (Sem brilho solar verdadeiro)
-      ctx.fillStyle = '#cbd5e1';
-      ctx.shadowColor = '#64748b';
-      ctx.shadowBlur = 6;
+      // RELÍQUIA DOURADA DE CRONOS (Idêntica à do verdadeiro!)
+      ctx.fillStyle = '#facc15';
+      ctx.shadowColor = '#fef08a';
+      ctx.shadowBlur = 22;
       ctx.beginPath();
-      ctx.arc(0, 0, 4, 0, Math.PI * 2);
+      ctx.arc(0, 0, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(0, 0, 2.5, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.restore();
@@ -4379,7 +4438,7 @@ class ShadowScythe extends Entity {
     this.returning = false;
   }
 
-  update(player, dt, audio, camera, particles) {
+  update(player, dt, audio, camera, particles, map = null) {
     this.time += dt;
     this.rot += dt * 14;
 
@@ -4399,6 +4458,23 @@ class ShadowScythe extends Entity {
 
     this.x += this.vx * dt;
     this.y += this.vy * dt;
+
+    // Elimina ao sair dos limites do mapa / tela
+    const mapW = map ? map.width : (CONFIG.MAP_COLS * CONFIG.TILE_SIZE);
+    const mapH = map ? map.height : (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE);
+    if (this.x < 0 || this.x > mapW || this.y < 0 || this.y > mapH) {
+      this.alive = false;
+      return;
+    }
+
+    // Elimina ao colidir com paredes ou obstáculos
+    if (map && typeof map.checkCollision === 'function' && map.checkCollision(this.getBounds())) {
+      this.alive = false;
+      if (particles && typeof particles.emit === 'function') {
+        particles.emit(this.x, this.y, 8, { color: '#c084fc', speed: 65 });
+      }
+      return;
+    }
 
     if (Math.hypot(player.x - this.x, player.y - this.y) < 24) {
       player.takeDamage(1, audio, camera);
@@ -4448,8 +4524,7 @@ class VoidPool {
 
     const dist = Math.hypot(player.x - this.x, player.y - this.y);
     if (dist < this.radius) {
-      player.x -= player.vx * dt * 0.45; // Lentidão ao pisar no vazio
-      player.y -= player.vy * dt * 0.45;
+      player.slowTimer = 0.5; // Lentidão segura aplicada ao jogador sem NaN!
       if (this.damageCooldown <= 0) {
         player.takeDamage(1, audio, camera);
         this.damageCooldown = 1.2;
@@ -4612,7 +4687,7 @@ class BossNocturnus extends Entity {
 
     // Atualizar Foices do Abismo
     for (let i = this.scythes.length - 1; i >= 0; i--) {
-      this.scythes[i].update(player, dt, audio, camera, particles);
+      this.scythes[i].update(player, dt, audio, camera, particles, map);
       if (!this.scythes[i].alive) this.scythes.splice(i, 1);
     }
 
@@ -4623,7 +4698,7 @@ class BossNocturnus extends Entity {
     }
 
     // Atualizar projéteis e ondas de choque
-    this.projectiles.forEach(p => p.update(player, dt, audio, camera, particles));
+    this.projectiles.forEach(p => p.update(player, dt, audio, camera, particles, map));
     this.projectiles = this.projectiles.filter(p => p.alive);
     this.shockwaves.forEach(sw => sw.update(player, dt, audio, camera, particles));
     this.shockwaves = this.shockwaves.filter(sw => sw.alive);
@@ -4813,7 +4888,7 @@ class BossAethon extends Entity {
 
     // Atualizar projéteis e ondas de choque do boss
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
-      this.projectiles[i].update(player, dt, audio, camera, particles);
+      this.projectiles[i].update(player, dt, audio, camera, particles, map);
       if (!this.projectiles[i].alive) this.projectiles.splice(i, 1);
     }
     for (let i = this.shockwaves.length - 1; i >= 0; i--) {
@@ -5597,6 +5672,7 @@ class GameEngine {
 
     // Coleções da Expansão das Fases 8 a 11 e Checkpoints
     this.activeCheckpoint = null; // { name, x, y, area }
+    this.discoveredCheckpoints = new Set(); // Checkpoints já descobertos (desaparecem do mapa!)
     this.astralBeams = [];
     this.checkpointMonuments = [];
     this.icePrisms = [];
@@ -5629,6 +5705,7 @@ class GameEngine {
   }
 
   registerCheckpoint(name, x, y, area) {
+    this.discoveredCheckpoints.add(name);
     this.activeCheckpoint = { name, x, y, area };
     const badge = document.getElementById('checkpoint-badge');
     const text = document.getElementById('checkpoint-text');
@@ -5697,10 +5774,10 @@ class GameEngine {
       this.owl = new OwlNPC(centerX, centerY - 48);
       this.totem = new AncientTotem(centerX, centerY);
 
-      // Checkpoint do Bosque
-      const cp = new CheckpointMonument(centerX, centerY + 80, 'Pedra dos Ecos');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Pedra dos Ecos') cp.activated = true;
-      this.checkpointMonuments = [cp];
+      // Checkpoint do Bosque (Desaparece permanentemente ao ser descoberto!)
+      this.checkpointMonuments = !this.discoveredCheckpoints.has('Pedra dos Ecos')
+        ? [new CheckpointMonument(centerX, centerY + 80, 'Pedra dos Ecos')]
+        : [];
 
       if (this.questStep <= 2) {
         const seedCoords = [
@@ -5737,10 +5814,10 @@ class GameEngine {
       this.chest = new TreasureChest(centerX, centerY);
       if (this.player.hasAuroraGem) this.chest.opened = true;
 
-      // Checkpoint da Caverna
-      const cpCave = new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Monólito da Caverna');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Monólito da Caverna') cpCave.activated = true;
-      this.checkpointMonuments = [cpCave];
+      // Checkpoint da Caverna (Desaparece ao ser descoberto!)
+      this.checkpointMonuments = !this.discoveredCheckpoints.has('Monólito da Caverna')
+        ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Monólito da Caverna')]
+        : [];
 
       // Monólito decifrável com a pista poética dos cristais harmônicos
       this.puzzleMonument = new PuzzleTabletMonument(
@@ -5780,9 +5857,8 @@ class GameEngine {
       this.showAreaBanner('SANTUÁRIO ANCESTRAL', 'Arena do 1º Chefe: Malakar');
       document.getElementById('area-indicator').textContent = '📍 Santuário da Árvore Mãe';
 
-      const cpSanc = new CheckpointMonument(centerX, centerY + 80, 'Santuário da Seiva');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Santuário da Seiva') cpSanc.activated = true;
-      this.checkpointMonuments = [cpSanc];
+      // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
+      this.checkpointMonuments = [];
 
       if (this.questStep >= 4) {
         this.portal = new AreaPortal(centerX, centerY - 40, 'SKY_ISLANDS', 'Palácio dos Ventos', true);
@@ -5805,10 +5881,10 @@ class GameEngine {
       this.showAreaBanner('PALÁCIO DOS VENTOS', 'Ilhas Flutuantes Celestes');
       document.getElementById('area-indicator').textContent = '📍 Palácio dos Ventos';
 
-      // Checkpoint das Ilhas dos Ventos
-      const cpSky = new CheckpointMonument(centerX, centerY + 80, 'Torre dos Ventos');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Torre dos Ventos') cpSky.activated = true;
-      this.checkpointMonuments = [cpSky];
+      // Checkpoint das Ilhas dos Ventos (Desaparece ao ser descoberto!)
+      this.checkpointMonuments = !this.discoveredCheckpoints.has('Torre dos Ventos')
+        ? [new CheckpointMonument(centerX, centerY + 80, 'Torre dos Ventos')]
+        : [];
 
       // Estela da Rosa dos Ventos
       this.puzzleMonument = new PuzzleTabletMonument(
@@ -5844,9 +5920,8 @@ class GameEngine {
       this.showAreaBanner('TRONO DO TROVÃO', 'Arena do 2º Chefe: Valdor');
       document.getElementById('area-indicator').textContent = '📍 Trono do Trovão';
 
-      const cpThrone = new CheckpointMonument(centerX, centerY + 80, 'Trono Celestial');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Trono Celestial') cpThrone.activated = true;
-      this.checkpointMonuments = [cpThrone];
+      // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
+      this.checkpointMonuments = [];
 
       if (this.questStep >= 5) {
         this.portal = new AreaPortal(centerX, centerY - 40, 'MAGMA_CORE', 'Abismo de Magma', true);
@@ -5871,10 +5946,10 @@ class GameEngine {
 
       this.forgeAltar = new ForgeAltar(centerX, centerY);
 
-      // Checkpoint do Abismo
-      const cpMagma = new CheckpointMonument(centerX, centerY + 80, 'Fornalha dos Ancestrais');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Fornalha dos Ancestrais') cpMagma.activated = true;
-      this.checkpointMonuments = [cpMagma];
+      // Checkpoint do Abismo (Desaparece ao ser descoberto!)
+      this.checkpointMonuments = !this.discoveredCheckpoints.has('Fornalha dos Ancestrais')
+        ? [new CheckpointMonument(centerX, centerY + 80, 'Fornalha dos Ancestrais')]
+        : [];
 
       // Monólito das Caldeiras
       this.puzzleMonument = new PuzzleTabletMonument(
@@ -5916,9 +5991,8 @@ class GameEngine {
       this.showAreaBanner('NÚCLEO DO ECLIPSE', 'Confronto Supremo: Kharon');
       document.getElementById('area-indicator').textContent = '📍 Núcleo do Eclipse';
 
-      const cpVoid = new CheckpointMonument(centerX, centerY + 80, 'Altar do Vazio');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Altar do Vazio') cpVoid.activated = true;
-      this.checkpointMonuments = [cpVoid];
+      // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
+      this.checkpointMonuments = [];
 
       if (this.questStep >= 7) {
         this.portal = new AreaPortal(centerX, centerY - 40, 'FROZEN_TUNDRA', 'Geleira de Niflheim', true);
@@ -5941,10 +6015,10 @@ class GameEngine {
       this.showAreaBanner('GELEIRA DE NIFLHEIM', 'Enigma Glacial dos Três Prismas');
       document.getElementById('area-indicator').textContent = '📍 Geleira de Niflheim';
 
-      // Checkpoint da Tundra
-      const cpFrost = new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Monólito Glacial');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Monólito Glacial') cpFrost.activated = true;
-      this.checkpointMonuments = [cpFrost];
+      // Checkpoint da Tundra (Desaparece ao ser descoberto!)
+      this.checkpointMonuments = !this.discoveredCheckpoints.has('Monólito Glacial')
+        ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Monólito Glacial')]
+        : [];
 
       // Tabuleta de Pistas Rúnicas
       this.puzzleMonument = new PuzzleTabletMonument(
@@ -5982,9 +6056,8 @@ class GameEngine {
       this.showAreaBanner('ARENA GLACIAL', '4º Chefe: Trinit, a Tríade Glacial');
       document.getElementById('area-indicator').textContent = '❄️ Arena Glacial';
 
-      const cpTrinit = new CheckpointMonument(centerX, centerY + 110, 'Santuário da Tríade Glacial');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Santuário da Tríade Glacial') cpTrinit.activated = true;
-      this.checkpointMonuments = [cpTrinit];
+      // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
+      this.checkpointMonuments = [];
 
       if (this.questStep >= 8) {
         this.portal = new AreaPortal(centerX, centerY - 40, 'CHRONOS_TEMPLE', 'Templo de Cronos', true);
@@ -6006,10 +6079,10 @@ class GameEngine {
       this.showAreaBanner('TEMPLO DE CRONOS', 'Sincronia das Areias Temporais');
       document.getElementById('area-indicator').textContent = '📍 Templo de Cronos';
 
-      // Checkpoint de Cronos
-      const cpChr = new CheckpointMonument(centerX, centerY + 80, 'Relicário de Cronos');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Relicário de Cronos') cpChr.activated = true;
-      this.checkpointMonuments = [cpChr];
+      // Checkpoint de Cronos (Desaparece ao ser descoberto!)
+      this.checkpointMonuments = !this.discoveredCheckpoints.has('Relicário de Cronos')
+        ? [new CheckpointMonument(centerX, centerY + 80, 'Relicário de Cronos')]
+        : [];
 
       // Tabuleta de Pistas
       this.puzzleMonument = new PuzzleTabletMonument(
@@ -6044,9 +6117,8 @@ class GameEngine {
       this.showAreaBanner('NEXUS TEMPORAL', '5º Chefe: Mirage, o Senhor dos Reflexos');
       document.getElementById('area-indicator').textContent = '⏳ Nexus de Cronos';
 
-      const cpMirage = new CheckpointMonument(centerX, centerY + 110, 'Relicário do Nexus Temporal');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Relicário do Nexus Temporal') cpMirage.activated = true;
-      this.checkpointMonuments = [cpMirage];
+      // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
+      this.checkpointMonuments = [];
 
       if (this.questStep >= 9) {
         this.portal = new AreaPortal(centerX, centerY - 40, 'SHADOW_LABYRINTH', 'Labirinto das Sombras', true);
@@ -6068,10 +6140,10 @@ class GameEngine {
       this.showAreaBanner('LABIRINTO DAS SOMBRAS', 'Matriz Espectral do Abismo');
       document.getElementById('area-indicator').textContent = '📍 Labirinto das Sombras';
 
-      // Checkpoint do Labirinto
-      const cpShd = new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Lanterna do Vazio');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Lanterna do Vazio') cpShd.activated = true;
-      this.checkpointMonuments = [cpShd];
+      // Checkpoint do Labirinto (Desaparece ao ser descoberto!)
+      this.checkpointMonuments = !this.discoveredCheckpoints.has('Lanterna do Vazio')
+        ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Lanterna do Vazio')]
+        : [];
 
       // Tabuleta de Pistas
       this.puzzleMonument = new PuzzleTabletMonument(
@@ -6110,9 +6182,8 @@ class GameEngine {
       this.showAreaBanner('SANTUÁRIO DO ABISMO', '6º Chefe: Nocturnus, Soberano do Abismo');
       document.getElementById('area-indicator').textContent = '🌑 Santuário do Abismo';
 
-      const cpNoct = new CheckpointMonument(centerX, centerY + 110, 'Altar do Abismo Umbral');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Altar do Abismo Umbral') cpNoct.activated = true;
-      this.checkpointMonuments = [cpNoct];
+      // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
+      this.checkpointMonuments = [];
 
       if (this.questStep >= 10) {
         this.portal = new AreaPortal(centerX, centerY - 40, 'AETHER_CITADEL', 'Cidadela do Éter', true);
@@ -6134,10 +6205,8 @@ class GameEngine {
       this.showAreaBanner('CIDADELA DO ÉTER', 'O Confronto Final Supremo: Aethon');
       document.getElementById('area-indicator').textContent = '📍 Cidadela do Éter';
 
-      // Checkpoint da Cidadela
-      const cpAeth = new CheckpointMonument(centerX, centerY + 115, 'Altar do Éter Primordial');
-      if (this.activeCheckpoint && this.activeCheckpoint.name === 'Altar do Éter Primordial') cpAeth.activated = true;
-      this.checkpointMonuments = [cpAeth];
+      // ARENA DO CHEFE FINAL: Sem checkpoints nas arenas de chefes!
+      this.checkpointMonuments = [];
 
       if (this.questStep >= 11) {
         // Já vencido
@@ -6596,6 +6665,7 @@ class GameEngine {
     this.player.health = this.player.maxHealth;
     this.player.seedsCollected = 0;
     this.activeCheckpoint = null;
+    this.discoveredCheckpoints = new Set();
     const badge = document.getElementById('checkpoint-badge');
     if (badge) badge.classList.add('hidden');
     this.loadArea('FOREST');
@@ -6616,8 +6686,25 @@ class GameEngine {
       this.player.update(this.input, this.map, dt, this.audio, this.particles, this.camera, this.projectiles, this.playerShockwaves, this.astralBeams);
 
       for (let i = this.projectiles.length - 1; i >= 0; i--) {
-        this.projectiles[i].update(this.map, dt, this.particles);
-        if (!this.projectiles[i].alive) this.projectiles.splice(i, 1);
+        const proj = this.projectiles[i];
+        proj.update(this.map, dt, this.particles);
+
+        // Colisão com obstáculos quebráveis (arbustos, cristais, rochas)
+        if (proj.alive && this.breakables && this.breakables.length > 0) {
+          for (let bIdx = this.breakables.length - 1; bIdx >= 0; bIdx--) {
+            if (this.breakables[bIdx].intersects(proj)) {
+              const b = this.breakables[bIdx];
+              const pColor = b.type === 'CRYSTAL' ? '#38bdf8' : (b.type === 'MAGMA_ROCK' ? '#f97316' : '#22c55e');
+              this.particles.emit(b.x, b.y, 8, { color: pColor, speed: 60 });
+              this.audio.playHit();
+              this.breakables.splice(bIdx, 1);
+              proj.alive = false;
+              break;
+            }
+          }
+        }
+
+        if (!proj.alive) this.projectiles.splice(i, 1);
       }
 
       for (let i = this.astralBeams.length - 1; i >= 0; i--) {
@@ -6822,19 +6909,21 @@ class GameEngine {
             this.audio.playVictory();
             this.camera.shake(12);
             this.particles.emit(this.forgeAltar.x, this.forgeAltar.y, 45, { color: '#f97316', speed: 140 });
-            this.showNotification('ESPADA FORJADA!', 'Lâmina do Fogo Estelar forjada! +1 VIDA EXTRA & CURA TOTAL!');
+            this.showNotification('ESPADA FORJADA!', 'Lâmina do Fogo Estelar forjada! Saúde totalmente restaurada!');
             this.checkBossPortalUnlock();
             this.updateHUD();
           }
         }
       }
 
-      // 10. Interação com Monólitos de Checkpoint
+      // 10. Interação com Monólitos de Checkpoint (Desaparece imediatamente ao ser descoberto!)
       if (this.checkpointMonuments.length > 0) {
-        for (let cp of this.checkpointMonuments) {
+        for (let i = this.checkpointMonuments.length - 1; i >= 0; i--) {
+          const cp = this.checkpointMonuments[i];
           const near = cp.update(this.player, dt);
           if (near && !cp.activated && this.input.consumeInteract()) {
             cp.activate(this);
+            this.checkpointMonuments.splice(i, 1);
             this.updateHUD();
           }
         }
@@ -6909,13 +6998,12 @@ class GameEngine {
 
         if (!this.boss.alive) {
           if (this.currentArea === 'SANCTUARY') {
-            // CHEFE 1 DERROTADO (MALAKAR) -> +1 CORAÇÃO MÁXIMO, +1 VIDA EXTRA, CURA TOTAL, PODER SÍSMICO [R] E DISPARO TRIPLO!
+            // CHEFE 1 DERROTADO (MALAKAR) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, PODER SÍSMICO [R] E DISPARO TRIPLO!
             this.audio.playVictory();
             this.camera.shake(14);
             document.getElementById('boss-hud').classList.add('hidden');
             this.player.maxHealth += 1;
             this.player.health = this.player.maxHealth;
-            if (this.player.lives < this.player.maxLives) this.player.lives++;
             this.enemies = []; // Elimina ajudantes remanescentes
             this.player.hasColossusPower = true;
             this.questStep = 4;
@@ -6930,13 +7018,12 @@ class GameEngine {
             this.updateHUD();
 
           } else if (this.currentArea === 'SKY_THRONE') {
-            // CHEFE 2 DERROTADO (VALDOR) -> +1 CORAÇÃO MÁXIMO, +1 VIDA EXTRA, CURA TOTAL, GANHA A ESPADA [F]!
+            // CHEFE 2 DERROTADO (VALDOR) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, GANHA A ESPADA [F]!
             this.audio.playVictory();
             this.camera.shake(16);
             document.getElementById('boss-hud').classList.add('hidden');
             this.player.maxHealth += 1;
             this.player.health = this.player.maxHealth;
-            if (this.player.lives < this.player.maxLives) this.player.lives++;
             this.enemies = []; // Elimina ajudantes remanescentes
             this.player.hasSword = true;
             this.questStep = 5;
@@ -6951,13 +7038,13 @@ class GameEngine {
             this.updateHUD();
 
           } else if (this.currentArea === 'VOID_CORE') {
-            // CHEFE 3 DERROTADO (KHARON) -> +1 CORAÇÃO MÁXIMO, +1 VIDA EXTRA, CURA TOTAL, PODER DO FOGO CÓSMICO E RAIO ASTRAL!
+            // CHEFE 3 DERROTADO (KHARON - MARCO DA JORNADA) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, RECUPERAÇÃO DE VIDA CRÍTICA, PODER DO FOGO CÓSMICO E RAIO ASTRAL!
             this.audio.playVictory();
             this.camera.shake(20);
             document.getElementById('boss-hud').classList.add('hidden');
             this.player.maxHealth += 1;
             this.player.health = this.player.maxHealth;
-            if (this.player.lives < this.player.maxLives) this.player.lives++;
+            if (this.player.lives < 2) this.player.lives++; // Bônus de sobrevivência
             this.player.hasBurnPower = true;
             this.player.hasAstralBeam = true; // Desbloqueia Raio Astral [C] / [X]!
             this.enemies = []; // Elimina ajudantes remanescentes
@@ -6973,54 +7060,52 @@ class GameEngine {
             this.updateHUD();
 
           } else if (this.currentArea === 'GLACIAL_ARENA') {
-            // CHEFE 4 DERROTADO: TRINIT, A TRÍADE GLACIAL -> +1 CORAÇÃO MÁXIMO, +1 VIDA EXTRA, CURA TOTAL, PORTAL PARA O TEMPLO DE CRONOS!
+            // CHEFE 4 DERROTADO: TRINIT, A TRÍADE GLACIAL -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, PORTAL PARA O TEMPLO DE CRONOS!
             this.audio.playVictory();
             this.camera.shake(16);
             document.getElementById('boss-hud').classList.add('hidden');
             this.player.maxHealth += 1;
             this.player.health = this.player.maxHealth;
-            if (this.player.lives < this.player.maxLives) this.player.lives++;
             this.enemies = [];
             this.boss = null;
             this.questStep = 8;
             const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
             const centerY = (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE) / 2;
             this.portal = new AreaPortal(centerX, centerY - 40, 'CHRONOS_TEMPLE', 'Templo de Cronos', true);
-            this.showNotification('TRÍADE GLACIAL DERROTADA!', '+1 Vida Extra e Coração Máximo! Siga para o Templo de Cronos!');
+            this.showNotification('TRÍADE GLACIAL DERROTADA!', 'Saúde e Vigor Restaurados! Siga para o Templo de Cronos!');
             this.updateHUD();
 
           } else if (this.currentArea === 'CHRONOS_NEXUS') {
-            // CHEFE 5 DERROTADO: MIRAGE, O SENHOR DOS REFLEXOS -> +1 CORAÇÃO MÁXIMO, +1 VIDA EXTRA, CURA TOTAL, PORTAL PARA O LABIRINTO!
+            // CHEFE 5 DERROTADO: MIRAGE, O SENHOR DOS REFLEXOS -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, PORTAL PARA O LABIRINTO!
             this.audio.playVictory();
             this.camera.shake(18);
             document.getElementById('boss-hud').classList.add('hidden');
             this.player.maxHealth += 1;
             this.player.health = this.player.maxHealth;
-            if (this.player.lives < this.player.maxLives) this.player.lives++;
             this.enemies = [];
             this.boss = null;
             this.questStep = 9;
             const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
             const centerY = (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE) / 2;
             this.portal = new AreaPortal(centerX, centerY - 40, 'SHADOW_LABYRINTH', 'Labirinto das Sombras', true);
-            this.showNotification('ILUSÃO TEMPORAL DISSIPADA!', '+1 Vida Extra e Coração Máximo! Siga para o Labirinto das Sombras!');
+            this.showNotification('ILUSÃO TEMPORAL DISSIPADA!', 'Saúde Plena Restaurada! Siga para o Labirinto das Sombras!');
             this.updateHUD();
 
           } else if (this.currentArea === 'SHADOW_SANCTUM') {
-            // CHEFE 6 DERROTADO: NOCTURNUS, O SOBERANO DO ABISMO -> +1 CORAÇÃO MÁXIMO, +1 VIDA EXTRA, CURA TOTAL, PORTAL PARA A CIDADELA!
+            // CHEFE 6 DERROTADO: NOCTURNUS, O SOBERANO DO ABISMO -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, RECUPERAÇÃO DE VIDA CRÍTICA, PORTAL PARA A CIDADELA!
             this.audio.playVictory();
             this.camera.shake(20);
             document.getElementById('boss-hud').classList.add('hidden');
             this.player.maxHealth += 1;
             this.player.health = this.player.maxHealth;
-            if (this.player.lives < this.player.maxLives) this.player.lives++;
+            if (this.player.lives < 2) this.player.lives++; // Bônus de sobrevivência
             this.enemies = [];
             this.boss = null;
             this.questStep = 10;
             const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
             const centerY = (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE) / 2;
             this.portal = new AreaPortal(centerX, centerY - 40, 'AETHER_CITADEL', 'Cidadela do Éter', true);
-            this.showNotification('SOBERANO DO ABISMO EXPULSO!', '+1 Vida Extra e Coração Máximo! O Portal Supremo da Cidadela foi liberado!');
+            this.showNotification('SOBERANO DO ABISMO EXPULSO!', 'Cura Cósmica! O Portal Supremo da Cidadela foi liberado!');
             this.updateHUD();
 
           } else if (this.currentArea === 'AETHER_CITADEL') {
@@ -7030,7 +7115,6 @@ class GameEngine {
             document.getElementById('boss-hud').classList.add('hidden');
             this.player.maxHealth += 1;
             this.player.health = this.player.maxHealth;
-            if (this.player.lives < this.player.maxLives) this.player.lives++;
             this.enemies = [];
             this.boss = null;
             this.questStep = 11;
