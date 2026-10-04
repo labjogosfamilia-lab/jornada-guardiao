@@ -1470,6 +1470,10 @@ class Player extends Entity {
     this.beamCooldown = 1.6;
     this.beamCooldownTimer = 0;
 
+    // Relíquias Sagradas de Enigma:
+    this.hasChronosLens = false;    // Lente de Cronos (Enigma do Templo de Cronos -> Revela Mirage real!)
+    this.hasAstralLantern = false;  // Lanterna Astral (Enigma do Labirinto das Sombras -> Imune à lentidão do Vazio!)
+
     // Ataque
     this.isAttacking = false;
     this.attackTime = 0;
@@ -4296,6 +4300,7 @@ class BossMirage extends Entity {
     this.phantomAlertText = '';
     this.phantomAlertX = 0;
     this.phantomAlertY = 0;
+    this.alertIsReal = false;
 
     // 2 Clones Fantasmas Idênticos e Invulneráveis
     this.phantoms = [
@@ -4343,6 +4348,7 @@ class BossMirage extends Entity {
     this.phantomAlertText = 'ILUSÃO FANTASMA!';
     this.phantomAlertX = phantom.x;
     this.phantomAlertY = phantom.y - 28;
+    this.alertIsReal = false;
 
     if (audio && typeof audio.playHit === 'function') audio.playHit();
     if (particles && typeof particles.emit === 'function') {
@@ -4375,10 +4381,16 @@ class BossMirage extends Entity {
     // Atingiu o Mirage verdadeiro!
     this.health -= amount;
     this.hitTimer = 0.22;
+    this.phantomAlertTimer = 1.2;
+    this.phantomAlertText = '✨ MIRAGE REAL DETECTADO! ✨';
+    this.phantomAlertX = this.x;
+    this.phantomAlertY = this.y - 28;
+    this.alertIsReal = true;
+
     if (audio && typeof audio.playHit === 'function') audio.playHit();
     if (camera && typeof camera.shake === 'function') camera.shake(7);
     if (particles && typeof particles.emit === 'function') {
-      particles.emit(this.x, this.y, 18, { color: '#facc15', speed: 110 });
+      particles.emit(this.x, this.y, 22, { color: '#facc15', speed: 120 });
     }
 
     if (this.health <= 0) {
@@ -4644,13 +4656,13 @@ class BossMirage extends Entity {
 
     ctx.restore();
 
-    // Alerta Flutuante de Ilusão
+    // Alerta Flutuante de Ilusão ou Confirmação da Lente de Cronos
     if (this.phantomAlertTimer > 0) {
       ctx.save();
       ctx.font = '8px "Press Start 2P", monospace';
-      ctx.fillStyle = '#94a3b8';
-      ctx.shadowColor = '#000000';
-      ctx.shadowBlur = 6;
+      ctx.fillStyle = this.alertIsReal ? '#facc15' : '#94a3b8';
+      ctx.shadowColor = this.alertIsReal ? '#ca8a04' : '#000000';
+      ctx.shadowBlur = this.alertIsReal ? 10 : 6;
       ctx.textAlign = 'center';
       ctx.fillText(this.phantomAlertText, this.phantomAlertX - camera.x, this.phantomAlertY - camera.y);
       ctx.restore();
@@ -4760,7 +4772,15 @@ class VoidPool {
 
     const dist = Math.hypot(player.x - this.x, player.y - this.y);
     if (dist < this.radius) {
-      player.slowTimer = 0.5; // Lentidão segura aplicada ao jogador sem NaN!
+      if (player.hasAstralLantern) {
+        // Imunidade total à lentidão do Vazio graças à Lanterna Astral conquistada no Enigma!
+        player.slowTimer = 0;
+        if (particles && typeof particles.emit === 'function' && Math.random() < 0.25) {
+          particles.emit(player.x, player.y, 3, { color: '#22d3ee', speed: 40, life: 0.35 });
+        }
+      } else {
+        player.slowTimer = 0.5; // Lentidão aplicada se não possuir a Lanterna Astral!
+      }
       if (this.damageCooldown <= 0) {
         player.takeDamage(1, audio, camera);
         this.damageCooldown = 1.2;
@@ -6181,11 +6201,11 @@ class GameEngine {
         ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Monólito da Caverna')]
         : [];
 
-      // Monólito decifrável com a pista poética dos cristais harmônicos
+      // Monólito decifrável com a missão do enigma para o Pisão Sísmico contra Malakar
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 52,
-        'Tabuleta da Canção Rúnica',
-        'A canção das pedras abrirá o Santuário: Primeiro desperta o Azul dos Mares (Safira), em seguida eleva-se o Ouro do Sol (Topázio), e por fim ressoa o Púrpura do Crepúsculo (Ametista). Se a harmonia for quebrada, o acorde se desfaz!'
+        'Tabuleta da Provação da Terra',
+        'PROVAÇÃO DA TERRA: Malakar, o Colosso Sombrio, protege-se sob uma couraça de pedra impenetrável a tiros normais! Harmonize os 3 Cristais Musicais na sequência harmônica (Safira Azul -> Topázio Solar -> Ametista do Crepúsculo). A ressonância telúrica despertará em você o PISÃO SÍSMICO [R], capaz de estilhaçar a armadura de rocha de Malakar e abrir o Santuário!'
       );
 
       // 3 Cristais Harmônicos Sequenciais Musicais (Dó, Mi, Sol)
@@ -6248,11 +6268,11 @@ class GameEngine {
         ? [new CheckpointMonument(centerX, centerY + 80, 'Torre dos Ventos')]
         : [];
 
-      // Estela da Rosa dos Ventos
+      // Estela da Provação dos Céus (Espada Celeste contra Valdor)
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX, centerY - 64,
-        'Estela dos Quatro Ventos',
-        'O Arconte dos Céus exige o domínio das correntes: Gire os 4 cataventos sagrados (Norte, Sul, Leste, Oeste) até que TODAS as setas apontem CONVERGINDO EXATAMENTE PARA O CENTRO DO TEMPLO! Apenas a convergência desperta o portal.'
+        'Estela da Provação dos Céus',
+        'PROVAÇÃO DOS CÉUS: Valdor, o Arconte do Trovão, ataca na velocidade do raio e desvia de projéteis distantes! Gire os 4 cataventos sagrados (Norte, Sul, Leste, Oeste) até que todas as correntes convirjam para o centro do templo. A condensação dos ventos forjará a ESPADA CELESTE [F], permitindo golpes ultrarrápidos corpo a corpo para combater a velocidade de Valdor!'
       );
 
       // 4 Cataventos da Rosa dos Ventos ao redor do templo
@@ -6313,11 +6333,11 @@ class GameEngine {
         ? [new CheckpointMonument(centerX, centerY + 80, 'Fornalha dos Ancestrais')]
         : [];
 
-      // Monólito das Caldeiras
+      // Monólito da Provação do Fogo (Forja Estelar contra Kharon)
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 54,
-        'Tabuleta da Pressão Rúnica',
-        'O Altar dos Titãs necessita de equilíbrio térmico absoluto: Regule as 4 caldeiras para somar EXATAMENTE 10 ºC no cadinho (+4 Enxofre, +6 Brasas, +7 Magma, -3 Obsidiana). Nem mais, nem menos!'
+        'Tabuleta da Provação do Fogo',
+        'PROVAÇÃO DO FOGO: Kharon, o Soberano do Eclipse, regenera sombras vivas que absorvem ataques normais! Calibre as 4 caldeiras para somar EXATAMENTE 10 ºC (+4 Enxofre, +6 Brasas, +7 Magma, -3 Obsidiana) e acione a Forja Central [E]. O fogo estelar concederá à sua espada a INCINERAÇÃO CÓSMICA (DoT), queimando o manto do eclipse e impedindo a cura de Kharon!'
       );
 
       // 4 Caldeiras Térmicas com valores combinatórios (+4, +6, +7, -3)
@@ -6382,11 +6402,11 @@ class GameEngine {
         ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Monólito Glacial')]
         : [];
 
-      // Tabuleta de Pistas Rúnicas
+      // Tabuleta da Provação do Gelo (Raio Astral contra Trinit)
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 60,
-        'Tabuleta da Refração Glacial',
-        'A Runa do Portal repousa além da fenda de gelo intransponível! Posicione-se ao sul do Prisma Alfa e dispare o Raio Astral [C] para o norte. Ajuste a rotação dos 3 Prismas Glaciais [E] para guiar o feixe sucessivamente em 90 graus até a Runa no leste!'
+        'Tabuleta da Provação do Gelo',
+        'PROVAÇÃO DO GELO: Trinit se divide em uma Tríade de Clones em rotação perpétua com tempestades congelantes em volta, tornando a aproximação letal! Posicione-se ao sul do Prisma Alfa e dispare seu feixe pelo cajado para o norte. Ajuste a rotação dos 3 Prismas Glaciais [E] para guiar o feixe sucessivamente em 90 graus até a Runa no leste. A refração pura concederá o RAIO ASTRAL [C], permitindo snipar a Tríade de Trinit à distância com precisão cirúrgica!'
       );
 
       // 3 Prismas Glaciais
@@ -6446,11 +6466,11 @@ class GameEngine {
         ? [new CheckpointMonument(centerX, centerY + 80, 'Relicário de Cronos')]
         : [];
 
-      // Tabuleta de Pistas
+      // Tabuleta da Provação do Tempo (Lente de Cronos contra Mirage)
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX, centerY - 64,
-        'Estela da Sincronia Temporal',
-        'O tempo é uno e trino: Passado, Presente e Futuro! Dispare o Raio Astral [C] para ativar os 3 Totens distantes sobre os fossos. Cada totem permanece ressoando por apenas 6 segundos. Você deve manter os 3 totens acesos SIMULTANEAMENTE para dissolver a barreira temporal!'
+        'Estela da Provação do Tempo',
+        'PROVAÇÃO DO TEMPO: Mirage, o Senhor dos Reflexos, invocará 2 clones fantasmas idênticos e invulneráveis para confundi-lo! Dispare o Raio Astral [C] para ativar os 3 Totens distantes (Passado, Presente e Futuro). Cada um ressoa por 6 segundos. Mantenha os 3 acesos simultaneamente para despertar a LENTE ESPECTRAL DE CRONOS, que fará o Mirage verdadeiro emitir um brilho dourado confirmatório ao ser golpeado!'
       );
 
       // 3 Totens Temporais de Cronos isolados sobre fossos
@@ -6507,11 +6527,11 @@ class GameEngine {
         ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Lanterna do Vazio')]
         : [];
 
-      // Tabuleta de Pistas
+      // Tabuleta da Provação do Abismo (Lanterna Astral contra Nocturnus)
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 60,
-        'Tabuleta da Inversão Espectral',
-        'Quatro orbes governam o labirinto. Ao tocar [E] ou atingir um orbe com o Raio Astral [C], sua energia e a dos orbes vizinhos conectados se invertem! Harmonize a rede para que TODOS OS 4 ORBES permaneçam ACESOS simultaneamente!'
+        'Tabuleta da Provação do Abismo',
+        'PROVAÇÃO DO ABISMO: Nocturnus inunda a arena com poços de vácuo negro que drenam o vigor e causam paralisia/lentidão extrema! Ao tocar [E] ou atingir os 4 orbes da rede lógica com o Raio Astral [C], inverta os vizinhos até manter todos os 4 orbes acesos simultaneamente. A matriz despertará a LANTERNA ASTRAL DA VERDADE, garantindo IMUNIDADE TOTAL À LENTIDÃO DO VAZIO!'
       );
 
       // 4 Orbes Lógicos Interligados
@@ -6582,6 +6602,12 @@ class GameEngine {
         new AetherMonolith(576, 596, 3, 0, 'Monólito Delta (Éter)', '#c084fc', '☯')
       ];
 
+      this.puzzleMonument = new PuzzleTabletMonument(
+        centerX - 90, centerY + 140,
+        'Tabuleta da Ressonância Dimensional',
+        'ENIGMA DO ARQUITETO: Aethon repousa em estase tetradimensional sob um escudo cósmico! Ajuste a rotação dos 4 Monólitos Astrais [E] (Chama, Gelo, Trovão, Éter) e atire para que o feixe passe sucessivamente pelos 4 elementos em circuito. Ao ressoar nas 4 dimensões, o tiro quebrará o escudo cósmico de Aethon, forçando-o à batalha final!'
+      );
+
       if (this.questStep >= 11) {
         // Já vencido
       } else {
@@ -6613,23 +6639,28 @@ class GameEngine {
       const allHarmonized = this.harmonicCrystals.length > 0 && this.harmonicCrystals.every(c => c.activated);
       if (this.player.hasAuroraGem && allHarmonized && this.portal.locked) {
         this.portal.locked = false;
-        // Dificuldade Aumentada: Cura Plena de Saúde sem concessão de vida extra
+        this.player.hasColossusPower = true; // Desperta Pisão Sísmico [R] contra Malakar!
         this.player.health = this.player.maxHealth;
         this.audio.playVictory();
-        this.camera.shake(12);
+        this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#38bdf8', speed: 120 });
-        this.showNotification('MISTÉRIO RESOLVIDO!', 'CURA TOTAL RESTAURADA! A Harmonia Sagrada abriu o Santuário!');
+        this.showNotification('MISTÉRIO RESOLVIDO!', 'A Ressonância Telúrica despertou o Pisão Sísmico [R] contra Malakar!');
+        document.getElementById('power-unlock-banner').classList.remove('hidden');
+        this.gameState = 'DIALOGUE';
         this.updateHUD();
       }
     } else if (this.currentArea === 'SKY_ISLANDS') {
       const allAligned = this.windCompasses.length > 0 && this.windCompasses.every(w => w.isAligned());
       if (allAligned && this.portal.locked) {
         this.portal.locked = false;
+        this.player.hasSword = true; // Forja a Espada Celeste [F] contra Valdor!
         this.player.health = this.player.maxHealth;
         this.audio.playVictory();
         this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#facc15', speed: 120 });
-        this.showNotification('MISTÉRIO CONVERGENTE!', 'CURA TOTAL RESTAURADA! Os 4 ventos revelaram o Trono de Valdor!');
+        this.showNotification('CONVERGÊNCIA DOS VENTOS!', 'A condensação dos ventos forjou a Espada Celeste [F] contra Valdor!');
+        document.getElementById('sword-unlock-banner').classList.remove('hidden');
+        this.gameState = 'DIALOGUE';
         this.updateHUD();
       }
     } else if (this.currentArea === 'MAGMA_CORE') {
@@ -6642,40 +6673,45 @@ class GameEngine {
         this.audio.playVictory();
         this.camera.shake(16);
         this.particles.emit(this.portal.x, this.portal.y, 50, { color: '#f97316', speed: 130 });
-        this.showNotification('MISTÉRIO DA FORJA!', 'CURA TOTAL RESTAURADA! O calor rúnico abriu o Núcleo do Eclipse!');
+        this.showNotification('FORJA VULCÂNICA ATIVADA!', 'Lâmina do Fogo Estelar pronta para queimar as sombras de Kharon!');
         this.updateHUD();
       }
     } else if (this.currentArea === 'FROZEN_TUNDRA') {
       const runeActive = this.iceRune && this.iceRune.activated;
       if (runeActive && this.portal.locked) {
         this.portal.locked = false;
+        this.player.hasAstralBeam = true; // Desperta o Raio Astral [C] contra Trinit!
         this.player.health = this.player.maxHealth;
         this.audio.playVictory();
         this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#38bdf8', speed: 120 });
-        this.showNotification('REFRAÇÃO PERFEITA!', 'CURA TOTAL RESTAURADA! A Runa Glacial abriu a Arena de Trinit!');
+        this.showNotification('REFRAÇÃO PERFEITA!', 'O Feixe Glacial despertou o Raio Astral [C] contra Trinit!');
+        document.getElementById('beam-unlock-banner').classList.remove('hidden');
+        this.gameState = 'DIALOGUE';
         this.updateHUD();
       }
     } else if (this.currentArea === 'CHRONOS_TEMPLE') {
       const allChronos = this.chronosTotems.length === 3 && this.chronosTotems.every(t => t.activeTimer > 0);
       if (allChronos && this.portal.locked) {
         this.portal.locked = false;
+        this.player.hasChronosLens = true; // Desperta a Lente de Cronos contra Mirage!
         this.player.health = this.player.maxHealth;
         this.audio.playVictory();
         this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#facc15', speed: 120 });
-        this.showNotification('SINCRONIA TEMPORAL!', 'CURA TOTAL RESTAURADA! O Templo abriu o Nexus de Mirage!');
+        this.showNotification('SINCRONIA TEMPORAL!', 'LENTE DE CRONOS DESPERTA! Revelará o Mirage verdadeiro entre os fantasmas!');
         this.updateHUD();
       }
     } else if (this.currentArea === 'SHADOW_LABYRINTH') {
       const allOrbsOn = this.shadowOrbs.length === 4 && this.shadowOrbs.every(o => o.isOn);
       if (allOrbsOn && this.portal.locked) {
         this.portal.locked = false;
+        this.player.hasAstralLantern = true; // Desperta a Lanterna Astral contra Nocturnus!
         this.player.health = this.player.maxHealth;
         this.audio.playVictory();
         this.camera.shake(16);
         this.particles.emit(this.portal.x, this.portal.y, 50, { color: '#22d3ee', speed: 130 });
-        this.showNotification('MATRIZ ESPECTRAL!', 'CURA TOTAL RESTAURADA! O Labirinto abriu o Santuário de Nocturnus!');
+        this.showNotification('MATRIZ ESPECTRAL!', 'LANTERNA ASTRAL ILUMINADA! Imunidade total à lentidão do Vazio de Nocturnus!');
         this.updateHUD();
       }
     }
@@ -6687,11 +6723,13 @@ class GameEngine {
       this.audio.startBGM('FOREST');
       document.getElementById('title-screen').classList.add('hidden');
       this.gameState = 'PLAYING';
-      this.triggerDialogue('Sylva', '🦉', [
-        'Kaelen, a floresta precisa de você!',
-        'Restaure o Totem do Bosque para dar início à sua jornada.',
-        'Use [Shift] para CORRER rapidamente e [Q] para a esquiva rápida (Dash)!',
-        'Derrote os chefes antigos e forje sua lâmina!',
+      this.triggerDialogue('Sylva, a Coruja Ancestral', '🦉', [
+        'Kaelen, a Árvore da Vida de Aethelgard foi corrompida pela Entropia Cósmica!',
+        'Os 7 Guardiões Colossais do reino enlouqueceram e aprisionaram as 7 Essências Sagradas.',
+        'Sem as Essências, o mundo se extinguirá no vazio. Seu destino é PURIFICAR cada um dos 7 Colossos!',
+        'Porém, cada Colosso possui defesas lendárias impenetráveis por magias comuns.',
+        'Antes de cada arena, você deve desvendar os ENIGMAS ANCESTRAIS para forjar a arma ou poder exato que anula a força do Colosso seguinte!',
+        'Restaure o Totem do Bosque para dar início à sua jornada sagrada!'
       ]);
     });
 
@@ -7285,6 +7323,7 @@ class GameEngine {
           } else {
             this.forgeAltar.used = true;
             this.player.swordLevel = 2; // Evolução para Espada do Fogo Estelar!
+            this.player.hasBurnPower = true; // Incineração Cósmica contra as sombras de Kharon!
             this.player.activeWeapon = 'SWORD';
             this.questStep = 6;
             if (this.player.lives < this.player.maxLives) this.player.lives++;
@@ -7292,7 +7331,9 @@ class GameEngine {
             this.audio.playVictory();
             this.camera.shake(12);
             this.particles.emit(this.forgeAltar.x, this.forgeAltar.y, 45, { color: '#f97316', speed: 140 });
-            this.showNotification('ESPADA FORJADA!', 'Lâmina do Fogo Estelar forjada! Saúde totalmente restaurada!');
+            this.showNotification('ESPADA FORJADA!', 'Lâmina do Fogo Estelar forjada! Poder de queimadura contra Kharon ativo!');
+            document.getElementById('burn-unlock-banner').classList.remove('hidden');
+            this.gameState = 'DIALOGUE';
             this.checkBossPortalUnlock();
             this.updateHUD();
           }
@@ -7393,69 +7434,56 @@ class GameEngine {
 
         if (!this.boss.alive) {
           if (this.currentArea === 'SANCTUARY') {
-            // CHEFE 1 DERROTADO (MALAKAR) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, PODER SÍSMICO [R] E DISPARO TRIPLO!
+            // CHEFE 1 PURIFICADO (MALAKAR) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL & RESGATE DA ESSÊNCIA DA TERRA!
             this.audio.playVictory();
             this.camera.shake(14);
             document.getElementById('boss-hud').classList.add('hidden');
             this.player.maxHealth += 1;
             this.player.health = this.player.maxHealth;
             this.enemies = []; // Elimina ajudantes remanescentes
-            this.player.hasColossusPower = true;
             this.questStep = 4;
             this.boss = null;
             const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
             const centerY = (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE) / 2;
             this.portal = new AreaPortal(centerX, centerY - 40, 'SKY_ISLANDS', 'Palácio dos Ventos', true);
-
-            // Exibir Banner de Desbloqueio do Super Poder [R]
-            document.getElementById('power-unlock-banner').classList.remove('hidden');
-            this.gameState = 'DIALOGUE';
+            this.showNotification('MALAKAR PURIFICADO!', 'A Essência da Terra foi resgatada! (+1 Coração Máximo & Cura Total). Siga para o Palácio dos Ventos!');
             this.updateHUD();
 
           } else if (this.currentArea === 'SKY_THRONE') {
-            // CHEFE 2 DERROTADO (VALDOR) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, GANHA A ESPADA [F]!
+            // CHEFE 2 PURIFICADO (VALDOR) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL & RESGATE DA ESSÊNCIA DA TEMPESTADE!
             this.audio.playVictory();
             this.camera.shake(16);
             document.getElementById('boss-hud').classList.add('hidden');
             this.player.maxHealth += 1;
             this.player.health = this.player.maxHealth;
             this.enemies = []; // Elimina ajudantes remanescentes
-            this.player.hasSword = true;
             this.questStep = 5;
             this.boss = null;
             const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
             const centerY = (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE) / 2;
             this.portal = new AreaPortal(centerX, centerY - 40, 'MAGMA_CORE', 'Abismo de Magma', true);
-
-            // Exibir Banner de Desbloqueio da Espada
-            document.getElementById('sword-unlock-banner').classList.remove('hidden');
-            this.gameState = 'DIALOGUE';
+            this.showNotification('VALDOR PURIFICADO!', 'A Essência da Tempestade foi resgatada! (+1 Coração Máximo & Cura Total). Siga para o Abismo de Magma!');
             this.updateHUD();
 
           } else if (this.currentArea === 'VOID_CORE') {
-            // CHEFE 3 DERROTADO (KHARON - MARCO DA JORNADA) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, RECUPERAÇÃO DE VIDA CRÍTICA, PODER DO FOGO CÓSMICO E RAIO ASTRAL!
+            // CHEFE 3 PURIFICADO (KHARON) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL & RESGATE DA ESSÊNCIA DO FOGO!
             this.audio.playVictory();
             this.camera.shake(20);
             document.getElementById('boss-hud').classList.add('hidden');
             this.player.maxHealth += 1;
             this.player.health = this.player.maxHealth;
             if (this.player.lives < 2) this.player.lives++; // Bônus de sobrevivência
-            this.player.hasBurnPower = true;
-            this.player.hasAstralBeam = true; // Desbloqueia Raio Astral [C] / [X]!
             this.enemies = []; // Elimina ajudantes remanescentes
             this.boss = null;
             this.questStep = 7;
             const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
             const centerY = (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE) / 2;
             this.portal = new AreaPortal(centerX, centerY - 40, 'FROZEN_TUNDRA', 'Geleira de Niflheim', true);
-
-            // Exibir Banner de Desbloqueio do Raio Astral
-            document.getElementById('beam-unlock-banner').classList.remove('hidden');
-            this.gameState = 'DIALOGUE';
+            this.showNotification('KHARON PURIFICADO!', 'A Essência do Fogo Primordial foi resgatada! (+1 Coração Máximo & Cura Total). Siga para a Geleira de Niflheim!');
             this.updateHUD();
 
           } else if (this.currentArea === 'GLACIAL_ARENA') {
-            // CHEFE 4 DERROTADO: TRINIT, A TRÍADE GLACIAL -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, PORTAL PARA O TEMPLO DE CRONOS!
+            // CHEFE 4 PURIFICADO (TRINIT) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL & RESGATE DA ESSÊNCIA DO GELO!
             this.audio.playVictory();
             this.camera.shake(16);
             document.getElementById('boss-hud').classList.add('hidden');
@@ -7467,11 +7495,11 @@ class GameEngine {
             const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
             const centerY = (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE) / 2;
             this.portal = new AreaPortal(centerX, centerY - 40, 'CHRONOS_TEMPLE', 'Templo de Cronos', true);
-            this.showNotification('TRÍADE GLACIAL DERROTADA!', 'Saúde e Vigor Restaurados! Siga para o Templo de Cronos!');
+            this.showNotification('TRINIT PURIFICADO!', 'A Essência do Gelo Eterno foi resgatada! (+1 Coração Máximo & Cura Total). Siga para o Templo de Cronos!');
             this.updateHUD();
 
           } else if (this.currentArea === 'CHRONOS_NEXUS') {
-            // CHEFE 5 DERROTADO: MIRAGE, O SENHOR DOS REFLEXOS -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, PORTAL PARA O LABIRINTO!
+            // CHEFE 5 PURIFICADO (MIRAGE) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL & RESGATE DA ESSÊNCIA DO TEMPO!
             this.audio.playVictory();
             this.camera.shake(18);
             document.getElementById('boss-hud').classList.add('hidden');
@@ -7483,11 +7511,11 @@ class GameEngine {
             const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
             const centerY = (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE) / 2;
             this.portal = new AreaPortal(centerX, centerY - 40, 'SHADOW_LABYRINTH', 'Labirinto das Sombras', true);
-            this.showNotification('ILUSÃO TEMPORAL DISSIPADA!', 'Saúde Plena Restaurada! Siga para o Labirinto das Sombras!');
+            this.showNotification('MIRAGE PURIFICADO!', 'A Essência do Tempo foi resgatada! (+1 Coração Máximo & Cura Total). Siga para o Labirinto das Sombras!');
             this.updateHUD();
 
           } else if (this.currentArea === 'SHADOW_SANCTUM') {
-            // CHEFE 6 DERROTADO: NOCTURNUS, O SOBERANO DO ABISMO -> +1 CORAÇÃO MÁXIMO, CURA TOTAL, RECUPERAÇÃO DE VIDA CRÍTICA, PORTAL PARA A CIDADELA!
+            // CHEFE 6 PURIFICADO (NOCTURNUS) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL & RESGATE DA ESSÊNCIA DO VÁCUO!
             this.audio.playVictory();
             this.camera.shake(20);
             document.getElementById('boss-hud').classList.add('hidden');
@@ -7500,7 +7528,7 @@ class GameEngine {
             const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
             const centerY = (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE) / 2;
             this.portal = new AreaPortal(centerX, centerY - 40, 'AETHER_CITADEL', 'Cidadela do Éter', true);
-            this.showNotification('SOBERANO DO ABISMO EXPULSO!', 'Cura Cósmica! O Portal Supremo da Cidadela foi liberado!');
+            this.showNotification('NOCTURNUS PURIFICADO!', 'A Essência do Vácuo foi resgatada! (+1 Coração Máximo & Cura Total). O Portal Supremo da Cidadela foi liberado!');
             this.updateHUD();
 
           } else if (this.currentArea === 'AETHER_CITADEL') {
@@ -7513,18 +7541,19 @@ class GameEngine {
             this.enemies = [];
             this.boss = null;
             this.questStep = 11;
+            this.showNotification('AETHON PURIFICADO!', 'Todas as 7 Essências Sagradas foram restauradas à Árvore da Vida!');
             this.updateHUD();
 
             setTimeout(() => {
               this.gameState = 'VICTORY';
               document.getElementById('victory-stats').innerHTML = `
-                ⭐ 7 Grandes Chefes Derrotados: <b>MALAKAR, VALDOR, KHARON, TRINIT, MIRAGE, NOCTURNUS & AETHON</b><br>
-                ⚔️ Arsenal Mestre Completo: <b>CAJADO, ESPADA DO FOGO ESTELAR & RAIO ASTRAL</b><br>
-                ⚡ Habilidades Antigas: <b>PISÃO SÍSMICO [R], FOGO CÓSMICO (DoT) & RAIO PERFURANTE [C]</b><br>
-                🧩 Enigmas Lógicos Decifrados: <b>REFRAÇÃO GLACIAL, SINCRONIA DE CRONOS, MATRIZ DAS SOMBRAS & ENIGMA DOS 4 MONÓLITOS DE AETHON</b><br>
+                🌟 7 Colossos Sagrados Purificados: <b>MALAKAR, VALDOR, KHARON, TRINIT, MIRAGE, NOCTURNUS & AETHON</b><br>
+                ✨ 7 Essências Sagradas Restauradas: <b>TERRA, TEMPESTADE, FOGO, GELO, TEMPO, VÁCUO & ÉTER</b><br>
+                ⚔️ Arsenal Forjado nas Provações: <b>CAJADO, ESPADA DO FOGO ESTELAR & RAIO ASTRAL</b><br>
+                ⚡ Relíquias & Poderes Despertos: <b>PISÃO SÍSMICO [R], LENTE DE CRONOS & LANTERNA ASTRAL</b><br>
+                🧩 Enigmas Antigos Decifrados: <b>REFRAÇÃO GLACIAL, SINCRONIA DE CRONOS, MATRIZ DAS SOMBRAS & 4 MONÓLITOS</b><br>
                 🛡️ Vidas de Guardião Restantes: <b>${this.player.lives} / ${this.player.maxLives}</b><br>
-                🚩 Checkpoints Descobertos: <b>TODOS OS SANTUÁRIOS REGISTRADOS!</b><br>
-                🌌 14 Fases Épicas Superadas: <b>A JORNADA COMPLETA FOI CONQUISTADA!</b>
+                🌌 14 Fases Épicas Conquistadas: <b>O EQUILÍBRIO DO COSMOS FOI RESTAURADO!</b>
               `;
               document.getElementById('victory-screen').classList.remove('hidden');
             }, 2500);
