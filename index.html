@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Jornada: O Guardião dos Bosques</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="game-wrapper">
+    <!-- Canvas Principal do Jogo -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Overlay de HUD (Vida, Essências, Objetivos) -->
+    <div id="hud">
+      <div class="hud-top-left">
+        <div class="lives-container">
+          <span class="hud-label">VIDAS:</span>
+          <div id="lives-icons"></div>
+        </div>
+        <div class="health-container">
+          <span class="hud-label">VIDA:</span>
+          <div id="health-hearts"></div>
+        </div>
+        <div class="stamina-container">
+          <div class="stamina-bar-bg">
+            <div id="stamina-fill"></div>
+          </div>
+          <span class="stamina-label">CORRER [Shift]</span>
+        </div>
+        <div class="dash-container">
+          <div class="dash-bar-bg">
+            <div id="dash-fill"></div>
+          </div>
+          <span class="dash-label">DASH [Q]</span>
+        </div>
+        <!-- Poder Sísmico do 1º Boss [R] -->
+        <div class="special-skill-container hidden" id="special-skill-hud">
+          <div class="special-bar-bg">
+            <div id="special-fill"></div>
+          </div>
+          <span class="special-label">PODER SÍSMICO [R]</span>
+        </div>
+        <!-- Seletor de Armas (Cajado / Espada) [F] -->
+        <div class="weapon-container hidden" id="weapon-hud">
+          <span class="weapon-icon" id="weapon-icon">🪄</span>
+          <div class="weapon-details">
+            <span class="weapon-title" id="weapon-title">Cajado da Aurora</span>
+            <span class="weapon-sub" id="weapon-sub">Magia à Distância</span>
+          </div>
+          <button class="weapon-swap-btn" id="weapon-swap-btn" title="Alternar Arma [F]">[F] Trocar</button>
+        </div>
+        <!-- Poder do Fogo Cósmico pós-Boss 3 -->
+        <div class="burn-skill-container hidden" id="burn-skill-hud">
+          <span class="burn-label">🔥 INCINERAÇÃO CÓSMICA</span>
+          <span class="burn-sub">Ataques queimam por 4s</span>
+        </div>
+        <!-- Poder de Longo Alcance: Raio Astral [C] -->
+        <div class="beam-skill-container hidden" id="beam-skill-hud">
+          <div class="beam-bar-bg">
+            <div id="beam-fill"></div>
+          </div>
+          <span class="beam-label">RAIO ASTRAL [C]</span>
+        </div>
+        <!-- Indicador de Checkpoint Ativo -->
+        <div class="checkpoint-badge hidden" id="checkpoint-badge">
+          <span class="checkpoint-icon">🚩</span>
+          <span id="checkpoint-text">Nenhum</span>
+        </div>
+      </div>
+
+      <div class="hud-top-right">
+        <div class="essence-badge">
+          <span class="essence-icon">🌱</span>
+          <span id="essence-counter">0 / 5</span>
+        </div>
+        <button id="audio-toggle-btn" title="Ligar/Desligar Som">🔊</button>
+      </div>
+
+      <!-- Barra de Vida do Chefe (Boss) -->
+      <div id="boss-hud" class="hidden">
+        <div class="boss-info">
+          <span id="boss-name">MALAKAR, O COLOSSO SOMBRIO</span>
+          <span id="boss-hp-text">100%</span>
+        </div>
+        <div class="boss-hp-bar-bg">
+          <div id="boss-hp-fill"></div>
+        </div>
+      </div>
+
+      <div class="quest-tracker">
+        <div class="area-indicator" id="area-indicator">📍 Bosque dos Ecos</div>
+        <span class="quest-title">MISSÃO ATUAL</span>
+        <span id="quest-text">Fale com Sylva, a Coruja Anciã no centro do bosque.</span>
+      </div>
+    </div>
+
+    <!-- Banner de Transição de Área -->
+    <div id="area-banner" class="hidden">
+      <h2 id="area-banner-title">CAVERNA DOS CRISTAIS</h2>
+      <p id="area-banner-sub">Profundezas Ancestrais</p>
+    </div>
+
+    <!-- Caixa de Diálogo com NPCs -->
+    <div id="dialogue-box" class="hidden">
+      <div class="dialogue-avatar" id="dialogue-avatar">🦉</div>
+      <div class="dialogue-content">
+        <div class="dialogue-name" id="dialogue-name">Sylva</div>
+        <div class="dialogue-text" id="dialogue-text"></div>
+        <div class="dialogue-prompt">[Espaço] Continuar...</div>
+      </div>
+    </div>
+
+    <!-- Tela de Mensagens / Notificações Rápidas -->
+    <div id="notification-banner" class="hidden">
+      <h2 id="notification-title">NOVA HABILIDADE!</h2>
+      <p id="notification-desc">Você aprendeu o Dash dos Ventos!</p>
+    </div>
+
+    <!-- Menu / Tela de Início -->
+    <div id="title-screen">
+      <div class="title-card">
+        <h1 class="game-logo">JORNADA</h1>
+        <h2 class="game-subtitle">O Guardião dos Bosques</h2>
+        <p class="game-lore">O Bosque dos Ecos está enfraquecendo. Restaure os totens ancestrais antes que a Sombra Cinzenta domine as árvores.</p>
+        
+        <div class="controls-guide">
+          <div class="key-row"><span>🎮 Movimentação:</span> <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> ou <kbd>Setas</kbd></div>
+          <div class="key-row"><span>🏃 Correr:</span> Segurar <kbd>Shift</kbd> (Aumenta velocidade!)</div>
+          <div class="key-row"><span>💨 Esquiva (Dash):</span> <kbd>Q</kbd> ou <kbd>K</kbd></div>
+          <div class="key-row"><span>⚡ Super Poder (Pós-Boss 1):</span> <kbd>R</kbd> (Pisão Sísmico Sagrado)</div>
+          <div class="key-row"><span>🔄 Trocar Arma (Pós-Boss 2):</span> <kbd>F</kbd> ou <kbd>Tab</kbd> (Feitiço / Espada)</div>
+          <div class="key-row"><span>🏹 Raio de Longo Alcance (Fase 8):</span> <kbd>C</kbd> ou <kbd>X</kbd> (Feixe Perfurante)</div>
+          <div class="key-row"><span>⚔️ Atacar:</span> <kbd>Espaço</kbd> ou <kbd>J</kbd> (ou Clique)</div>
+          <div class="key-row"><span>💬 Interagir / Checkpoint:</span> <kbd>E</kbd> (Salve o marco de renascimento!)</div>
+        </div>
+
+        <button id="start-btn" class="btn-primary">INICIAR AVENTURA</button>
+      </div>
+    </div>
+
+    <!-- Banner de Desbloqueio de Super Poder (Pós-Boss 1: Malakar) -->
+    <div id="power-unlock-banner" class="hidden">
+      <div class="power-card">
+        <h2 id="power-unlock-title">⚡ PODER DO COLOSSO ABSORVIDO! ⚡</h2>
+        <p id="power-unlock-desc">Você adquiriu o <b>Pisão Sísmico Sagrado [R]</b> e o <b>Disparo Triplo Celestial</b>!</p>
+        <p class="power-unlock-sub">Pressione <b>[R]</b> para invocar uma poderosa onda de choque dourada!<br>Um portal sagrado se abriu para o <b>Palácio dos Ventos</b>!</p>
+        <button id="close-power-banner-btn" class="btn-primary">AVANÇAR PARA OS CÉUS</button>
+      </div>
+    </div>
+
+    <!-- Banner de Desbloqueio da Espada (Pós-Boss 2: Valdor) -->
+    <div id="sword-unlock-banner" class="hidden">
+      <div class="power-card">
+        <h2 id="sword-unlock-title">⚔️ ESPADA DO TROVÃO CONQUISTADA! ⚔️</h2>
+        <p id="sword-unlock-desc">Você libertou a poderosa <b>Lâmina Celestial</b> do Arconte!</p>
+        <p class="power-unlock-sub">Pressione <b>[F]</b> ou <b>[Tab]</b> para alternar livremente entre <b>Feitiços (Cajado)</b> e <b>Espada</b>!<br>Sua espada poderá evoluir na próxima forja!</p>
+        <button id="close-sword-banner-btn" class="btn-primary">EMBAINHAR E CONTINUAR</button>
+      </div>
+    </div>
+
+    <!-- Banner de Desbloqueio do Poder de Fogo (Pós-Boss 3: Kharon) -->
+    <div id="burn-unlock-banner" class="hidden">
+      <div class="power-card">
+        <h2 id="burn-unlock-title">🔥 INCINERAÇÃO CÓSMICA ABSORVIDA! 🔥</h2>
+        <p id="burn-unlock-desc">Você derrotou Kharon e dominou a <b>Chama Primordial do Eclipse</b>!</p>
+        <p class="power-unlock-sub">Todos os seus golpes (espada, feitiços e pisão) agora <b>INCENDEIAM os inimigos por 4 segundos</b> com dano contínuo!<br>Vitalidade expandida: <b>+1 Coração Máximo de Vida</b> e cura total!</p>
+        <button id="close-burn-banner-btn" class="btn-primary">DESPERTAR AS CHAMAS</button>
+      </div>
+    </div>
+
+    <!-- Banner de Desbloqueio do Raio Astral [C] (Fase 8: Geleira) -->
+    <div id="beam-unlock-banner" class="hidden">
+      <div class="power-card">
+        <h2 id="beam-unlock-title">🏹 RAIO ASTRAL PERFURANTE ABSORVIDO! 🏹</h2>
+        <p id="beam-unlock-desc">Você despertou o artefato dos deuses no <b>Altar Glacial</b>!</p>
+        <p class="power-unlock-sub">Pressione <b>[C]</b> ou <b>[X]</b> para disparar um <b>Feixe Perfurante de Longo Alcance</b>!<br>Atravessa hordas de monstros, reflete em prismas de quartzo e aciona relíquias distantes através de abismos!</p>
+        <button id="close-beam-banner-btn" class="btn-primary">DOMINAR O FEIXE</button>
+      </div>
+    </div>
+
+    <!-- Tela de Game Over -->
+    <div id="game-over-screen" class="hidden">
+      <div class="title-card game-over-card">
+        <h2 class="game-over-title">SUA ENERGIA SE ESGOTOU</h2>
+        <p>A floresta aguarda o despertar de um verdadeiro guardião...</p>
+        <button id="respawn-btn" class="btn-primary">TENTAR NOVAMENTE</button>
+      </div>
+    </div>
+
+    <!-- Tela de Vitória da Fase -->
+    <div id="victory-screen" class="hidden">
+      <div class="title-card victory-card">
+        <h2 class="victory-title">✨ REINO DE AETHELGARD PURIFICADO! ✨</h2>
+        <p>A terra, os céus e os abismos foram libertos do eclipse cósmico!</p>
+        <div id="victory-stats"></div>
+        <button id="next-level-btn" class="btn-primary">JOGAR NOVAMENTE</button>
+      </div>
+    </div>
+
+    <!-- Controles Virtuais Touch (para Celular / Tablet) -->
+    <div id="touch-controls">
+      <div id="touch-dpad">
+        <button class="touch-btn" id="dpad-up">▲</button>
+        <div class="dpad-middle">
+          <button class="touch-btn" id="dpad-left">◀</button>
+          <button class="touch-btn" id="dpad-right">▶</button>
+        </div>
+        <button class="touch-btn" id="dpad-down">▼</button>
+      </div>
+      <div id="touch-actions">
+        <button class="touch-action-btn hidden" id="touch-beam" title="Raio Astral [C]">🏹</button>
+        <button class="touch-action-btn hidden" id="touch-special" title="Poder Especial [R]">⚡</button>
+        <button class="touch-action-btn hidden" id="touch-weapon-swap" title="Trocar Arma [F]">🔄</button>
+        <button class="touch-action-btn" id="touch-sprint" title="Correr [Shift]">🏃</button>
+        <button class="touch-action-btn" id="touch-dash" title="Dash [Q]">💨</button>
+        <button class="touch-action-btn" id="touch-interact" title="Interagir [E]">💬</button>
+        <button class="touch-action-btn touch-action-primary" id="touch-attack" title="Atacar">⚔️</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
