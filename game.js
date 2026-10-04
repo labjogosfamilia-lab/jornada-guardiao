@@ -3395,6 +3395,119 @@ class ForgeAltar extends Entity {
   }
 }
 
+// Altar Sagrado de Missão Separada para Conquistar Armas e Poderes
+class PowerMissionAltar extends Entity {
+  constructor(x, y, type, name, promptText, rewardText, color, icon) {
+    super(x, y, 44, 44);
+    this.type = type; // 'COLOSSUS_POWER', 'SWORD', 'ASTRAL_BEAM', 'CHRONOS_LENS', 'ASTRAL_LANTERN'
+    this.name = name;
+    this.promptText = promptText;
+    this.rewardText = rewardText;
+    this.color = color;
+    this.icon = icon;
+    this.claimed = false;
+    this.animTime = Math.random() * Math.PI * 2;
+  }
+
+  update(player, dt) {
+    this.animTime += dt * 2.8;
+    return Math.hypot(player.x - this.x, player.y - this.y) < 52;
+  }
+
+  claim(game) {
+    if (this.claimed) return;
+    this.claimed = true;
+    if (game.audio && typeof game.audio.playVictory === 'function') game.audio.playVictory();
+    if (game.camera && typeof game.camera.shake === 'function') game.camera.shake(14);
+    if (game.particles && typeof game.particles.emit === 'function') {
+      game.particles.emit(this.x, this.y, 40, { color: this.color, speed: 130, life: 1.2 });
+    }
+    game.showNotification(this.name.toUpperCase(), this.rewardText);
+
+    if (this.type === 'COLOSSUS_POWER') {
+      game.player.hasColossusPower = true;
+      const b = document.getElementById('power-unlock-banner');
+      if (b) b.classList.remove('hidden');
+      game.gameState = 'DIALOGUE';
+    } else if (this.type === 'SWORD') {
+      game.player.hasSword = true;
+      const b = document.getElementById('sword-unlock-banner');
+      if (b) b.classList.remove('hidden');
+      game.gameState = 'DIALOGUE';
+    } else if (this.type === 'ASTRAL_BEAM') {
+      game.player.hasAstralBeam = true;
+      const b = document.getElementById('beam-unlock-banner');
+      if (b) b.classList.remove('hidden');
+      game.gameState = 'DIALOGUE';
+    } else if (this.type === 'CHRONOS_LENS') {
+      game.player.hasChronosLens = true;
+      const b = document.getElementById('chronos-unlock-banner');
+      if (b) b.classList.remove('hidden');
+      game.gameState = 'DIALOGUE';
+    } else if (this.type === 'ASTRAL_LANTERN') {
+      game.player.hasAstralLantern = true;
+      const b = document.getElementById('shadow-unlock-banner');
+      if (b) b.classList.remove('hidden');
+      game.gameState = 'DIALOGUE';
+    }
+    game.updateHUD();
+  }
+
+  draw(ctx, camera, isNear) {
+    const sx = this.x - camera.x;
+    const sy = this.y - camera.y;
+    const bob = Math.sin(this.animTime) * 3;
+
+    ctx.save();
+    ctx.translate(sx, sy);
+
+    // Pedestal de Pedra Sagrada
+    ctx.fillStyle = '#1e1b4b';
+    ctx.fillRect(-20, 10, 40, 16);
+    ctx.fillStyle = '#312e81';
+    ctx.fillRect(-16, 6, 32, 5);
+
+    // Relíquia Flutuante no Topo
+    if (!this.claimed) {
+      ctx.fillStyle = this.color;
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 20;
+
+      ctx.beginPath();
+      ctx.arc(0, -10 + bob, 14, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Símbolo da Arma / Poder
+      ctx.font = '16px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(this.icon, 0, -10 + bob);
+    } else {
+      // Reivindicado: Brilho residual sagrado
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(0, -6, 8, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+
+    // Rótulo da Missão ao se aproximar
+    if (isNear) {
+      ctx.save();
+      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.fillStyle = this.claimed ? '#94a3b8' : this.color;
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 6;
+      ctx.textAlign = 'center';
+      ctx.fillText(this.claimed ? `✨ ${this.name} (Concluído)` : `[E] ${this.promptText}`, sx, sy - 34);
+      ctx.restore();
+    }
+  }
+}
+
 // ====================================================================
 // NOVAS ENTIDADES, CHECKPOINTS E ENIGMAS LÓGICOS DAS FASES 8 A 11
 // ====================================================================
@@ -6039,6 +6152,7 @@ class GameEngine {
     this.portal = null;
     this.chest = null;
     this.forgeAltar = null;
+    this.powerAltars = [];
     this.pylons = [];
     this.harmonicCrystals = [];
     this.harmonicStep = 1;
@@ -6117,6 +6231,7 @@ class GameEngine {
     this.portal = null;
     this.chest = null;
     this.forgeAltar = null;
+    this.powerAltars = [];
 
     // Reinicializar coleções das novas fases
     this.astralBeams = [];
@@ -6201,11 +6316,17 @@ class GameEngine {
         ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Monólito da Caverna')]
         : [];
 
-      // Monólito decifrável com a missão do enigma para o Pisão Sísmico contra Malakar
+      // Altar Sagrado de Missão Separada para o Pisão Sísmico [R]
+      this.powerAltars = [
+        new PowerMissionAltar(centerX + 80, centerY, 'COLOSSUS_POWER', 'Altar Telúrico do Titã', 'Absorver Pisão Sísmico [R]', 'A terra ancestral vibra em você! O Pisão Sísmico [R] foi conquistado contra Malakar!', '#38bdf8', '⚡')
+      ];
+      if (this.player.hasColossusPower) this.powerAltars[0].claimed = true;
+
+      // Monólito decifrável com o Enigma do Portal e a Missão do Altar
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 52,
-        'Tabuleta da Provação da Terra',
-        'PROVAÇÃO DA TERRA: Malakar, o Colosso Sombrio, protege-se sob uma couraça de pedra impenetrável a tiros normais! Harmonize os 3 Cristais Musicais na sequência harmônica (Safira Azul -> Topázio Solar -> Ametista do Crepúsculo). A ressonância telúrica despertará em você o PISÃO SÍSMICO [R], capaz de estilhaçar a armadura de rocha de Malakar e abrir o Santuário!'
+        'Tabuleta da Caverna Ancestral',
+        'ENIGMA DO PORTAL: Harmonize os 3 Cristais Musicais (Safira, Topázio, Ametista) para abrir o Santuário de Malakar!\nMISSÃO DO ALTAR: Aproxime-se do Altar Telúrico [E] para absorver o PISÃO SÍSMICO [R], essencial para estilhaçar a armadura de pedra de Malakar!'
       );
 
       // 3 Cristais Harmônicos Sequenciais Musicais (Dó, Mi, Sol)
@@ -6227,11 +6348,11 @@ class GameEngine {
         this.breakables.push(new BreakableObject(bx, by, 'CRYSTAL'));
       }
 
-      const caveUnlocked = Boolean(this.player.hasAuroraGem && this.harmonicCrystals.length > 0 && this.harmonicCrystals.every(c => c.activated));
+      const caveUnlocked = Boolean(this.harmonicCrystals.length > 0 && this.harmonicCrystals.every(c => c.activated));
       this.portal = new AreaPortal(
         31 * CONFIG.TILE_SIZE, 5 * CONFIG.TILE_SIZE,
         'SANCTUARY', 'Santuário', false,
-        !caveUnlocked, 'Abra o Baú e ressoe a Melodia Sagrada dos Cristais'
+        !caveUnlocked, 'Harmonize os 3 Cristais Musicais para abrir o Santuário'
       );
 
     } else if (areaType === 'SANCTUARY') {
@@ -6268,11 +6389,17 @@ class GameEngine {
         ? [new CheckpointMonument(centerX, centerY + 80, 'Torre dos Ventos')]
         : [];
 
-      // Estela da Provação dos Céus (Espada Celeste contra Valdor)
+      // Pedra da Lâmina dos Ventos (Missão Separada para a Espada Celeste [F])
+      this.powerAltars = [
+        new PowerMissionAltar(centerX, centerY, 'SWORD', 'Pedra da Lâmina dos Ventos', 'Desembainhar a Espada Celeste [F]', 'A Lâmina Celestial foi desembainhada! Pressione [F] para alternar entre Cajado e Espada!', '#facc15', '⚔️')
+      ];
+      if (this.player.hasSword) this.powerAltars[0].claimed = true;
+
+      // Estela do Palácio dos Ventos
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX, centerY - 64,
-        'Estela da Provação dos Céus',
-        'PROVAÇÃO DOS CÉUS: Valdor, o Arconte do Trovão, ataca na velocidade do raio e desvia de projéteis distantes! Gire os 4 cataventos sagrados (Norte, Sul, Leste, Oeste) até que todas as correntes convirjam para o centro do templo. A condensação dos ventos forjará a ESPADA CELESTE [F], permitindo golpes ultrarrápidos corpo a corpo para combater a velocidade de Valdor!'
+        'Estela do Palácio dos Ventos',
+        'ENIGMA DO PORTAL: Gire os 4 cataventos sagrados até que todas as correntes convirjam para o centro para revelar o Trono de Valdor!\nMISSÃO DA LÂMINA: Desembainhe a lendária ESPADA CELESTE [F] na Rocha Central [E] para golpear na velocidade da tempestade e confrontar Valdor no corpo a corpo!'
       );
 
       // 4 Cataventos da Rosa dos Ventos ao redor do templo
@@ -6333,11 +6460,11 @@ class GameEngine {
         ? [new CheckpointMonument(centerX, centerY + 80, 'Fornalha dos Ancestrais')]
         : [];
 
-      // Monólito da Provação do Fogo (Forja Estelar contra Kharon)
+      // Monólito do Abismo de Magma
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 54,
-        'Tabuleta da Provação do Fogo',
-        'PROVAÇÃO DO FOGO: Kharon, o Soberano do Eclipse, regenera sombras vivas que absorvem ataques normais! Calibre as 4 caldeiras para somar EXATAMENTE 10 ºC (+4 Enxofre, +6 Brasas, +7 Magma, -3 Obsidiana) e acione a Forja Central [E]. O fogo estelar concederá à sua espada a INCINERAÇÃO CÓSMICA (DoT), queimando o manto do eclipse e impedindo a cura de Kharon!'
+        'Tabuleta do Abismo de Magma',
+        'ENIGMA DO PORTAL: Calibre as 4 caldeiras para somar EXATAMENTE 10 ºC (+4 Enxofre, +6 Brasas, +7 Magma, -3 Obsidiana) para abrir o Núcleo do Eclipse!\nMISSÃO DA FORJA: Aproxime-se da Forja Central [E] para forjar a LÂMINA DO FOGO ESTELAR (DoT) e queimar as sombras de Kharon!'
       );
 
       // 4 Caldeiras Térmicas com valores combinatórios (+4, +6, +7, -3)
@@ -6360,11 +6487,11 @@ class GameEngine {
       }
 
       const currentHeat = this.magmaValves.reduce((acc, v) => acc + (v.isOpen ? v.heatValue : 0), 0);
-      const magmaUnlocked = Boolean(this.player.swordLevel >= 2 && currentHeat === 10);
+      const magmaUnlocked = currentHeat === 10;
       this.portal = new AreaPortal(
         31 * CONFIG.TILE_SIZE, 5 * CONFIG.TILE_SIZE,
         'VOID_CORE', 'Núcleo do Eclipse', true,
-        !magmaUnlocked, 'Ajuste as 4 caldeiras para 10 ºC e forje a Espada Estelar'
+        !magmaUnlocked, 'Ajuste as 4 caldeiras para exatamente 10 ºC'
       );
 
     } else if (areaType === 'VOID_CORE') {
@@ -6402,11 +6529,17 @@ class GameEngine {
         ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Monólito Glacial')]
         : [];
 
-      // Tabuleta da Provação do Gelo (Raio Astral contra Trinit)
+      // Relicário Glacial de Luz (Missão Separada para o Raio Astral [C])
+      this.powerAltars = [
+        new PowerMissionAltar(centerX - 80, centerY + 80, 'ASTRAL_BEAM', 'Relicário Glacial de Luz', 'Canalizar o Raio Astral [C]', 'O feixe cósmico foi canalizado no cajado! Pressione [C] ou [X] para disparar!', '#38bdf8', '🏹')
+      ];
+      if (this.player.hasAstralBeam) this.powerAltars[0].claimed = true;
+
+      // Tabuleta da Geleira de Niflheim
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 60,
-        'Tabuleta da Provação do Gelo',
-        'PROVAÇÃO DO GELO: Trinit se divide em uma Tríade de Clones em rotação perpétua com tempestades congelantes em volta, tornando a aproximação letal! Posicione-se ao sul do Prisma Alfa e dispare seu feixe pelo cajado para o norte. Ajuste a rotação dos 3 Prismas Glaciais [E] para guiar o feixe sucessivamente em 90 graus até a Runa no leste. A refração pura concederá o RAIO ASTRAL [C], permitindo snipar a Tríade de Trinit à distância com precisão cirúrgica!'
+        'Tabuleta da Geleira de Niflheim',
+        'ENIGMA DO PORTAL: Ajuste a rotação dos 3 Prismas Glaciais [E] e dispare do sul para o norte para guiar o feixe até a Runa Glacial e abrir a Arena de Trinit!\nMISSÃO DO RELICÁRIO: Aproxime-se do Relicário Glacial [E] para despertar o RAIO ASTRAL [C] e abater a Tríade de Trinit à distância com precisão cirúrgica!'
       );
 
       // 3 Prismas Glaciais
@@ -6466,11 +6599,17 @@ class GameEngine {
         ? [new CheckpointMonument(centerX, centerY + 80, 'Relicário de Cronos')]
         : [];
 
-      // Tabuleta da Provação do Tempo (Lente de Cronos contra Mirage)
+      // Relicário das Areias de Cronos (Missão Separada para a Lente de Cronos)
+      this.powerAltars = [
+        new PowerMissionAltar(centerX, centerY, 'CHRONOS_LENS', 'Relicário das Areias de Cronos', 'Absorver a Lente de Cronos', 'A Lente Espectral de Cronos revelará o Mirage verdadeiro entre os fantasmas!', '#facc15', '⏳')
+      ];
+      if (this.player.hasChronosLens) this.powerAltars[0].claimed = true;
+
+      // Estela do Templo de Cronos
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX, centerY - 64,
-        'Estela da Provação do Tempo',
-        'PROVAÇÃO DO TEMPO: Mirage, o Senhor dos Reflexos, invocará 2 clones fantasmas idênticos e invulneráveis para confundi-lo! Dispare o Raio Astral [C] para ativar os 3 Totens distantes (Passado, Presente e Futuro). Cada um ressoa por 6 segundos. Mantenha os 3 acesos simultaneamente para despertar a LENTE ESPECTRAL DE CRONOS, que fará o Mirage verdadeiro emitir um brilho dourado confirmatório ao ser golpeado!'
+        'Estela do Templo de Cronos',
+        'ENIGMA DO PORTAL: Dispare o Raio Astral [C] para ativar os 3 Totens distantes sobre os fossos simultaneamente em até 6 segundos para abrir o Nexus de Mirage!\nMISSÃO DO RELICÁRIO: Aproxime-se do Relicário de Cronos [E] no centro para absorver a LENTE ESPECTRAL, capaz de desmascarar os clones de Mirage!'
       );
 
       // 3 Totens Temporais de Cronos isolados sobre fossos
@@ -6527,11 +6666,17 @@ class GameEngine {
         ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Lanterna do Vazio')]
         : [];
 
-      // Tabuleta da Provação do Abismo (Lanterna Astral contra Nocturnus)
+      // Braseiro da Chama Astral (Missão Separada para a Lanterna Astral da Verdade)
+      this.powerAltars = [
+        new PowerMissionAltar(centerX, centerY, 'ASTRAL_LANTERN', 'Braseiro da Chama Astral', 'Acender a Lanterna da Verdade', 'A Lanterna Astral da Verdade foi acesa! Imunidade total à lentidão do Vazio concedida!', '#22d3ee', '🕯️')
+      ];
+      if (this.player.hasAstralLantern) this.powerAltars[0].claimed = true;
+
+      // Tabuleta do Labirinto das Sombras
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 60,
-        'Tabuleta da Provação do Abismo',
-        'PROVAÇÃO DO ABISMO: Nocturnus inunda a arena com poços de vácuo negro que drenam o vigor e causam paralisia/lentidão extrema! Ao tocar [E] ou atingir os 4 orbes da rede lógica com o Raio Astral [C], inverta os vizinhos até manter todos os 4 orbes acesos simultaneamente. A matriz despertará a LANTERNA ASTRAL DA VERDADE, garantindo IMUNIDADE TOTAL À LENTIDÃO DO VAZIO!'
+        'Tabuleta do Labirinto das Sombras',
+        'ENIGMA DO PORTAL: Ao tocar [E] ou atingir os 4 orbes da rede lógica com o Raio Astral [C], inverta os vizinhos até manter todos os 4 orbes acesos para abrir o Santuário de Nocturnus!\nMISSÃO DO BRASEIRO: Aproxime-se do Braseiro da Chama Astral [E] no centro para acender a LANTERNA ASTRAL e anular a paralisia do vácuo de Nocturnus!'
       );
 
       // 4 Orbes Lógicos Interligados
@@ -6639,79 +6784,67 @@ class GameEngine {
       const allHarmonized = this.harmonicCrystals.length > 0 && this.harmonicCrystals.every(c => c.activated);
       if (this.player.hasAuroraGem && allHarmonized && this.portal.locked) {
         this.portal.locked = false;
-        this.player.hasColossusPower = true; // Desperta Pisão Sísmico [R] contra Malakar!
         this.player.health = this.player.maxHealth;
         this.audio.playVictory();
         this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#38bdf8', speed: 120 });
-        this.showNotification('MISTÉRIO RESOLVIDO!', 'A Ressonância Telúrica despertou o Pisão Sísmico [R] contra Malakar!');
-        document.getElementById('power-unlock-banner').classList.remove('hidden');
-        this.gameState = 'DIALOGUE';
+        this.showNotification('PORTAL DESBLOQUEADO!', 'O enigma dos cristais foi resolvido! O Santuário de Malakar está aberto! Visite o Altar Telúrico [E] para absorver o Pisão Sísmico [R]!');
         this.updateHUD();
       }
     } else if (this.currentArea === 'SKY_ISLANDS') {
       const allAligned = this.windCompasses.length > 0 && this.windCompasses.every(w => w.isAligned());
       if (allAligned && this.portal.locked) {
         this.portal.locked = false;
-        this.player.hasSword = true; // Forja a Espada Celeste [F] contra Valdor!
         this.player.health = this.player.maxHealth;
         this.audio.playVictory();
         this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#facc15', speed: 120 });
-        this.showNotification('CONVERGÊNCIA DOS VENTOS!', 'A condensação dos ventos forjou a Espada Celeste [F] contra Valdor!');
-        document.getElementById('sword-unlock-banner').classList.remove('hidden');
-        this.gameState = 'DIALOGUE';
+        this.showNotification('PORTAL DESBLOQUEADO!', 'A Rosa dos Ventos convergiu e abriu o Trono de Valdor! Desembainhe a Espada Celeste [F] na Rocha Sagrada [E]!');
         this.updateHUD();
       }
     } else if (this.currentArea === 'MAGMA_CORE') {
       const currentHeat = this.magmaValves.reduce((acc, v) => acc + (v.isOpen ? v.heatValue : 0), 0);
       const tempReady = currentHeat === 10;
-      const swordForged = this.player.swordLevel >= 2;
-      if (tempReady && swordForged && this.portal.locked) {
+      if (tempReady && this.portal.locked) {
         this.portal.locked = false;
         this.player.health = this.player.maxHealth;
         this.audio.playVictory();
         this.camera.shake(16);
         this.particles.emit(this.portal.x, this.portal.y, 50, { color: '#f97316', speed: 130 });
-        this.showNotification('FORJA VULCÂNICA ATIVADA!', 'Lâmina do Fogo Estelar pronta para queimar as sombras de Kharon!');
+        this.showNotification('PORTAL DESBLOQUEADO!', 'A pressão térmica estabilizou em 10 ºC e abriu a arena de Kharon! Aproxime-se da Forja [E] para forjar a Lâmina do Fogo Estelar!');
         this.updateHUD();
       }
     } else if (this.currentArea === 'FROZEN_TUNDRA') {
       const runeActive = this.iceRune && this.iceRune.activated;
       if (runeActive && this.portal.locked) {
         this.portal.locked = false;
-        this.player.hasAstralBeam = true; // Desperta o Raio Astral [C] contra Trinit!
         this.player.health = this.player.maxHealth;
         this.audio.playVictory();
         this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#38bdf8', speed: 120 });
-        this.showNotification('REFRAÇÃO PERFEITA!', 'O Feixe Glacial despertou o Raio Astral [C] contra Trinit!');
-        document.getElementById('beam-unlock-banner').classList.remove('hidden');
-        this.gameState = 'DIALOGUE';
+        this.showNotification('PORTAL DESBLOQUEADO!', 'A refração da luz descongelou a passagem para a Arena de Trinit! Visite o Relicário Glacial [E] para despertar o Raio Astral [C]!');
         this.updateHUD();
       }
     } else if (this.currentArea === 'CHRONOS_TEMPLE') {
       const allChronos = this.chronosTotems.length === 3 && this.chronosTotems.every(t => t.activeTimer > 0);
       if (allChronos && this.portal.locked) {
         this.portal.locked = false;
-        this.player.hasChronosLens = true; // Desperta a Lente de Cronos contra Mirage!
         this.player.health = this.player.maxHealth;
         this.audio.playVictory();
         this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#facc15', speed: 120 });
-        this.showNotification('SINCRONIA TEMPORAL!', 'LENTE DE CRONOS DESPERTA! Revelará o Mirage verdadeiro entre os fantasmas!');
+        this.showNotification('PORTAL DESBLOQUEADO!', 'O alinhamento temporal abriu o Nexus de Mirage! Visite o Relicário das Areias de Cronos [E] para adquirir a Lente de Cronos!');
         this.updateHUD();
       }
     } else if (this.currentArea === 'SHADOW_LABYRINTH') {
       const allOrbsOn = this.shadowOrbs.length === 4 && this.shadowOrbs.every(o => o.isOn);
       if (allOrbsOn && this.portal.locked) {
         this.portal.locked = false;
-        this.player.hasAstralLantern = true; // Desperta a Lanterna Astral contra Nocturnus!
         this.player.health = this.player.maxHealth;
         this.audio.playVictory();
         this.camera.shake(16);
         this.particles.emit(this.portal.x, this.portal.y, 50, { color: '#22d3ee', speed: 130 });
-        this.showNotification('MATRIZ ESPECTRAL!', 'LANTERNA ASTRAL ILUMINADA! Imunidade total à lentidão do Vazio de Nocturnus!');
+        this.showNotification('PORTAL DESBLOQUEADO!', 'A matriz de orbes abriu o Santuário de Nocturnus! Aproxime-se do Braseiro da Chama Astral [E] para acender a Lanterna da Verdade!');
         this.updateHUD();
       }
     }
@@ -6820,6 +6953,40 @@ class GameEngine {
         this.gameState = 'PLAYING';
       });
     }
+
+    const closeChronosBtn = document.getElementById('close-chronos-banner-btn');
+    if (closeChronosBtn) {
+      closeChronosBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('chronos-unlock-banner').classList.add('hidden');
+        this.gameState = 'PLAYING';
+      });
+    }
+
+    const chronosBanner = document.getElementById('chronos-unlock-banner');
+    if (chronosBanner) {
+      chronosBanner.addEventListener('click', () => {
+        chronosBanner.classList.add('hidden');
+        this.gameState = 'PLAYING';
+      });
+    }
+
+    const closeShadowBtn = document.getElementById('close-shadow-banner-btn');
+    if (closeShadowBtn) {
+      closeShadowBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('shadow-unlock-banner').classList.add('hidden');
+        this.gameState = 'PLAYING';
+      });
+    }
+
+    const shadowBanner = document.getElementById('shadow-unlock-banner');
+    if (shadowBanner) {
+      shadowBanner.addEventListener('click', () => {
+        shadowBanner.classList.add('hidden');
+        this.gameState = 'PLAYING';
+      });
+    }
   }
 
   triggerDialogue(name, avatar, lines) {
@@ -6843,17 +7010,23 @@ class GameEngine {
       const swordBanner = document.getElementById('sword-unlock-banner');
       const burnBanner = document.getElementById('burn-unlock-banner');
       const beamBanner = document.getElementById('beam-unlock-banner');
+      const chronosBanner = document.getElementById('chronos-unlock-banner');
+      const shadowBanner = document.getElementById('shadow-unlock-banner');
       const pOpen = powerBanner && !powerBanner.classList.contains('hidden');
       const sOpen = swordBanner && !swordBanner.classList.contains('hidden');
       const bOpen = burnBanner && !burnBanner.classList.contains('hidden');
       const bmOpen = beamBanner && !beamBanner.classList.contains('hidden');
+      const cOpen = chronosBanner && !chronosBanner.classList.contains('hidden');
+      const shOpen = shadowBanner && !shadowBanner.classList.contains('hidden');
 
-      if (pOpen || sOpen || bOpen || bmOpen) {
+      if (pOpen || sOpen || bOpen || bmOpen || cOpen || shOpen) {
         if (this.input.consumeAttack() || this.input.consumeInteract() || this.input.consumeSpecial() || this.input.consumeDash() || this.input.consumeBeam()) {
           if (pOpen) powerBanner.classList.add('hidden');
           if (sOpen) swordBanner.classList.add('hidden');
           if (bOpen) burnBanner.classList.add('hidden');
           if (bmOpen) beamBanner.classList.add('hidden');
+          if (cOpen) chronosBanner.classList.add('hidden');
+          if (shOpen) shadowBanner.classList.add('hidden');
           this.gameState = 'PLAYING';
         }
       } else {
@@ -7340,6 +7513,16 @@ class GameEngine {
         }
       }
 
+      // 9.5 Interação com Altares Sagrados de Missão de Poder e Armas (Caverna, Céus, Tundra, Cronos, Sombras)
+      if (this.powerAltars && this.powerAltars.length > 0) {
+        for (let altar of this.powerAltars) {
+          const nearAltar = altar.update(this.player, dt);
+          if (nearAltar && !altar.claimed && this.input.consumeInteract()) {
+            altar.claim(this);
+          }
+        }
+      }
+
       // 10. Interação com Monólitos de Checkpoint (Desaparece imediatamente ao ser descoberto!)
       if (this.checkpointMonuments.length > 0) {
         for (let i = this.checkpointMonuments.length - 1; i >= 0; i--) {
@@ -7684,6 +7867,14 @@ class GameEngine {
       const nearForge = Math.hypot(this.player.x - this.forgeAltar.x, this.player.y - this.forgeAltar.y) < 54;
       const currentHeat = this.magmaValves.length > 0 ? this.magmaValves.reduce((acc, v) => acc + (v.isOpen ? v.heatValue : 0), 0) : null;
       this.forgeAltar.draw(this.ctx, this.camera, nearForge, currentHeat);
+    }
+
+    // Altares Sagrados de Missão de Poder e Armas (Caverna, Céus, Tundra, Cronos, Sombras)
+    if (this.powerAltars && this.powerAltars.length > 0) {
+      this.powerAltars.forEach(altar => {
+        const nearAltar = Math.hypot(this.player.x - altar.x, this.player.y - altar.y) < 52;
+        altar.draw(this.ctx, this.camera, nearAltar);
+      });
     }
 
     // Monólitos de Checkpoint das Fases
