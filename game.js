@@ -958,7 +958,7 @@ class AstralBeamProjectile extends Entity {
     this.trail = [];
   }
 
-  update(map, dt, particles, icePrisms = [], iceRune = null, chronosTotems = [], shadowOrbs = [], boss = null, enemies = [], audio = null, camera = null, game = null) {
+  update(map, dt, particles, icePrisms = [], iceRune = null, chronosTotems = [], shadowOrbs = [], boss = null, enemies = [], audio = null, camera = null, game = null, aetherMonoliths = []) {
     this.x += this.vx * dt;
     this.y += this.vy * dt;
 
@@ -1062,13 +1062,95 @@ class AstralBeamProjectile extends Entity {
       }
     }
 
+    // 4.5 REFLEXÃO NOS MONÓLITOS CELESTIAIS DE ÉTER (Fase 14 - Mega Chefe Final Aethon)
+    if (aetherMonoliths && Array.isArray(aetherMonoliths)) {
+      for (let monolith of aetherMonoliths) {
+        if (!this.reflectedPrisms.has(monolith) && this.intersects(monolith)) {
+          this.reflectedPrisms.add(monolith);
+          this.visitedPrisms.add(monolith.id !== undefined ? monolith.id : monolith.name);
+          monolith.onReflect(this, audio, particles);
+
+          const count = this.visitedPrisms.size;
+          if (count === 1) {
+            this.color = '#ef4444'; // Chama Astral Carmesim
+            this.glowColor = '#fca5a5';
+          } else if (count === 2) {
+            this.color = '#06b6d4'; // Gelo Cósmico
+            this.glowColor = '#a5f3fc';
+          } else if (count === 3) {
+            this.color = '#eab308'; // Trovão Estelar
+            this.glowColor = '#fef08a';
+          } else if (count >= 4 && !this.isHarmonized) {
+            this.isHarmonized = true;
+            this.color = '#c084fc'; // SUPER RAIO CÓSMICO DO ÉTER!
+            this.glowColor = '#f0abfc';
+            this.damage = 10;
+            if (audio && typeof audio.playVictory === 'function') audio.playVictory();
+            if (particles && typeof particles.emit === 'function') {
+              particles.emit(this.x, this.y, 45, { color: '#c084fc', speed: 150, life: 1.2 });
+            }
+            if (game && typeof game.showNotification === 'function') {
+              game.showNotification('RESSONÂNCIA TETRADIMENSIONAL!', 'Super Raio Cósmico canalizado! Convergindo no Núcleo de Aethon!');
+            }
+          }
+          break;
+        }
+      }
+    }
+
     // 5. CHEFES: Encontra o alvo e é eliminado
     if (boss && boss.alive && !this.hitEntities.has(boss) && boss.intersects && boss.intersects(this)) {
-      if (boss.shieldActive && typeof boss.breakShield === 'function') {
-        boss.breakShield(audio, camera, particles);
+      if (boss instanceof BossAethon) {
+        if (boss.isStasis) {
+          // Chefe ainda em estase antes da luta: precisa do Super Raio (4 monólitos) para despertar!
+          if (this.isHarmonized && this.visitedPrisms.size >= 4) {
+            boss.awaken(audio, camera, particles, game);
+            this.hitEntities.add(boss);
+            this.alive = false;
+            return;
+          } else {
+            // Tiro direto ou feixe incompleto: refletido pelo cristal de estase!
+            if (audio && typeof audio.playHit === 'function') audio.playHit();
+            if (particles && typeof particles.emit === 'function') {
+              particles.emit(this.x, this.y, 16, { color: '#38bdf8', speed: 80 });
+            }
+            if (game && typeof game.showNotification === 'function') {
+              game.showNotification('SELO DE ESTASE IMPENETRÁVEL!', 'Alinhe os 4 Monólitos [E] e dispare o Raio Astral [C] para despertar o Arquiteto!');
+            }
+            this.hitEntities.add(boss);
+            this.alive = false;
+            return;
+          }
+        } else if (boss.shieldActive) {
+          // Durante a luta: o escudo só quebra se o tiro tiver passado pelos 4 monólitos!
+          if (this.isHarmonized && this.visitedPrisms.size >= 4) {
+            boss.breakShield(audio, camera, particles, game);
+          } else {
+            // Tiro direto sem enigma: repelido!
+            if (audio && typeof audio.playHit === 'function') audio.playHit();
+            if (particles && typeof particles.emit === 'function') {
+              particles.emit(this.x, this.y, 14, { color: '#38bdf8', speed: 70 });
+            }
+            if (game && typeof game.showNotification === 'function') {
+              game.showNotification('ESCUDO IMUTÁVEL!', 'Aethon repele ataques diretos! Guie o feixe pelos 4 Monólitos [C]!');
+            }
+            this.hitEntities.add(boss);
+            this.alive = false;
+            return;
+          }
+        } else {
+          // Escudo quebrado: dano normal!
+          boss.takeDamage(this.damage, audio, camera, particles, game);
+          if (this.hasBurn && typeof boss.applyBurn === 'function') boss.applyBurn(4.0);
+        }
       } else {
-        boss.takeDamage(this.damage, this, audio, camera, particles, game);
-        if (this.hasBurn && typeof boss.applyBurn === 'function') boss.applyBurn(4.0);
+        // Outros chefes
+        if (boss.shieldActive && typeof boss.breakShield === 'function') {
+          boss.breakShield(audio, camera, particles);
+        } else {
+          boss.takeDamage(this.damage, this, audio, camera, particles, game);
+          if (this.hasBurn && typeof boss.applyBurn === 'function') boss.applyBurn(4.0);
+        }
       }
       this.hitEntities.add(boss);
       this.alive = false; // Eliminado ao atingir o alvo!
@@ -3752,6 +3834,160 @@ class ShadowLogicOrb extends Entity {
   }
 }
 
+// ============================================================================
+// ENIGMA DO CHEFE FINAL (FASE 14): MONÓLITO CELESTIAL DE REFRAÇÃO DIMENSIONAL
+// ============================================================================
+class AetherMonolith extends Entity {
+  constructor(x, y, id, rotation = 0, name = 'Monólito Dimensional', color = '#38bdf8', rune = '♈') {
+    super(x, y, 40, 48);
+    this.id = id;
+    this.name = name;
+    // rotation:
+    // 0: '/' (NE-SW diagonal: UP->RIGHT, LEFT->DOWN, DOWN->LEFT, RIGHT->UP)
+    // 1: '\' (NW-SE diagonal: UP->LEFT, RIGHT->DOWN, DOWN->RIGHT, LEFT->UP)
+    this.rotation = rotation;
+    this.color = color;
+    this.rune = rune;
+    this.anim = Math.random() * Math.PI * 2;
+    this.pulse = 0;
+  }
+
+  update(player, dt) {
+    this.anim += dt * 2.5;
+    this.pulse = Math.sin(this.anim) * 0.5 + 0.5;
+    return Math.hypot(player.x - this.x, player.y - this.y) < 54;
+  }
+
+  rotate(audio, particles) {
+    this.rotation = (this.rotation + 1) % 2;
+    if (audio && typeof audio.playPrismRotate === 'function') audio.playPrismRotate();
+    if (particles && typeof particles.emit === 'function') {
+      particles.emit(this.x, this.y, 22, { color: this.color, speed: 95, life: 0.8 });
+    }
+  }
+
+  onReflect(beam, audio, particles) {
+    const spd = beam.speed;
+    const curVx = beam.vx;
+    const curVy = beam.vy;
+
+    beam.x = this.x;
+    beam.y = this.y;
+
+    if (this.rotation === 0) {
+      // Espelho '/' (Diagonal NE-SW)
+      if (curVy < -50) { beam.vx = spd; beam.vy = 0; }
+      else if (curVx < -50) { beam.vx = 0; beam.vy = spd; }
+      else if (curVy > 50) { beam.vx = -spd; beam.vy = 0; }
+      else if (curVx > 50) { beam.vx = 0; beam.vy = -spd; }
+    } else {
+      // Espelho '\' (Diagonal NW-SE)
+      if (curVy < -50) { beam.vx = -spd; beam.vy = 0; }
+      else if (curVx > 50) { beam.vx = 0; beam.vy = spd; }
+      else if (curVy > 50) { beam.vx = spd; beam.vy = 0; }
+      else if (curVx < -50) { beam.vx = 0; beam.vy = -spd; }
+    }
+
+    if (audio && typeof audio.playPrismRotate === 'function') audio.playPrismRotate();
+    if (particles && typeof particles.emit === 'function') {
+      particles.emit(this.x, this.y, 25, { color: this.color, speed: 120 });
+    }
+  }
+
+  draw(ctx, camera, isNear, allMonoliths = []) {
+    const sx = this.x - camera.x;
+    const sy = this.y - camera.y;
+
+    ctx.save();
+    ctx.translate(sx, sy);
+
+    // Sombra do Monólito
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.beginPath();
+    ctx.ellipse(0, 18, 20, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Pedestal de Obsidiana Celestial
+    ctx.fillStyle = '#0f172a';
+    ctx.beginPath();
+    ctx.moveTo(-18, 16);
+    ctx.lineTo(18, 16);
+    ctx.lineTo(14, -8);
+    ctx.lineTo(-14, -8);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Runa Elemental gravada no pedestal
+    ctx.font = '14px sans-serif';
+    ctx.fillStyle = this.color;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(this.rune, 0, 4);
+
+    // Prisma Refratário Flutuante
+    const floatY = -18 + Math.sin(this.anim) * 3;
+    ctx.save();
+    ctx.translate(0, floatY);
+
+    // Aura do prisma
+    ctx.shadowColor = this.color;
+    ctx.shadowBlur = 14;
+
+    // Espelho de Quartzo Celestial
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 4.5;
+    ctx.beginPath();
+    if (this.rotation === 0) {
+      // '/'
+      ctx.moveTo(-12, 12);
+      ctx.lineTo(12, -12);
+    } else {
+      // '\'
+      ctx.moveTo(-12, -12);
+      ctx.lineTo(12, 12);
+    }
+    ctx.stroke();
+
+    // Núcleo de Cristal
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(0, 0, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.restore();
+
+    // Prompt de Interação [E]
+    if (isNear) {
+      ctx.save();
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 3;
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center';
+      const promptY = sy - 44;
+      ctx.strokeText(`[E] Alinhar ${this.name}`, sx, promptY);
+      ctx.fillText(`[E] Alinhar ${this.name}`, sx, promptY);
+
+      // Guia de Alinhamento
+      const isAligned = (this.id === 0 && this.rotation === 0) ||
+                        (this.id === 1 && this.rotation === 1) ||
+                        (this.id === 2 && this.rotation === 0) ||
+                        (this.id === 3 && this.rotation === 1);
+      const orientText = isAligned ? '✨ ALINHADO AO CIRCUITO!' : '⚠️ DESALINHADO! Pressione [E]';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillStyle = isAligned ? '#4ade80' : '#f87171';
+      ctx.strokeText(orientText, sx, promptY + 14);
+      ctx.fillText(orientText, sx, promptY + 14);
+      ctx.restore();
+    }
+  }
+}
+
 // 6. CHEFE 4 (FASE 9): TRINIT, A TRÍADE GLACIAL
 class BossTrinit extends Entity {
   constructor(x, y) {
@@ -4819,14 +5055,17 @@ class BossNocturnus extends Entity {
 class BossAethon extends Entity {
   constructor(x, y) {
     super(x, y, 54, 54);
+    this.name = 'AETHON, O ARQUITETO DAS DIMENSÕES';
     this.maxHealth = 85;
     this.health = 85;
     this.state = 'HOVER';
     this.timer = 0;
     this.animTime = 0;
     this.hitTimer = 0;
+    this.isStasis = true; // Inicia em estase dimensional (Enigma inicial antes de começar a batalha!)
     this.shieldActive = true;
     this.shieldBrokenTimer = 0;
+    this.phase2Triggered = false;
     this.projectiles = [];
     this.shockwaves = [];
     this.isBurning = false;
@@ -4840,22 +5079,65 @@ class BossAethon extends Entity {
     this.burnTickTimer = 0.8;
   }
 
-  breakShield(audio, camera, particles) {
-    if (!this.shieldActive) return;
-    this.shieldActive = false;
-    this.shieldBrokenTimer = 5.5; // 5.5 segundos vulnerável a ataques de Espada e Cajado!
-    if (audio && typeof audio.playShockwave === 'function') audio.playShockwave();
-    if (audio && typeof audio.playBeamHit === 'function') audio.playBeamHit();
-    if (camera && typeof camera.shake === 'function') camera.shake(16);
+  awaken(audio, camera, particles, game) {
+    if (!this.isStasis) return;
+    this.isStasis = false;
+    this.shieldActive = true;
+    this.shieldBrokenTimer = 0;
+    if (audio && typeof audio.playVictory === 'function') audio.playVictory();
+    if (audio && typeof audio.playBossRoar === 'function') audio.playBossRoar();
+    if (camera && typeof camera.shake === 'function') camera.shake(25);
     if (particles && typeof particles.emit === 'function') {
-      particles.emit(this.x, this.y, 45, { color: '#38bdf8', speed: 140, life: 1.2 });
+      particles.emit(this.x, this.y, 100, { color: '#facc15', speed: 220, life: 2.5 });
+      particles.emit(this.x, this.y, 80, { color: '#818cf8', speed: 180, life: 2.0 });
+    }
+    const bossHud = document.getElementById('boss-hud');
+    if (bossHud) {
+      document.getElementById('boss-name').textContent = 'AETHON, O ARQUITETO DAS DIMENSÕES';
+      bossHud.classList.remove('hidden');
+    }
+    if (game && typeof game.showAreaBanner === 'function') {
+      game.showAreaBanner('AETHON DESPERTO!', 'O Confronto Final Supremo Começou!');
+    }
+    if (game && typeof game.showNotification === 'function') {
+      game.showNotification('SELO PRIMORDIAL ROMPIDO!', 'Aethon despertou! Desvie dos golpes e quebre sua barreira com os Monólitos!');
+    }
+    if (game) {
+      const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
+      const centerY = (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE) / 2;
+      game.enemies = [
+        new EnemyCreature(centerX - 120, centerY, 'AETHER'),
+        new EnemyCreature(centerX + 120, centerY, 'AETHER')
+      ];
     }
   }
 
-  update(player, map, dt, audio, particles, camera, playerProjectiles, enemies) {
+  breakShield(audio, camera, particles, game) {
+    if (!this.shieldActive) return;
+    this.shieldActive = false;
+    this.shieldBrokenTimer = 7.0; // 7 segundos vulnerável a ataques de Espada e Cajado!
+    if (audio && typeof audio.playShockwave === 'function') audio.playShockwave();
+    if (audio && typeof audio.playBeamHit === 'function') audio.playBeamHit();
+    if (audio && typeof audio.playVictory === 'function') audio.playVictory();
+    if (camera && typeof camera.shake === 'function') camera.shake(18);
+    if (particles && typeof particles.emit === 'function') {
+      particles.emit(this.x, this.y, 60, { color: '#c084fc', speed: 160, life: 1.5 });
+      particles.emit(this.x, this.y, 40, { color: '#38bdf8', speed: 120, life: 1.2 });
+    }
+    if (game && typeof game.showNotification === 'function') {
+      game.showNotification('BARREIRA DIMENSIONAL COLAPSADA!', 'O Arquiteto está vulnerável! Ataque com a Espada e Feitiços!');
+    }
+  }
+
+  update(player, map, dt, audio, particles, camera, playerProjectiles, enemies, game = null) {
     this.timer += dt;
     this.animTime += dt * 3.5;
     if (this.hitTimer > 0) this.hitTimer -= dt;
+
+    // Em estase antes da luta: apenas flutua e aguarda o feixe dos 4 monólitos
+    if (this.isStasis) {
+      return;
+    }
 
     if (!this.shieldActive) {
       this.shieldBrokenTimer -= dt;
@@ -4922,7 +5204,6 @@ class BossAethon extends Entity {
 
       case 'WARP_STRIKE':
         if (camera && typeof camera.shake === 'function') camera.shake(10);
-        // Teleporta para um quadrante da arena
         const angles = [0.25, 0.75, 1.25, 1.75];
         const ang = angles[Math.floor(Math.random() * angles.length)] * Math.PI;
         const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
@@ -4950,7 +5231,7 @@ class BossAethon extends Entity {
     // Dano corpo a corpo com a Espada
     if (player.isAttacking && player.attackHitbox && this.hitTimer <= 0) {
       if (this.intersects(player.attackHitbox)) {
-        if (this.shieldActive) {
+        if (this.shieldActive || this.isStasis) {
           if (audio && typeof audio.playHit === 'function') audio.playHit();
           if (camera && typeof camera.shake === 'function') camera.shake(3);
           if (particles && typeof particles.emit === 'function') {
@@ -4958,7 +5239,7 @@ class BossAethon extends Entity {
           }
         } else {
           const dmg = player.activeWeapon === 'SWORD' ? (player.swordLevel === 2 ? 3 : 2) : 1;
-          this.takeDamage(dmg, audio, camera, particles);
+          this.takeDamage(dmg, audio, camera, particles, game);
           if (player.hasBurnPower) this.applyBurn(4.0);
         }
       }
@@ -4969,13 +5250,13 @@ class BossAethon extends Entity {
       if (this.intersects(playerProjectiles[i])) {
         const p = playerProjectiles[i];
         p.alive = false;
-        if (this.shieldActive) {
+        if (this.shieldActive || this.isStasis) {
           if (audio && typeof audio.playHit === 'function') audio.playHit();
           if (particles && typeof particles.emit === 'function') {
             particles.emit(this.x, this.y, 6, { color: '#38bdf8', speed: 50 });
           }
         } else {
-          this.takeDamage(p.damage, audio, camera, particles);
+          this.takeDamage(p.damage, audio, camera, particles, game);
           if (p.hasBurn || player.hasBurnPower) this.applyBurn(4.0);
         }
       }
@@ -4988,13 +5269,54 @@ class BossAethon extends Entity {
     if (hpText) hpText.textContent = `${Math.ceil(hpPct)}%`;
   }
 
-  takeDamage(amount, audio, camera, particles) {
+  takeDamage(amount, ...args) {
     this.health -= amount;
     this.hitTimer = 0.22;
+
+    let audio = null, camera = null, particles = null, game = null;
+    for (let arg of args) {
+      if (!arg) continue;
+      if (typeof arg.playHit === 'function') audio = arg;
+      else if (typeof arg.shake === 'function') camera = arg;
+      else if (typeof arg.emit === 'function') particles = arg;
+      else if (arg.aetherMonoliths !== undefined) game = arg;
+    }
+
     if (audio && typeof audio.playHit === 'function') audio.playHit();
     if (camera && typeof camera.shake === 'function') camera.shake(7);
     if (particles && typeof particles.emit === 'function') {
       particles.emit(this.x, this.y, 14, { color: '#818cf8', speed: 100 });
+    }
+
+    // FASE 2: COLAPSO DIMENSIONAL (50% HP)
+    if (this.health <= 42 && !this.phase2Triggered) {
+      this.phase2Triggered = true;
+      this.shieldActive = true;
+      this.shieldBrokenTimer = 0;
+      this.state = 'WARP_STRIKE';
+
+      const centerX = (CONFIG.MAP_COLS * CONFIG.TILE_SIZE) / 2;
+      const centerY = (CONFIG.MAP_ROWS * CONFIG.TILE_SIZE) / 2;
+      this.x = centerX;
+      this.y = centerY - 40;
+
+      // Distorce os monólitos 1 e 3 da rede
+      if (game && game.aetherMonoliths && game.aetherMonoliths.length >= 4) {
+        game.aetherMonoliths[1].rotate(audio, particles);
+        game.aetherMonoliths[3].rotate(audio, particles);
+      }
+
+      if (audio && typeof audio.playBossRoar === 'function') audio.playBossRoar();
+      if (camera && typeof camera.shake === 'function') camera.shake(22);
+      if (particles && typeof particles.emit === 'function') {
+        particles.emit(this.x, this.y, 80, { color: '#ef4444', speed: 170, life: 1.8 });
+      }
+      if (game && typeof game.showAreaBanner === 'function') {
+        game.showAreaBanner('COLAPSO DAS DIMENSÕES!', 'O Arquiteto distorceu os Monólitos!');
+      }
+      if (game && typeof game.showNotification === 'function') {
+        game.showNotification('REDE DISTORCIDA!', 'Reajuste os Monólitos [E] e dispare o Raio [C] para romper o escudo final!');
+      }
     }
 
     if (this.health <= 0) {
@@ -5015,8 +5337,37 @@ class BossAethon extends Entity {
     ctx.save();
     ctx.translate(sx, sy);
 
-    // Escudo Dimensional Impenetrável
-    if (this.shieldActive) {
+    // Cúpula Estelar de Estase Primordial (Antes de despertar)
+    if (this.isStasis) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(192, 132, 252, 0.85)';
+      ctx.lineWidth = 4;
+      ctx.shadowColor = '#c084fc';
+      ctx.shadowBlur = 24;
+      ctx.beginPath();
+      const r = 50 + Math.sin(this.animTime * 2) * 3;
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2 + this.animTime * 0.5;
+        const px = Math.cos(a) * r;
+        const py = Math.sin(a) * r;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(192, 132, 252, 0.2)';
+      ctx.fill();
+
+      // Glifo Central
+      ctx.font = '16px sans-serif';
+      ctx.fillStyle = '#facc15';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🔒', 0, 0);
+      ctx.restore();
+    } else if (this.shieldActive) {
+      // Escudo Dimensional Impenetrável
       ctx.save();
       ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
       ctx.lineWidth = 3.5;
@@ -5094,24 +5445,33 @@ class BossAethon extends Entity {
 
     ctx.restore();
 
-    // Alerta de Escudo Dimensional
-    if (this.shieldActive) {
+    // Alerta de Escudo / Estase Dimensional
+    if (this.isStasis) {
       ctx.save();
-      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.font = 'bold 9px monospace';
+      ctx.fillStyle = '#c084fc';
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 6;
+      ctx.textAlign = 'center';
+      ctx.fillText('🔒 SELO PRIMORDIAL - ALINHE OS 4 MONÓLITOS [E] & USE [C]', sx, sy - 54);
+      ctx.restore();
+    } else if (this.shieldActive) {
+      ctx.save();
+      ctx.font = 'bold 9px monospace';
       ctx.fillStyle = '#38bdf8';
       ctx.shadowColor = '#000000';
       ctx.shadowBlur = 6;
       ctx.textAlign = 'center';
-      ctx.fillText('🛡️ ESCUDO IMPENETRÁVEL! Use [C]', sx, sy - 46);
+      ctx.fillText('🛡️ ESCUDO DOS 4 MONÓLITOS! Refrate o Raio [C]', sx, sy - 54);
       ctx.restore();
     } else {
       ctx.save();
-      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.font = 'bold 9px monospace';
       ctx.fillStyle = '#f87171';
       ctx.shadowColor = '#000000';
       ctx.shadowBlur = 6;
       ctx.textAlign = 'center';
-      ctx.fillText(`⚡ VULNERÁVEL! (${this.shieldBrokenTimer.toFixed(1)}s)`, sx, sy - 46);
+      ctx.fillText(`⚡ VULNERÁVEL! (${this.shieldBrokenTimer.toFixed(1)}s) ATAQUE!`, sx, sy - 54);
       ctx.restore();
     }
   }
@@ -5679,6 +6039,7 @@ class GameEngine {
     this.iceRune = null;
     this.chronosTotems = [];
     this.shadowOrbs = [];
+    this.aetherMonoliths = [];
 
     this.gameState = 'TITLE';
     this.dialogueQueue = [];
@@ -5744,6 +6105,7 @@ class GameEngine {
     this.iceRune = null;
     this.chronosTotems = [];
     this.shadowOrbs = [];
+    this.aetherMonoliths = [];
 
     const bossHud = document.getElementById('boss-hud');
     if (bossHud) bossHud.classList.add('hidden');
@@ -6202,11 +6564,23 @@ class GameEngine {
     } else if (areaType === 'AETHER_CITADEL') {
       // FASE 14: CIDADELA DO ÉTER (7º MEGA-CHEFE FINAL: AETHON, O ARQUITETO DAS DIMENSÕES)
       this.audio.startBGM('AETHER');
-      this.showAreaBanner('CIDADELA DO ÉTER', 'O Confronto Final Supremo: Aethon');
+      this.showAreaBanner('CIDADELA DO ÉTER', 'Enigma do Arquiteto: Decifre os 4 Monólitos!');
       document.getElementById('area-indicator').textContent = '📍 Cidadela do Éter';
 
       // ARENA DO CHEFE FINAL: Sem checkpoints nas arenas de chefes!
       this.checkpointMonuments = [];
+
+      // Os 4 Monólitos Refratários do Enigma de Aethon:
+      // Monólito 0: Noroeste (380, 220) - Runa Alfa (Fogo Carmesim) - Rotação inicial: 1 (Desalinhado, correto: 0 [/])
+      // Monólito 1: Nordeste (770, 220) - Runa Beta (Gelo Cósmico) - Rotação inicial: 0 (Desalinhado, correto: 1 [\])
+      // Monólito 2: Sudeste (770, 596) - Runa Gama (Trovão Dourado) - Rotação inicial: 0 (Alinhado, correto: 0 [/])
+      // Monólito 3: Sudoeste (576, 596) - Runa Delta (Éter Astral) - Rotação inicial: 0 (Desalinhado, correto: 1 [\])
+      this.aetherMonoliths = [
+        new AetherMonolith(380, 220, 0, 1, 'Monólito Alfa (Chama)', '#ef4444', '♈'),
+        new AetherMonolith(770, 220, 1, 0, 'Monólito Beta (Gelo)', '#06b6d4', '♒'),
+        new AetherMonolith(770, 596, 2, 0, 'Monólito Gama (Trovão)', '#eab308', '⚡'),
+        new AetherMonolith(576, 596, 3, 0, 'Monólito Delta (Éter)', '#c084fc', '☯')
+      ];
 
       if (this.questStep >= 11) {
         // Já vencido
@@ -6216,10 +6590,8 @@ class GameEngine {
           bossHud.classList.remove('hidden');
         }
         this.boss = new BossAethon(centerX, centerY - 40);
-        this.enemies = [
-          new EnemyCreature(centerX - 110, centerY, 'AETHER'),
-          new EnemyCreature(centerX + 110, centerY, 'AETHER')
-        ];
+        this.boss.isStasis = true; // Inicia em estase cósmica (Enigma antes de despertar!)
+        this.enemies = []; // Sentinelas despertam com Aethon!
       }
     }
 
@@ -6630,7 +7002,17 @@ class GameEngine {
         questText.textContent = 'Enfrente Nocturnus, o Soberano do Abismo no Santuário Umbral!';
       }
     } else if (this.questStep === 10) {
-      questText.textContent = 'Enfrente Aethon, o Arquiteto das Dimensões na Cidadela do Éter!';
+      if (this.currentArea === 'AETHER_CITADEL' && this.boss && this.boss.isStasis) {
+        const m = this.aetherMonoliths;
+        const isAligned = m && m.length === 4 && m[0].rotation === 0 && m[1].rotation === 1 && m[2].rotation === 0 && m[3].rotation === 1;
+        questText.textContent = isAligned
+          ? '⚡ Circuito dos 4 Monólitos Alinhado! Dispare o Raio Astral [C] no Monólito Noroeste (Alfa)!'
+          : '🧩 Enigma do Arquiteto: Alinhe os 4 Monólitos [E] para conduzir o Raio Astral [C] até Aethon!';
+      } else if (this.currentArea === 'AETHER_CITADEL' && this.boss && this.boss.shieldActive) {
+        questText.textContent = '🛡️ Escudo de Aethon Ativo! Refrate o Raio Astral [C] pelos 4 Monólitos para romper a barreira!';
+      } else {
+        questText.textContent = 'Enfrente Aethon, o Arquiteto das Dimensões na Cidadela do Éter!';
+      }
     } else {
       questText.textContent = '✨ O Multiverso e todos os 14 reinos foram restaurados em harmonia suprema!';
     }
@@ -6711,7 +7093,8 @@ class GameEngine {
         this.astralBeams[i].update(
           this.map, dt, this.particles,
           this.icePrisms, this.iceRune, this.chronosTotems, this.shadowOrbs,
-          this.boss, this.enemies, this.audio, this.camera
+          this.boss, this.enemies, this.audio, this.camera, this,
+          this.aetherMonoliths
         );
         if (!this.astralBeams[i].alive) this.astralBeams.splice(i, 1);
       }
@@ -6967,6 +7350,18 @@ class GameEngine {
         }
       }
 
+      // 14.5 Interação com Monólitos Refratários do Éter (Fase 14 - Mega Chefe Final Aethon)
+      if (this.aetherMonoliths && this.aetherMonoliths.length > 0) {
+        for (let monolith of this.aetherMonoliths) {
+          const near = monolith.update(this.player, dt);
+          if (near && this.input.consumeInteract()) {
+            monolith.rotate(this.audio, this.particles);
+            this.showNotification('MONÓLITO REALINHADO', `${monolith.name} rotacionado!`);
+            this.updateHUD();
+          }
+        }
+      }
+
       // 15. Interação com Portal
       if (this.portal) {
         this.portal.update(dt);
@@ -6994,7 +7389,7 @@ class GameEngine {
 
       // 17. Atualizar Chefes (Malakar, Valdor, Kharon ou Aethon)
       if (this.boss) {
-        this.boss.update(this.player, this.map, dt, this.audio, this.particles, this.camera, this.projectiles, this.enemies);
+        this.boss.update(this.player, this.map, dt, this.audio, this.particles, this.camera, this.projectiles, this.enemies, this);
 
         if (!this.boss.alive) {
           if (this.currentArea === 'SANCTUARY') {
@@ -7126,7 +7521,7 @@ class GameEngine {
                 ⭐ 7 Grandes Chefes Derrotados: <b>MALAKAR, VALDOR, KHARON, TRINIT, MIRAGE, NOCTURNUS & AETHON</b><br>
                 ⚔️ Arsenal Mestre Completo: <b>CAJADO, ESPADA DO FOGO ESTELAR & RAIO ASTRAL</b><br>
                 ⚡ Habilidades Antigas: <b>PISÃO SÍSMICO [R], FOGO CÓSMICO (DoT) & RAIO PERFURANTE [C]</b><br>
-                🧩 Enigmas Lógicos Decifrados: <b>REFRAÇÃO GLACIAL, SINCRONIA DE CRONOS & MATRIZ DAS SOMBRAS</b><br>
+                🧩 Enigmas Lógicos Decifrados: <b>REFRAÇÃO GLACIAL, SINCRONIA DE CRONOS, MATRIZ DAS SOMBRAS & ENIGMA DOS 4 MONÓLITOS DE AETHON</b><br>
                 🛡️ Vidas de Guardião Restantes: <b>${this.player.lives} / ${this.player.maxLives}</b><br>
                 🚩 Checkpoints Descobertos: <b>TODOS OS SANTUÁRIOS REGISTRADOS!</b><br>
                 🌌 14 Fases Épicas Superadas: <b>A JORNADA COMPLETA FOI CONQUISTADA!</b>
@@ -7287,6 +7682,42 @@ class GameEngine {
       const near = Math.hypot(this.player.x - o.x, this.player.y - o.y) < 44;
       o.draw(this.ctx, this.camera, near, this.shadowOrbs);
     });
+
+    // Monólitos Refratários do Éter (Fase 14 - Enigma do Mega Chefe Final Aethon)
+    if (this.aetherMonoliths && this.aetherMonoliths.length === 4) {
+      const m = this.aetherMonoliths;
+      const isAligned = m[0].rotation === 0 && m[1].rotation === 1 && m[2].rotation === 0 && m[3].rotation === 1;
+
+      // 1. Linhas de condução dimensional no piso da arena
+      this.ctx.save();
+      this.ctx.lineWidth = isAligned ? 3 : 1.5;
+      this.ctx.strokeStyle = isAligned ? 'rgba(56, 189, 248, 0.75)' : 'rgba(255, 255, 255, 0.15)';
+      if (!isAligned) this.ctx.setLineDash([6, 6]);
+      else {
+        this.ctx.shadowColor = '#38bdf8';
+        this.ctx.shadowBlur = 10;
+      }
+      this.ctx.beginPath();
+      // Alfa para Beta
+      this.ctx.moveTo(m[0].x - this.camera.x, m[0].y - this.camera.y);
+      this.ctx.lineTo(m[1].x - this.camera.x, m[1].y - this.camera.y);
+      // Beta para Gama
+      this.ctx.lineTo(m[2].x - this.camera.x, m[2].y - this.camera.y);
+      // Gama para Delta
+      this.ctx.lineTo(m[3].x - this.camera.x, m[3].y - this.camera.y);
+      // Delta para Aethon
+      if (this.boss) {
+        this.ctx.lineTo(this.boss.x - this.camera.x, this.boss.y - this.camera.y);
+      }
+      this.ctx.stroke();
+      this.ctx.restore();
+
+      // 2. Desenhar os 4 Monólitos
+      this.aetherMonoliths.forEach(monolith => {
+        const near = Math.hypot(this.player.x - monolith.x, this.player.y - monolith.y) < 54;
+        monolith.draw(this.ctx, this.camera, near, this.aetherMonoliths);
+      });
+    }
 
     if (this.portal) {
       const nearPortal = Math.hypot(this.player.x - this.portal.x, this.player.y - this.portal.y) < 40;
