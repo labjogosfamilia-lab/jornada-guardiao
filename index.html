@@ -58,6 +58,25 @@
           <span class="burn-label">🔥 INCINERAÇÃO CÓSMICA</span>
           <span class="burn-sub">Ataques queimam por 4s</span>
         </div>
+        <!-- Poder Glacial de Niflheim (Fase 4 - Missão 1) -->
+        <div class="frost-skill-container hidden" id="frost-skill-hud">
+          <span class="frost-label">❄️ PODER GLACIAL</span>
+          <span class="frost-sub">Golpes congelam por 3s</span>
+        </div>
+        <!-- Poder dos 3 Clones Astrais (Fase 8 - Geleira de Niflheim) [T] -->
+        <div class="triad-skill-container hidden" id="triad-skill-hud">
+          <div class="triad-bar-bg">
+            <div id="triad-fill"></div>
+          </div>
+          <span class="triad-label">👥 3 CLONES [T]</span>
+        </div>
+        <!-- Poder dos 2 Fantasmas Invulneráveis (Fase 10 - Templo de Cronos) [G] -->
+        <div class="ghost-skill-container hidden" id="ghost-skill-hud">
+          <div class="ghost-bar-bg">
+            <div id="ghost-fill"></div>
+          </div>
+          <span class="ghost-label">👻 2 FANTASMAS [G]</span>
+        </div>
         <!-- Poder de Longo Alcance: Raio Astral [C] -->
         <div class="beam-skill-container hidden" id="beam-skill-hud">
           <div class="beam-bar-bg">
@@ -77,6 +96,11 @@
           <span class="essence-icon">🌱</span>
           <span id="essence-counter">0 / 5</span>
         </div>
+        <button id="hud-save-btn" class="hud-save-btn" title="Salvar Jogo a Toda Hora [P]">💾 SALVAR [P]</button>
+        <div id="autosave-pill" class="autosave-pill" title="Jogo Salvo Automaticamente a Toda Hora">
+          <span class="autosave-dot"></span>
+          <span id="autosave-text">AUTO-SAVE ON</span>
+        </div>
         <button id="audio-toggle-btn" title="Ligar/Desligar Som">🔊</button>
       </div>
 
@@ -93,8 +117,12 @@
 
       <div class="quest-tracker">
         <div class="area-indicator" id="area-indicator">📍 Bosque dos Ecos</div>
-        <span class="quest-title">MISSÃO ATUAL</span>
+        <span class="quest-title">MISSÃO PRINCIPAL</span>
         <span id="quest-text">Fale com Sylva, a Coruja Anciã no centro do bosque.</span>
+        <div id="power-quest-container" class="hidden">
+          <span class="quest-title power-quest-title">⚡ MISSÃO DE PODER</span>
+          <span id="power-quest-text">Provação Telúrica...</span>
+        </div>
       </div>
     </div>
 
@@ -133,9 +161,27 @@
           <div class="key-row"><span>💨 Esquiva (Dash):</span> <kbd>Q</kbd> ou <kbd>K</kbd></div>
           <div class="key-row"><span>⚡ Super Poder (Pós-Boss 1):</span> <kbd>R</kbd> (Pisão Sísmico Sagrado)</div>
           <div class="key-row"><span>🔄 Trocar Arma (Pós-Boss 2):</span> <kbd>F</kbd> ou <kbd>Tab</kbd> (Feitiço / Espada)</div>
+          <div class="key-row"><span>❄️ Poder Glacial (Fase 4):</span> Passivo (Espada e Tiros congelam por 3s)</div>
+          <div class="key-row"><span>👥 3 Clones Astrais (Fase 8):</span> <kbd>T</kbd> ou <kbd>V</kbd> (Multiplica herói em 3 clones!)</div>
+          <div class="key-row"><span>👻 2 Fantasmas Invulneráveis (Fase 10):</span> <kbd>G</kbd> (Invoca 2 fantasmas imunes a dano!)</div>
           <div class="key-row"><span>🏹 Raio de Longo Alcance (Fase 8):</span> <kbd>C</kbd> ou <kbd>X</kbd> (Feixe Perfurante)</div>
+          <div class="key-row"><span>🛡️ Desativar Escudo do Último Boss:</span> <kbd>B</kbd> (Rompe a Barreira de Aethon!)</div>
+          <div class="key-row"><span>💾 Salvar Jogo:</span> <kbd>P</kbd> ou <kbd>💾</kbd> (Salva a toda hora automaticamente!)</div>
           <div class="key-row"><span>⚔️ Atacar:</span> <kbd>Espaço</kbd> ou <kbd>J</kbd> (ou Clique)</div>
           <div class="key-row"><span>💬 Interagir / Checkpoint:</span> <kbd>E</kbd> (Salve o marco de renascimento!)</div>
+        </div>
+
+        <!-- Card de Progresso Salvo -->
+        <div id="save-slot-card" class="save-slot-card hidden">
+          <div class="save-slot-header">
+            <span class="save-slot-title">💾 PROGRESSO ENCONTRADO</span>
+            <span id="save-slot-date" class="save-slot-date">--/--</span>
+          </div>
+          <div class="save-slot-body">
+            <div id="save-slot-area" class="save-slot-area">📍 Nenhuma área salva</div>
+            <div id="save-slot-stats" class="save-slot-stats">❤️ 4/4 | 🛡️ 3 Vidas | 🪄 Cajado da Aurora</div>
+          </div>
+          <button id="continue-btn" class="btn-primary btn-continue">CONTINUAR JORNADA</button>
         </div>
 
         <button id="start-btn" class="btn-primary">INICIAR AVENTURA</button>
@@ -145,28 +191,38 @@
     <!-- Banner de Desbloqueio de Super Poder (Missão do Altar Telúrico -> Contra Malakar) -->
     <div id="power-unlock-banner" class="hidden">
       <div class="power-card">
-        <h2 id="power-unlock-title">⚡ MISSÃO SAGRADA: PISÃO SÍSMICO [R] DESPERTO! ⚡</h2>
-        <p id="power-unlock-desc">Você comungou com o <b>Altar Telúrico do Titã</b> e absorveu a força da terra!</p>
-        <p class="power-unlock-sub">O Colosso <b>Malakar</b> possui uma couraça de pedra impenetrável por tiros normais.<br>Use o <b>Pisão Sísmico [R]</b> para estilhaçar a armadura de rocha e atordoá-lo!<br>Arma divina pronta para o confronto!</p>
+        <h2 id="power-unlock-title">⚡ PROVAÇÃO SUPERADA: PISÃO SÍSMICO [R] CONQUISTADO! ⚡</h2>
+        <p id="power-unlock-desc">Você venceu a <b>Provação Telúrica da Rocha</b> e provou seu valor diante dos Guardiões Ancestrais!</p>
+        <p class="power-unlock-sub">O Colosso <b>Malakar</b> possui uma couraça de pedra impenetrável por tiros normais.<br>Use o <b>Pisão Sísmico [R]</b> para estilhaçar a armadura de rocha e atordoá-lo!<br>Poder divino conquistado com honra e batalha!</p>
         <button id="close-power-banner-btn" class="btn-primary">DESAFIAR O COLOSSO</button>
       </div>
     </div>
 
-    <!-- Banner de Desbloqueio da Espada (Missão da Pedra da Lâmina -> Contra Valdor) -->
+    <!-- Banner de Desbloqueio da Espada & Poder Glacial (Fase 4 - Missão 1) -->
     <div id="sword-unlock-banner" class="hidden">
       <div class="power-card">
-        <h2 id="sword-unlock-title">⚔️ MISSÃO SAGRADA: ESPADA CELESTE [F] FORJADA! ⚔️</h2>
-        <p id="sword-unlock-desc">Você desembainhou a lendária <b>Lâmina Celestial</b> na Rocha Sagrada dos Ventos!</p>
-        <p class="power-unlock-sub">O Arconte <b>Valdor</b> ataca na velocidade do raio e desvia de ataques à distância.<br>Pressione <b>[F]</b> ou <b>[Tab]</b> para empunhar a <b>Espada Celeste</b> e desferir cortes em velocidade da tempestade no combate corpo a corpo!<br>Arma lendária pronta para a batalha!</p>
+        <h2 id="sword-unlock-title">⚔️ JULGAMENTO SUPERADO: ESPADA CELESTE & PODER GLACIAL! ❄️</h2>
+        <p id="sword-unlock-desc">Você sintonizou os ventos celestes e absorveu a <b>Lâmina Celestial</b> imbuída com o <b>Poder Glacial de Niflheim</b>!</p>
+        <p class="power-unlock-sub">Pressione <b>[F]</b> ou <b>[Tab]</b> para empunhar a <b>Espada Celeste</b>!<br>Seus ataques agora disparam <b>estilhaços de gelo álgido</b> que <b>congelam e desaceleram os inimigos por 3 segundos</b>!<br>Arma lendária e poder glacial despertos com honra!</p>
         <button id="close-sword-banner-btn" class="btn-primary">DESAFIAR O TRONO</button>
+      </div>
+    </div>
+
+    <!-- Banner de Desbloqueio dos 3 Clones Astrais (Fase 8 - Geleira de Niflheim) -->
+    <div id="triad-unlock-banner" class="hidden">
+      <div class="power-card">
+        <h2 id="triad-unlock-title">👥 PROVAÇÃO SUPERADA: PODER DOS 3 CLONES ASTRAIS! 👥</h2>
+        <p id="triad-unlock-desc">Você sintonizou os Espelhos Cósmicos na Geleira de Niflheim (Fase 8)!</p>
+        <p class="power-unlock-sub">Pressione <b>[T]</b> ou <b>[V]</b> para invocar <b>3 Clones Astrais simultâneos</b>!<br>Três clones lutarão ao seu lado por 10 segundos, espelhando todos os seus movimentos e ataques de espada e cajado!<br>Poder dos 3 Clones conquistado com sabedoria ancestral!</p>
+        <button id="close-triad-banner-btn" class="btn-primary">DOMINAR OS 3 CLONES</button>
       </div>
     </div>
 
     <!-- Banner de Desbloqueio do Poder de Fogo (Missão da Forja dos Titãs -> Contra Kharon) -->
     <div id="burn-unlock-banner" class="hidden">
       <div class="power-card">
-        <h2 id="burn-unlock-title">🔥 MISSÃO DA FORJA: LÂMINA DO FOGO ESTELAR! 🔥</h2>
-        <p id="burn-unlock-desc">Você bateu o metal na Bigorna Solar com o cadinho a 10 ºC!</p>
+        <h2 id="burn-unlock-title">🔥 PROVAÇÃO SUPERADA: LÂMINA DO FOGO ESTELAR! 🔥</h2>
+        <p id="burn-unlock-desc">Você calibrou o cadinho a 10 ºC, purificou as feras de lava e bateu o metal na Bigorna Solar!</p>
         <p class="power-unlock-sub">O Soberano <b>Kharon</b> regenera defesas no manto da escuridão do eclipse.<br>A <b>Chama Estelar (DoT de Queimadura)</b> queima as sombras continuamente, impedindo sua cura!<br>Todos os seus ataques agora incendeiam os inimigos!</p>
         <button id="close-burn-banner-btn" class="btn-primary">ENFRENTAR O ECLIPSE</button>
       </div>
@@ -175,8 +231,8 @@
     <!-- Banner de Desbloqueio do Raio Astral [C] (Missão do Relicário Glacial -> Contra Trinit) -->
     <div id="beam-unlock-banner" class="hidden">
       <div class="power-card">
-        <h2 id="beam-unlock-title">🏹 MISSÃO SAGRADA: RAIO ASTRAL [C] CANALIZADO! 🏹</h2>
-        <p id="beam-unlock-desc">Você comungou com o <b>Relicário Glacial</b> e canalizou a luz pura no seu cajado!</p>
+        <h2 id="beam-unlock-title">🏹 PROVAÇÃO SUPERADA: RAIO ASTRAL [C] CANALIZADO! 🏹</h2>
+        <p id="beam-unlock-desc">Você derrotou os Espectros da Nevasca e descongelou o feixe cósmico do <b>Relicário Glacial</b>!</p>
         <p class="power-unlock-sub">A Tríade <b>Trinit</b> gira em formação triangular protegida por uma tempestade de gelo mortal.<br>Pressione <b>[C]</b> ou <b>[X]</b> para disparar o <b>Feixe Perfurante de Longo Alcance</b> e snipar os clones à distância com precisão cirúrgica!</p>
         <button id="close-beam-banner-btn" class="btn-primary">ENTRAR NA ARENA</button>
       </div>
@@ -185,8 +241,8 @@
     <!-- Banner de Desbloqueio da Lente de Cronos (Missão do Relicário de Cronos -> Contra Mirage) -->
     <div id="chronos-unlock-banner" class="hidden">
       <div class="power-card">
-        <h2 id="chronos-unlock-title">⏳ MISSÃO SAGRADA: LENTE DE CRONOS ABSORVIDA! ⏳</h2>
-        <p id="chronos-unlock-desc">Você comungou com o <b>Relicário das Areias de Cronos</b> e adquiriu a visão além do tempo!</p>
+        <h2 id="chronos-unlock-title">⏳ PROVAÇÃO SUPERADA: LENTE DE CRONOS ABSORVIDA! ⏳</h2>
+        <p id="chronos-unlock-desc">Você expurgou as Anomalias Temporais e estabilizou o fluxo das <b>Areias de Cronos</b>!</p>
         <p class="power-unlock-sub">O Senhor dos Reflexos <b>Mirage</b> cria miragens idênticas para confundir e esmagar seus oponentes.<br>A <b>Lente de Cronos</b> revela o verdadeiro Mirage com uma aura temporal dourada cintilante!<br>Identifique o corpo real e não desperdice energia nos clones!</p>
         <button id="close-chronos-banner-btn" class="btn-primary">DESAFIAR O NEXUS</button>
       </div>
@@ -195,10 +251,20 @@
     <!-- Banner de Desbloqueio da Lanterna Astral (Missão do Braseiro Astral -> Contra Nocturnus) -->
     <div id="shadow-unlock-banner" class="hidden">
       <div class="power-card">
-        <h2 id="shadow-unlock-title">🕯️ MISSÃO SAGRADA: LANTERNA ASTRAL ACESA! 🕯️</h2>
-        <p id="shadow-unlock-desc">Você acendeu a Chama Astral no <b>Braseiro Sagrado</b> e obteve a luz contra o Abismo!</p>
+        <h2 id="shadow-unlock-title">🕯️ PROVAÇÃO SUPERADA: LANTERNA ASTRAL ACESA! 🕯️</h2>
+        <p id="shadow-unlock-desc">Você destruiu os Espreitadores do Vazio e reacendeu a Chama Astral no <b>Braseiro da Verdade</b>!</p>
         <p class="power-unlock-sub">O Soberano <b>Nocturnus</b> projeta um Vácuo de Escuridão absoluta que aprisiona e desacelera o Guardião.<br>A <b>Lanterna Astral</b> dispersa a estagnação do Vazio e concede <b>imunidade total à lentidão e penalidades de movimento</b>!<br>Mova-se livremente pelas sombras e derrote Nocturnus!</p>
         <button id="close-shadow-banner-btn" class="btn-primary">ENFRENTAR O ABISMO</button>
+      </div>
+    </div>
+
+    <!-- Banner de Desbloqueio dos 2 Fantasmas Invulneráveis (Fase 10 - Templo de Cronos) -->
+    <div id="ghost-unlock-banner" class="hidden">
+      <div class="power-card">
+        <h2 id="ghost-unlock-title">👻 PROVAÇÃO SUPERADA: PODER DOS FANTASMAS ESPECTRAIS! 👻</h2>
+        <p id="ghost-unlock-desc">Você canalizou o Altar dos Espectros do Tempo no Templo de Cronos (Fase 10)!</p>
+        <p class="power-unlock-sub">Pressione <b>[G]</b> ou <b>[B]</b> para invocar <b>2 Fantasmas Espectrais idênticos a Kaelen</b>!<br>Eles lutam ao seu lado por 15 segundos e <b>NÃO TOMAM DANO NENHUM</b> (100% imunes a qualquer dano ou projétil)!<br>Seus fantasmas atacam os inimigos e chefes sem sofrer ferimentos!</p>
+        <button id="close-ghost-banner-btn" class="btn-primary">DOMINAR OS FANTASMAS</button>
       </div>
     </div>
 
@@ -207,7 +273,10 @@
       <div class="title-card game-over-card">
         <h2 class="game-over-title">SUA ENERGIA SE ESGOTOU</h2>
         <p>A floresta aguarda o despertar de um verdadeiro guardião...</p>
-        <button id="respawn-btn" class="btn-primary">TENTAR NOVAMENTE</button>
+        <div class="game-over-buttons">
+          <button id="respawn-btn" class="btn-primary">TENTAR NOVAMENTE</button>
+          <button id="reload-save-btn" class="btn-secondary">CARREGAR DO SAVE (💾)</button>
+        </div>
       </div>
     </div>
 
@@ -232,9 +301,13 @@
         <button class="touch-btn" id="dpad-down">▼</button>
       </div>
       <div id="touch-actions">
+        <button class="touch-action-btn hidden" id="touch-break-shield" title="Desativar Escudo [B]">🛡️</button>
+        <button class="touch-action-btn hidden" id="touch-ghost" title="2 Fantasmas [G]">👻</button>
+        <button class="touch-action-btn hidden" id="touch-triad" title="3 Clones [T]">👥</button>
         <button class="touch-action-btn hidden" id="touch-beam" title="Raio Astral [C]">🏹</button>
         <button class="touch-action-btn hidden" id="touch-special" title="Poder Especial [R]">⚡</button>
         <button class="touch-action-btn hidden" id="touch-weapon-swap" title="Trocar Arma [F]">🔄</button>
+        <button class="touch-action-btn" id="touch-save" title="Salvar Jogo a Toda Hora [💾]">💾</button>
         <button class="touch-action-btn" id="touch-sprint" title="Correr [Shift]">🏃</button>
         <button class="touch-action-btn" id="touch-dash" title="Dash [Q]">💨</button>
         <button class="touch-action-btn" id="touch-interact" title="Interagir [E]">💬</button>
