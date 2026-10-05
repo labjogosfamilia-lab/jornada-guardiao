@@ -340,6 +340,101 @@ body {
   text-shadow: 0 0 6px #0284c7;
 }
 
+/* Indicador do Poder Glacial de Niflheim (Fase 4 - Missão 1) */
+.frost-skill-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: rgba(8, 20, 38, 0.9);
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.65);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+.frost-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #38bdf8;
+  text-shadow: 0 0 6px #0284c7;
+}
+
+.frost-sub {
+  font-size: 10px;
+  color: #bae6fd;
+}
+
+/* Indicador do Poder da Tríade Cósmica 3X (Fase 4 - Missão 2) */
+.triad-skill-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: rgba(22, 16, 38, 0.9);
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(250, 204, 21, 0.6);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 12px rgba(250, 204, 21, 0.25);
+}
+
+.triad-bar-bg {
+  width: 90px;
+  height: 8px;
+  background: #1e293b;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#triad-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #facc15, #38bdf8, #c084fc);
+  transition: width 0.08s linear;
+}
+
+.triad-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #fde047;
+  text-shadow: 0 0 6px #ca8a04;
+}
+
+/* Indicador do Poder dos 2 Fantasmas Invulneráveis (Fase 5 - Altar dos Espectros) */
+.ghost-skill-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: rgba(14, 28, 48, 0.9);
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.7);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+}
+
+.ghost-bar-bg {
+  width: 90px;
+  height: 8px;
+  background: #0f172a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#ghost-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+  transition: width 0.08s linear;
+}
+
+.ghost-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #7dd3fc;
+  text-shadow: 0 0 6px #0284c7;
+}
+
 /* Indicador de Checkpoint Ativo */
 .checkpoint-badge {
   display: flex;
@@ -403,6 +498,80 @@ body {
   background: rgba(34, 197, 94, 0.3);
   border-color: #4ade80;
   transform: scale(1.05);
+}
+
+#hud-save-btn, .hud-save-btn {
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.25), rgba(20, 83, 45, 0.9));
+  border: 1.5px solid rgba(74, 222, 128, 0.65);
+  color: #86efac;
+  border-radius: 18px;
+  padding: 6px 12px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.25);
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+}
+
+#hud-save-btn:hover, .hud-save-btn:hover {
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.45), rgba(20, 83, 45, 0.98));
+  border-color: #4ade80;
+  color: #fff;
+  transform: scale(1.04);
+  box-shadow: 0 0 18px rgba(74, 222, 128, 0.55);
+}
+
+#hud-save-btn:active, .hud-save-btn:active {
+  transform: scale(0.96);
+}
+
+/* Indicador de Salvamento Automático Contínuo */
+.autosave-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(11, 20, 14, 0.8);
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  border-radius: 14px;
+  padding: 5px 9px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #86efac;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.autosave-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px #4ade80;
+  transition: all 0.25s ease;
+}
+
+.autosave-pill.saving {
+  border-color: rgba(56, 189, 248, 0.7);
+  background: rgba(14, 30, 50, 0.9);
+  color: #7dd3fc;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+.autosave-pill.saving .autosave-dot {
+  background: #38bdf8;
+  box-shadow: 0 0 10px #38bdf8;
+  transform: scale(1.35);
+}
+
+#touch-save {
+  background: rgba(34, 197, 94, 0.3);
+  border-color: rgba(74, 222, 128, 0.6);
 }
 
 /* === Boss Health Bar HUD === */
@@ -494,6 +663,23 @@ body {
   font-size: 13px;
   color: #e2e8f0;
   line-height: 1.4;
+}
+
+#power-quest-container {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(250, 204, 21, 0.4);
+}
+
+.power-quest-title {
+  color: #facc15 !important;
+}
+
+#power-quest-text {
+  font-size: 12px;
+  color: #fef08a;
+  line-height: 1.35;
+  display: block;
 }
 
 /* Banner de Transição de Área */
@@ -639,11 +825,113 @@ body {
   background: rgba(17, 24, 39, 0.95);
   border: 2px solid #22c55e;
   border-radius: 16px;
-  padding: 36px 42px;
+  padding: 32px 38px;
   max-width: 580px;
   width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
   text-align: center;
   box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(34, 197, 94, 0.2);
+}
+
+/* Card de Save Slot no Menu Inicial */
+.save-slot-card {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(16, 37, 66, 0.95));
+  border: 2px solid #38bdf8;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.save-slot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+  padding-bottom: 6px;
+}
+
+.save-slot-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: #38bdf8;
+  letter-spacing: 1px;
+}
+
+.save-slot-date {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #94a3b8;
+}
+
+.save-slot-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.save-slot-area {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #facc15;
+  text-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+}
+
+.save-slot-stats {
+  font-size: 13px;
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.btn-continue {
+  background: linear-gradient(180deg, #38bdf8, #0284c7) !important;
+  border-color: #7dd3fc !important;
+  box-shadow: 0 6px 0 #0369a1, 0 10px 20px rgba(0,0,0,0.5) !important;
+  margin-top: 6px;
+  width: 100%;
+}
+
+.btn-continue:hover {
+  box-shadow: 0 8px 0 #0369a1, 0 12px 25px rgba(56, 189, 248, 0.5) !important;
+}
+
+.btn-secondary {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  background: rgba(30, 41, 59, 0.9);
+  color: #e2e8f0;
+  border: 1px solid #64748b;
+  border-radius: 8px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 0 #0f172a, 0 6px 12px rgba(0,0,0,0.4);
+}
+
+.btn-secondary:hover {
+  background: rgba(51, 65, 85, 0.9);
+  border-color: #94a3b8;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #0f172a;
+}
+
+.game-over-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
 }
 
 .game-logo {
@@ -824,9 +1112,15 @@ kbd {
   border-color: #86efac;
 }
 
+#touch-break-shield {
+  background: rgba(88, 28, 135, 0.85);
+  border-color: #facc15;
+  box-shadow: 0 0 14px rgba(250, 204, 21, 0.7);
+}
+
 /* Power Unlock Banner / Modal */
-/* Power, Sword, Burn & Beam Unlock Banners / Modais */
-#power-unlock-banner, #sword-unlock-banner, #burn-unlock-banner, #beam-unlock-banner {
+/* Power, Sword, Burn, Beam, Chronos, Shadow, Triad & Ghost Unlock Banners / Modais */
+#power-unlock-banner, #sword-unlock-banner, #burn-unlock-banner, #beam-unlock-banner, #chronos-unlock-banner, #shadow-unlock-banner, #triad-unlock-banner, #ghost-unlock-banner {
   position: absolute;
   inset: 0;
   background: rgba(3, 7, 18, 0.88);
@@ -849,7 +1143,7 @@ kbd {
   box-shadow: 0 0 40px rgba(250, 204, 21, 0.4), 0 20px 50px rgba(0, 0, 0, 0.9);
 }
 
-#power-unlock-title, #sword-unlock-title, #burn-unlock-title, #beam-unlock-title {
+#power-unlock-title, #sword-unlock-title, #burn-unlock-title, #beam-unlock-title, #chronos-unlock-title, #shadow-unlock-title, #triad-unlock-title, #ghost-unlock-title {
   font-family: 'Press Start 2P', monospace;
   font-size: 15px;
   color: #fef08a;
@@ -858,7 +1152,7 @@ kbd {
   text-shadow: 0 0 10px rgba(250, 204, 21, 0.6);
 }
 
-#power-unlock-desc, #sword-unlock-desc, #burn-unlock-desc, #beam-unlock-desc {
+#power-unlock-desc, #sword-unlock-desc, #burn-unlock-desc, #beam-unlock-desc, #chronos-unlock-desc, #shadow-unlock-desc, #triad-unlock-desc, #ghost-unlock-desc {
   font-size: 15px;
   color: #f1f5f9;
   margin-bottom: 12px;
@@ -869,6 +1163,20 @@ kbd {
   font-size: 13px;
   color: #94a3b8;
   margin-bottom: 26px;
+}
+
+#touch-ghost {
+  border-color: #38bdf8;
+  color: #7dd3fc;
+  background: rgba(12, 28, 50, 0.85);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+#touch-triad {
+  border-color: #c084fc;
+  color: #fde047;
+  background: rgba(30, 18, 50, 0.85);
+  box-shadow: 0 0 10px rgba(192, 132, 252, 0.4);
 }
 
 #touch-beam {
