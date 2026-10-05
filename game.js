@@ -1,30 +1,36 @@
 /**
  * ====================================================================
- * JORNADA: O GUARDIÃO DOS BOSQUES — EXPANSÃO SUPREMA DAS 14 FASES
- * 14 Áreas Interconectadas com 7 Grandes Chefes Divinos Alternados:
+ * JORNADA: O GUARDIÃO DOS BOSQUES — EXPANSÃO SUPREMA DAS 15 FASES
+ * 15 Áreas Interconectadas com 7 Grandes Chefes Divinos e Enigmas Dedicados:
  *  1. Bosque dos Ecos (Tutorial & Totem da Seiva)
- *  2. Caverna dos Cristais (Enigma 1: Tríade Harmônica C-E-G)
+ *  2. Caverna dos Cristais (Enigma 1: Tríade Harmônica C-E-G | Missão Altar: Pisão Sísmico [R])
  *  3. Santuário da Árvore Mãe (1º Boss: Malakar, o Colosso Sombrio)
- *     -> Recompensa: Poder Sísmico [R] + Disparo Triplo Celestial!
- *  4. Palácio dos Ventos (Enigma 2: Rosa dos Ventos Convergente)
+ *     -> Recompensa: Essência da Terra (+1 Coração Máximo & Cura Total)
+ *  4. Palácio dos Ventos (Enigma 2: Rosa dos Ventos Convergente | DUAS MISSÕES SECRETAS:
+ *     - Missão 1: Santuário dos Ventos (SW) -> Espada Celeste [F] + Poder Glacial de Niflheim (Slow 3s)
+ *     - Missão 2: Câmara da Tríade (SE) -> Poder da Tríade 3X [T] (Multiplica Kaelen em 3 clones!)
  *  5. Trono do Trovão (2º Boss: Valdor, o Arconte do Trovão)
- *     -> Recompensa: Espada do Trovão + Troca de Armas [F] / [Tab]!
+ *     -> Recompensa: Essência da Tempestade (+1 Coração Máximo & Cura Total)
  *  6. Abismo da Forja de Magma (Enigma 3: Equilíbrio Térmico das Caldeiras a 10 ºC)
  *     -> Recompensa: Forja da Espada de Fogo Estelar Nível 2!
  *  7. Núcleo do Eclipse Cósmico (3º Boss: Kharon, o Soberano do Eclipse)
- *     -> Recompensa: Incineração Cósmica (DoT) + Raio Astral Perfurante [C] / [X]!
+ *     -> Recompensa: Essência do Fogo Primordial + Incineração Cósmica (DoT)
  *  8. Geleira de Niflheim (Enigma 4: Refração Glacial em 90º com 3 Prismas Harmonizadores)
- *     -> O Feixe muda de cor para Dourado e só ativa a Runa após atravessar os 3 prismas!
+ *     -> Missão Altar: Relicário Glacial de Luz -> Raio Astral Perfurante [C] / [X]
  *  9. Arena Glacial (4º Boss: Trinit, a Tríade Glacial)
- *     -> Se divide em 3 clones autônomos com HP compartilhado e ataques em triângulo!
+ *     -> Recompensa: Essência do Gelo Eterno (+1 Coração Máximo & Cura Total)
  *  10. Templo de Cronos (Enigma 5: Sincronia Temporal dos 3 Totens com Raio Astral)
+ *     -> Missão Altar: Sincronia Temporal -> Lente Espectral de Cronos
  *  11. Nexus de Cronos (5º Boss: Mirage, o Senhor dos Reflexos Ilusórios)
- *     -> Cria 2 clones fantasmas idênticos e invulneráveis; se embaralha a cada 8s!
+ *     -> Recompensa: Essência do Tempo (+1 Coração Máximo & Cura Total)
  *  12. Labirinto das Sombras (Enigma 6: Matriz Booleana de Inversão de Orbes Espectrais)
+ *     -> Missão Altar: Provação da Luz no Vazio -> Lanterna Astral da Verdade
  *  13. Santuário do Abismo (6º Boss: Nocturnus, o Soberano do Abismo Umbral)
- *     -> Arremessa foices bumerangues, cria poços de vazio e teletransporta nas trevas!
- *  14. Cidadela do Éter (7º Mega-Chefe Final: Aethon, o Arquiteto das Dimensões)
- *     -> Escudo Dimensional quebrado pelo Raio Astral [C]! Vitória Final!
+ *     -> Recompensa: Essência do Vácuo (+1 Coração Máximo & Cura Total)
+ *  14. Cidadela do Éter (Enigma Puro 7: Ressonância Dimensional dos 4 Monólitos Astrais)
+ *     -> Enigma tetradimensional que destranca os portões ancestrais do Trono do Éter!
+ *  15. Trono do Éter (7º Mega-Chefe Final: Aethon, o Arquiteto das Dimensões)
+ *     -> Arena exclusiva com batalha colossal de quebra de escudo e vitória suprema!
  *
  * Sistema de Checkpoints & Dificuldade Elevada:
  *  - Vidas finitas: Apenas 3 vidas de guardião; cura sem vidas extras em enigmas.
@@ -35,11 +41,14 @@
  *  - W, A, S, D ou Setas: Mover
  *  - Segurar Shift: CORRER (Sprint contínuo com consumo de vigor)
  *  - Tecla Q ou K: DASH (Esquiva rápida com invulnerabilidade)
- *  - Tecla R: PODER SÍSMICO (Onda de choque em área - pós-Boss 1)
- *  - Tecla F ou Tab: ALTERNAR ARMA (Cajado Arcano vs Espada - pós-Boss 2)
- *  - Tecla C ou X: RAIO ASTRAL (Feixe de longo alcance - pós-Boss 3)
- *  - Espaço / J / Clique: Atacar com arma ativa
- *  - Tecla E: Interagir, ativar checkpoints, ler pistas e girar prismas/cataventos
+ *  - Tecla R: PODER SÍSMICO (Onda de choque em área - Altar da Caverna)
+ *  - Tecla F ou Tab: ALTERNAR ARMA (Cajado Arcano vs Espada Celeste - Altar dos Ventos)
+ *  - Tecla T ou V: PODER DOS 3 CLONES ASTRAIS (Conjura 3 Clones Astrais por 10s - Altar de Niflheim Fase 8)
+ *  - Tecla G: PODER DOS 2 FANTASMAS (Conjura 2 Fantasmas Invulneráveis por 15s - Altar de Cronos Fase 10)
+ *  - Tecla B: DESATIVAR ESCUDO DO ÚLTIMO BOSS (Rompe a Barreira Dimensional de Aethon)
+ *  - Tecla C ou X: RAIO ASTRAL (Feixe de longo alcance - Altar de Niflheim)
+ *  - Espaço / J / Clique: Atacar com arma ativa (clones espelham ataques de cajado e espada)
+ *  - Tecla E: Interagir, ativar checkpoints, ler pistas e girar prismas/cataventos/monólitos
  * ====================================================================
  */
 
@@ -372,6 +381,48 @@ class AudioEngine {
     });
   }
 
+  playMissionStart() {
+    if (this.muted || !this.ctx) return;
+    const chords = [
+      { f: 220, d: 0.15 },
+      { f: 330, d: 0.15 },
+      { f: 440, d: 0.25 },
+      { f: 554.37, d: 0.45 }
+    ];
+    let t = this.ctx.currentTime;
+    chords.forEach(c => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(c.f, t);
+      gain.gain.setValueAtTime(0.18, t);
+      gain.gain.exponentialRampToValueAtTime(0.005, t + c.d);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + c.d);
+      t += c.d * 0.72;
+    });
+  }
+
+  playMissionComplete() {
+    if (this.muted || !this.ctx) return;
+    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+    let t = this.ctx.currentTime;
+    notes.forEach((f, i) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(f, t + i * 0.08);
+      gain.gain.setValueAtTime(0.22, t + i * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + i * 0.08 + 0.35);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t + i * 0.08);
+      osc.stop(t + i * 0.08 + 0.36);
+    });
+  }
+
   playPuzzleTone(freq = 440) {
     if (this.muted || !this.ctx) return;
     const osc = this.ctx.createOscillator();
@@ -473,6 +524,14 @@ class AudioEngine {
     gain.connect(this.ctx.destination);
     osc.start();
     osc.stop(this.ctx.currentTime + 0.13);
+  }
+
+  playPowerUp() {
+    this.playCheckpoint();
+  }
+
+  playCoin() {
+    this.playPickup();
   }
 
   playCheckpoint() {
@@ -646,6 +705,10 @@ class InputManager {
     this.beamPressed = false;
     this.swapWeaponPressed = false;
     this.interactPressed = false;
+    this.triadPressed = false;
+    this.ghostPressed = false;
+    this.breakShieldPressed = false;
+    this.savePressed = false;
 
     this.setupKeyboard();
     this.setupTouch();
@@ -663,6 +726,10 @@ class InputManager {
       if (key === 'q' || key === 'k') this.dashPressed = true;
       if (key === 'r') this.specialPressed = true;
       if (key === 'c' || key === 'x') this.beamPressed = true;
+      if (key === 't' || key === 'v') this.triadPressed = true;
+      if (key === 'g') this.ghostPressed = true;
+      if (key === 'b') this.breakShieldPressed = true;
+      if (key === 'p') this.savePressed = true;
       if (key === 'f' || key === 'tab') this.swapWeaponPressed = true;
       if (key === 'e') this.interactPressed = true;
     });
@@ -693,8 +760,12 @@ class InputManager {
     bindTouch('touch-dash', () => { this.dashPressed = true; }, () => {});
     bindTouch('touch-special', () => { this.specialPressed = true; }, () => {});
     bindTouch('touch-beam', () => { this.beamPressed = true; }, () => {});
+    bindTouch('touch-triad', () => { this.triadPressed = true; }, () => {});
+    bindTouch('touch-ghost', () => { this.ghostPressed = true; }, () => {});
+    bindTouch('touch-break-shield', () => { this.breakShieldPressed = true; }, () => {});
     bindTouch('touch-sprint', () => { this.keys['shift'] = true; }, () => { this.keys['shift'] = false; });
     bindTouch('touch-weapon-swap', () => { this.swapWeaponPressed = true; }, () => {});
+    bindTouch('touch-save', () => { this.savePressed = true; }, () => {});
     bindTouch('touch-interact', () => { this.interactPressed = true; }, () => {});
   }
 
@@ -751,6 +822,30 @@ class InputManager {
   consumeInteract() {
     const val = this.interactPressed;
     this.interactPressed = false;
+    return val;
+  }
+
+  consumeTriad() {
+    const val = this.triadPressed;
+    this.triadPressed = false;
+    return val;
+  }
+
+  consumeGhost() {
+    const val = this.ghostPressed;
+    this.ghostPressed = false;
+    return val;
+  }
+
+  consumeBreakShield() {
+    const val = this.breakShieldPressed;
+    this.breakShieldPressed = false;
+    return val;
+  }
+
+  consumeSave() {
+    const val = this.savePressed;
+    this.savePressed = false;
     return val;
   }
 }
@@ -958,6 +1053,16 @@ class AstralBeamProjectile extends Entity {
     this.trail = [];
   }
 
+  // Núcleo compacto central de colisão com paredes para não raspar em ladrilhos laterais
+  getCoreBounds() {
+    return {
+      left: this.x - 4,
+      right: this.x + 4,
+      top: this.y - 4,
+      bottom: this.y + 4
+    };
+  }
+
   update(map, dt, particles, icePrisms = [], iceRune = null, chronosTotems = [], shadowOrbs = [], boss = null, enemies = [], audio = null, camera = null, game = null, aetherMonoliths = []) {
     this.x += this.vx * dt;
     this.y += this.vy * dt;
@@ -983,8 +1088,9 @@ class AstralBeamProjectile extends Entity {
       return;
     }
 
-    // Colisão com paredes sólidas (atravessa abismos e fendas tile 3, colide com parede tile 1)
-    const hitWall = map && (typeof map.checkWallOnlyCollision === 'function' ? map.checkWallOnlyCollision(this.getBounds()) : map.checkCollision(this.getBounds()));
+    // Colisão com paredes sólidas (atravessa abismos e fendas tile 3, colide com parede tile 1 usando o núcleo central)
+    const bounds = typeof this.getCoreBounds === 'function' ? this.getCoreBounds() : this.getBounds();
+    const hitWall = map && (typeof map.checkWallOnlyCollision === 'function' ? map.checkWallOnlyCollision(bounds) : map.checkCollision(bounds));
     if (hitWall) {
       this.alive = false;
       if (particles && typeof particles.emit === 'function') {
@@ -1089,7 +1195,15 @@ class AstralBeamProjectile extends Entity {
             if (particles && typeof particles.emit === 'function') {
               particles.emit(this.x, this.y, 45, { color: '#c084fc', speed: 150, life: 1.2 });
             }
-            if (game && typeof game.showNotification === 'function') {
+            if (game && game.currentArea === 'AETHER_CITADEL') {
+              if (game.portal && game.portal.locked) {
+                game.portal.locked = false;
+                if (game.camera && typeof game.camera.shake === 'function') game.camera.shake(16);
+                if (game.showNotification) {
+                  game.showNotification('PORTAL DO TRONO DESBLOQUEADO!', 'Ressonância Tetradimensional ativada! O Trono do Éter (Fase 15) foi aberto!');
+                }
+              }
+            } else if (game && typeof game.showNotification === 'function') {
               game.showNotification('RESSONÂNCIA TETRADIMENSIONAL!', 'Super Raio Cósmico canalizado! Convergindo no Núcleo de Aethon!');
             }
           }
@@ -1157,15 +1271,17 @@ class AstralBeamProjectile extends Entity {
       return;
     }
 
-    // 6. INIMIGOS COMUNS: Encontra o alvo e é eliminado
+    // 6. INIMIGOS COMUNS: O Raio Astral é um feixe perfurante que atravessa inimigos!
     if (enemies && Array.isArray(enemies)) {
       for (let enemy of enemies) {
         if (enemy.alive && !this.hitEntities.has(enemy) && this.intersects(enemy)) {
           enemy.takeDamage(this.damage, this, audio, camera, particles);
           if (this.hasBurn && typeof enemy.applyBurn === 'function') enemy.applyBurn(4.0);
           this.hitEntities.add(enemy);
-          this.alive = false; // Eliminado ao atingir o alvo!
-          return;
+          if (particles && typeof particles.emit === 'function') {
+            particles.emit(enemy.x, enemy.y, 8, { color: this.color, speed: 65 });
+          }
+          // Feixe perfurante contínuo: NÃO morre ao atingir monstros comuns, continua a trajetória!
         }
       }
     }
@@ -1474,6 +1590,28 @@ class Player extends Entity {
     this.hasChronosLens = false;    // Lente de Cronos (Enigma do Templo de Cronos -> Revela Mirage real!)
     this.hasAstralLantern = false;  // Lanterna Astral (Enigma do Labirinto das Sombras -> Imune à lentidão do Vazio!)
 
+    // Efeitos Especiais de Missões de Poder:
+    this.speedBuffTimer = 0;        // Bônus de velocidade na Corrida da Tempestade
+    this.carryingSolarFlame = false; // Chama Solar carregada para o Degelo de Niflheim
+
+    // Novos Poderes Sagrados:
+    this.hasGlacialFrostPower = false; // Poder Glacial de Niflheim (Espada Celeste: ataques congelam e desaceleram inimigos por 3s)
+    this.hasTriadClonePower = false;   // Poder dos 3 Clones Astrais [T] (Altar da Geleira - Fase 8: invoca 3 clones por 10s)
+    this.triadCloneTimer = 0;
+    this.triadDuration = 10.0;
+    this.triadCooldownTimer = 0;
+    this.triadCooldown = 15.0;
+    this.cloneHitboxes = [];
+
+    // Novo Super Poder dos 2 Fantasmas Invulneráveis (Fase 10 - Templo de Cronos) [G] / [B]
+    this.hasGhostPower = false;
+    this.ghostPowerTimer = 0;
+    this.ghostDuration = 15.0; // 15s de duração ativa!
+    this.ghostCooldownTimer = 0;
+    this.ghostCooldown = 25.0; // 25s de recarga
+    this.ghosts = [];
+    this.ghostHitboxes = [];
+
     // Ataque
     this.isAttacking = false;
     this.attackTime = 0;
@@ -1493,6 +1631,27 @@ class Player extends Entity {
     this.seedsCollected = 0;
   }
 
+  getAttackBounds() {
+    if (this.attackHitbox && typeof this.attackHitbox.getBounds === 'function') {
+      return this.attackHitbox.getBounds();
+    }
+    const offset = 26;
+    let hx = this.x;
+    let hy = this.y;
+    let hw = 32;
+    let hh = 32;
+    if (this.facing === 'down') { hy += offset; hw = 40; hh = 28; }
+    else if (this.facing === 'up') { hy -= offset; hw = 40; hh = 28; }
+    else if (this.facing === 'left') { hx -= offset; hw = 28; hh = 40; }
+    else if (this.facing === 'right') { hx += offset; hw = 28; hh = 40; }
+    return {
+      left: hx - hw / 2,
+      right: hx + hw / 2,
+      top: hy - hh / 2,
+      bottom: hy + hh / 2
+    };
+  }
+
   swapWeapon(audio, particles) {
     if (!this.hasSword) return;
     this.activeWeapon = this.activeWeapon === 'STAFF' ? 'SWORD' : 'STAFF';
@@ -1503,16 +1662,60 @@ class Player extends Entity {
     });
   }
 
-  update(input, map, dt, audio, particles, camera, projectiles, playerShockwaves, astralBeams = []) {
+  update(input, map, dt, audio, particles, camera, projectiles, playerShockwaves, astralBeams = [], game = null) {
     if (this.invulnerableTimer > 0) this.invulnerableTimer -= dt;
     if (this.attackCooldown > 0) this.attackCooldown -= dt;
     if (this.dashCooldownTimer > 0) this.dashCooldownTimer -= dt;
     if (this.specialCooldownTimer > 0) this.specialCooldownTimer -= dt;
     if (this.beamCooldownTimer > 0) this.beamCooldownTimer -= dt;
+    if (this.speedBuffTimer > 0) this.speedBuffTimer -= dt;
+    if (this.triadCloneTimer > 0) this.triadCloneTimer -= dt;
+    if (this.triadCooldownTimer > 0) this.triadCooldownTimer -= dt;
+    if (this.ghostPowerTimer > 0) {
+      this.ghostPowerTimer -= dt;
+      if (this.ghostPowerTimer <= 0) {
+        this.ghosts = [];
+        this.ghostHitboxes = [];
+      }
+    }
+    if (this.ghostCooldownTimer > 0) this.ghostCooldownTimer -= dt;
 
     // Alternar arma com [F] ou [Tab]
     if (input.consumeSwapWeapon()) {
       this.swapWeapon(audio, particles);
+    }
+
+    // ATIVAR PODER DOS 3 CLONES ASTRAIS [T] / [V] (Fase 8 - Geleira de Niflheim)
+    if (this.hasTriadClonePower && input.consumeTriad() && this.triadCooldownTimer <= 0 && this.triadCloneTimer <= 0) {
+      this.triadCloneTimer = this.triadDuration;
+      this.triadCooldownTimer = this.triadCooldown;
+      this.invulnerableTimer = 0.5;
+      if (audio && typeof audio.playPowerUp === 'function') audio.playPowerUp();
+      if (camera && typeof camera.shake === 'function') camera.shake(8);
+      if (particles && typeof particles.emit === 'function') {
+        particles.emit(this.x - 28, this.y, 25, { color: '#c084fc', speed: 100, life: 1.0 });
+        particles.emit(this.x + 28, this.y, 25, { color: '#38bdf8', speed: 100, life: 1.0 });
+        particles.emit(this.x, this.y - 28, 25, { color: '#facc15', speed: 100, life: 1.0 });
+        particles.emit(this.x, this.y, 35, { color: '#a855f7', speed: 120, life: 1.2 });
+      }
+    }
+
+    // ATIVAR PODER DOS 2 FANTASMAS INVULNERÁVEIS [G] / [B] (Fase 10 - Templo de Cronos)
+    if (this.hasGhostPower && input.consumeGhost() && this.ghostCooldownTimer <= 0 && this.ghostPowerTimer <= 0) {
+      this.ghostPowerTimer = this.ghostDuration;
+      this.ghostCooldownTimer = this.ghostCooldown;
+      this.ghosts = [
+        new PlayerGhost(this, 'left'),
+        new PlayerGhost(this, 'right')
+      ];
+      this.invulnerableTimer = 0.5;
+      if (audio && typeof audio.playPowerUp === 'function') audio.playPowerUp();
+      if (camera && typeof camera.shake === 'function') camera.shake(8);
+      if (particles && typeof particles.emit === 'function') {
+        particles.emit(this.x - 30, this.y, 25, { color: '#38bdf8', speed: 110, life: 1.0 });
+        particles.emit(this.x + 30, this.y, 25, { color: '#38bdf8', speed: 110, life: 1.0 });
+        particles.emit(this.x, this.y, 30, { color: '#818cf8', speed: 120, life: 1.1 });
+      }
     }
 
     // DISPARAR SUPER PODER DO 1º BOSS COM [R] (Pisão Sísmico Sagrado)
@@ -1585,6 +1788,7 @@ class Player extends Entity {
       if (this.attackTime >= this.attackDuration) {
         this.isAttacking = false;
         this.attackHitbox = null;
+        this.cloneHitboxes = [];
       }
       return;
     }
@@ -1628,6 +1832,31 @@ class Player extends Entity {
 
       this.attackHitbox = new Entity(hx, hy, hw, hh);
 
+      // 3 Clones Astrais atacam simultaneamente se estiverem ativos!
+      if (this.triadCloneTimer > 0) {
+        this.cloneHitboxes = [
+          new Entity(hx - 28, hy - 6, hw, hh),
+          new Entity(hx + 28, hy - 6, hw, hh),
+          new Entity(hx, hy - 26, hw, hh)
+        ];
+        particles.emit(hx - 28, hy - 6, 6, { color: '#c084fc', speed: 80 });
+        particles.emit(hx + 28, hy - 6, 6, { color: '#38bdf8', speed: 80 });
+        particles.emit(hx, hy - 26, 6, { color: '#facc15', speed: 80 });
+      } else {
+        this.cloneHitboxes = [];
+      }
+
+      // Fantasmas também atacam simultaneamente se estiverem ativos!
+      if (this.ghostPowerTimer > 0 && this.ghosts.length > 0) {
+        this.ghostHitboxes = [];
+        this.ghosts.forEach(ghost => {
+          ghost.triggerMirroredAttack(pDirX, pDirY, hx, hy, hw, hh, audio, particles, projectiles);
+          if (ghost.attackHitbox) this.ghostHitboxes.push(ghost.attackHitbox);
+        });
+      } else {
+        this.ghostHitboxes = [];
+      }
+
       // Se armado com Cajado e possui a gema: dispara feitiço à distância!
       if (this.activeWeapon === 'STAFF' && this.hasAuroraGem) {
         if (this.hasColossusPower) {
@@ -1648,6 +1877,13 @@ class Player extends Entity {
           projectiles.push(new SpellProjectile(hx, hy, pDirX, pDirY, this.hasBurnPower ? '#f97316' : '#67e8f9', this.hasBurnPower));
           audio.playShoot();
         }
+
+        // Se os 3 Clones Astrais estiverem ativos, os 3 clones disparam seus feitiços!
+        if (this.triadCloneTimer > 0) {
+          projectiles.push(new SpellProjectile(hx - 28, hy - 6, pDirX, pDirY, '#c084fc', this.hasBurnPower));
+          projectiles.push(new SpellProjectile(hx + 28, hy - 6, pDirX, pDirY, '#38bdf8', this.hasBurnPower));
+          projectiles.push(new SpellProjectile(hx, hy - 26, pDirX, pDirY, '#facc15', this.hasBurnPower));
+        }
       }
 
       particles.emit(hx, hy, 6, {
@@ -1666,6 +1902,9 @@ class Player extends Entity {
     if (this.slowTimer > 0) {
       this.slowTimer -= dt;
       currentSpeed *= 0.6; // Lentidão segura aplicada por poços do vazio ou feitiços
+    }
+    if (this.speedBuffTimer > 0) {
+      currentSpeed *= 1.35; // Bônus celestial do vendaval
     }
 
     if (this.isMoving && input.isSprinting && this.stamina > 5) {
@@ -1691,6 +1930,11 @@ class Player extends Entity {
       this.moveWithCollision(dx, dy, map);
     } else {
       this.animTime = 0;
+    }
+
+    // Atualizar os 2 Fantasmas Invulneráveis se estiverem ativos
+    if (this.ghostPowerTimer > 0 && this.ghosts.length > 0) {
+      this.ghosts.forEach(ghost => ghost.update(dt, map, audio, particles, projectiles, game));
     }
   }
 
@@ -1787,35 +2031,99 @@ class Player extends Entity {
       ctx.restore();
     }
 
+    // Chama Solar Carregada (Missão do Degelo de Niflheim)
+    if (this.carryingSolarFlame) {
+      ctx.save();
+      const ft = Date.now() * 0.006;
+      const flameX = screenX + Math.cos(ft) * 22;
+      const flameY = screenY + 2 + Math.sin(ft) * 12;
+      ctx.fillStyle = '#f97316';
+      ctx.shadowColor = '#fbbf24';
+      ctx.shadowBlur = 18;
+      ctx.beginPath();
+      ctx.arc(flameX, flameY, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath();
+      ctx.arc(flameX, flameY, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Poder Glacial de Niflheim (Desbloqueado com a Espada Celeste)
+    if (this.hasGlacialFrostPower) {
+      ctx.save();
+      const gt = Date.now() * 0.005;
+      for (let i = 0; i < 3; i++) {
+        const ga = gt + (i * Math.PI * 2) / 3;
+        const gx = screenX + Math.cos(ga) * 20;
+        const gy = screenY + 4 + Math.sin(ga) * 9;
+        ctx.fillStyle = '#38bdf8';
+        ctx.shadowColor = '#e0f2fe';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(gx, gy, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
     const walkBob = Math.sin(this.animTime) * 2;
+
+    // 3 Clones Astrais simultâneos (Desbloqueados na Geleira de Niflheim - Fase 8)
+    if (this.triadCloneTimer > 0) {
+      ctx.save();
+      const alphaPulse = 0.72 + Math.sin(Date.now() * 0.008) * 0.2;
+      ctx.globalAlpha = alphaPulse;
+      // Clone 1 (Alpha - Violeta Cósmico) à esquerda
+      this.drawSprite(ctx, screenX - 28, screenY - 6 + walkBob, this.facing, walkBob, '#c084fc');
+      // Clone 2 (Beta - Ciano Celestial) à direita
+      this.drawSprite(ctx, screenX + 28, screenY - 6 + walkBob, this.facing, walkBob, '#38bdf8');
+      // Clone 3 (Gama - Dourado Astral) na retaguarda
+      this.drawSprite(ctx, screenX, screenY - 26 + walkBob, this.facing, walkBob, '#facc15');
+      ctx.restore();
+    }
+
     this.drawSprite(ctx, screenX, screenY + walkBob, this.facing, walkBob);
 
-    // Efeito Visual do Ataque
+    // Desenhar os 2 Fantasmas Invulneráveis se estiverem ativos
+    if (this.ghostPowerTimer > 0 && this.ghosts.length > 0) {
+      this.ghosts.forEach(ghost => ghost.draw(ctx, camera, this));
+    }
+
+    // Efeito Visual do Ataque (Kaelen + Clones)
     if (this.isAttacking) {
-      ctx.save();
       const isSword = this.activeWeapon === 'SWORD';
       const swordFlame = isSword && this.swordLevel === 2;
-
-      ctx.strokeStyle = isSword ? (swordFlame ? '#f97316' : '#38bdf8') : '#67e8f9';
-      ctx.lineWidth = isSword ? 4 : 3;
-      ctx.shadowColor = isSword ? (swordFlame ? '#ea580c' : '#0284c7') : '#38bdf8';
-      ctx.shadowBlur = 12;
-
       const progress = this.attackTime / this.attackDuration;
       const angle = (progress - 0.5) * Math.PI;
 
-      ctx.translate(screenX, screenY);
       let baseRot = 0;
       if (this.facing === 'right') baseRot = 0;
       if (this.facing === 'down') baseRot = Math.PI / 2;
       if (this.facing === 'left') baseRot = Math.PI;
       if (this.facing === 'up') baseRot = -Math.PI / 2;
 
-      ctx.rotate(baseRot + angle);
-      ctx.beginPath();
-      ctx.arc(isSword ? 22 : 18, 0, isSword ? 24 : 20, -0.7, 0.7);
-      ctx.stroke();
-      ctx.restore();
+      const slashPositions = [{ x: screenX, y: screenY, color: isSword ? (swordFlame ? '#f97316' : '#38bdf8') : '#67e8f9', shadow: isSword ? (swordFlame ? '#ea580c' : '#0284c7') : '#38bdf8' }];
+      if (this.triadCloneTimer > 0) {
+        slashPositions.push({ x: screenX - 28, y: screenY - 6, color: '#c084fc', shadow: '#9333ea' });
+        slashPositions.push({ x: screenX + 28, y: screenY - 6, color: '#38bdf8', shadow: '#0284c7' });
+        slashPositions.push({ x: screenX, y: screenY - 26, color: '#facc15', shadow: '#eab308' });
+      }
+
+      slashPositions.forEach(pos => {
+        ctx.save();
+        ctx.strokeStyle = pos.color;
+        ctx.lineWidth = isSword ? 4 : 3;
+        ctx.shadowColor = pos.shadow;
+        ctx.shadowBlur = 12;
+        ctx.translate(pos.x, pos.y);
+        ctx.rotate(baseRot + angle);
+        ctx.beginPath();
+        ctx.arc(isSword ? 22 : 18, 0, isSword ? 24 : 20, -0.7, 0.7);
+        ctx.stroke();
+        ctx.restore();
+      });
     }
   }
 
@@ -1907,6 +2215,8 @@ class EnemyCreature extends Entity {
     this.biome = biome; // 'FOREST', 'CAVE', 'SKY', 'MAGMA', 'VOID'
     this.health = biome === 'VOID' ? 5 : (biome === 'MAGMA' ? 4 : (biome === 'SKY' ? 3 : 2));
     this.speed = biome === 'VOID' ? 100 : (biome === 'SKY' ? 90 : 70);
+    this.baseSpeed = this.speed;
+    this.slowTimer = 0;
     this.detectionRadius = 150;
     this.animTime = Math.random() * 5;
     this.hitTimer = 0;
@@ -1928,6 +2238,17 @@ class EnemyCreature extends Entity {
     this.animTime += dt * 4;
     if (this.hitTimer > 0) this.hitTimer -= dt;
     if (this.attackCooldown > 0) this.attackCooldown -= dt;
+
+    // Efeito Glacial de Niflheim (Lentidão de 3 segundos)
+    if (this.slowTimer > 0) {
+      this.slowTimer -= dt;
+      this.speed = this.baseSpeed * 0.45;
+      if (particles && Math.random() < 0.15) {
+        particles.emit(this.x, this.y, 1, { color: '#38bdf8', speed: 25, life: 0.3 });
+      }
+    } else {
+      this.speed = this.baseSpeed;
+    }
 
     // Processamento de dano contínuo de queimadura (Burn DoT)
     if (this.isBurning && this.burnTimer > 0) {
@@ -1969,9 +2290,12 @@ class EnemyCreature extends Entity {
       }
     }
 
-    // Dano por golpe do jogador
-    if (player.isAttacking && player.attackHitbox && this.hitTimer <= 0) {
-      if (this.intersects(player.attackHitbox)) {
+    // Dano por golpe do jogador, clones da Tríade ou Fantasmas
+    if (player.isAttacking && this.hitTimer <= 0) {
+      let hitByPlayer = player.attackHitbox && this.intersects(player.attackHitbox);
+      let hitByClone = player.cloneHitboxes && player.cloneHitboxes.some(ch => this.intersects(ch));
+      let hitByGhost = player.ghostHitboxes && player.ghostHitboxes.some(gh => this.intersects(gh));
+      if (hitByPlayer || hitByClone || hitByGhost) {
         const dmg = player.activeWeapon === 'SWORD' ? (player.swordLevel === 2 ? 3 : 2) : 1;
         this.takeDamage(dmg, player, audio, camera, particles);
         if (player.hasBurnPower) this.applyBurn(4.0);
@@ -2010,6 +2334,13 @@ class EnemyCreature extends Entity {
     if (audio && typeof audio.playHit === 'function') audio.playHit();
     if (camera && typeof camera.shake === 'function') camera.shake(4);
 
+    if (source && (source.hasGlacialFrostPower || (source.player && source.player.hasGlacialFrostPower))) {
+      this.slowTimer = 3.0; // Aplica lentidão glacial de 3 segundos
+      if (particles && typeof particles.emit === 'function') {
+        particles.emit(this.x, this.y, 8, { color: '#38bdf8', speed: 60 });
+      }
+    }
+
     if (source && typeof source.x === 'number' && typeof source.y === 'number') {
       const angle = Math.atan2(this.y - source.y, this.x - source.x);
       this.x += Math.cos(angle) * 20;
@@ -2045,6 +2376,16 @@ class EnemyCreature extends Entity {
 
     ctx.save();
     ctx.translate(screenX, screenY);
+
+    if (this.slowTimer > 0) {
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.shadowColor = '#e0f2fe';
+      ctx.shadowBlur = 6;
+      ctx.beginPath();
+      ctx.arc(0, 0, 16, 0, Math.PI * 2);
+      ctx.stroke();
+    }
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
     ctx.beginPath();
@@ -2085,6 +2426,90 @@ class EnemyCreature extends Entity {
     }
 
     ctx.restore();
+  }
+}
+
+// ====================================================================
+// GUARDIÃO DE ELITE DAS PROVAÇÕES DE PODER (MISSÕES PARA DESBLOQUEIO DE HABILIDADES)
+// ====================================================================
+class TrialGuardianCreature extends EnemyCreature {
+  constructor(x, y, biome, guardianName, auraColor, maxHp = 3, altarRef = null) {
+    super(x, y, biome);
+    this.isTrialGuardian = true;
+    this.guardianName = guardianName || 'Guardião Ancestral';
+    this.auraColor = auraColor || '#f59e0b';
+    this.altarRef = altarRef;
+    this.maxHealth = maxHp;
+    this.health = maxHp;
+    this.speed = Math.max(this.speed, 85);
+    this.detectionRadius = 260; // Área de percepção estendida
+    this.guardianProcessed = false;
+    this.width = 28;
+    this.height = 28;
+  }
+
+  update(player, map, dt, audio, particles, camera, projectiles) {
+    const drop = super.update(player, map, dt, audio, particles, camera, projectiles);
+
+    // Efeito de rastro rúnico constante do Guardião
+    if (Math.random() < 0.4 && particles && typeof particles.emit === 'function') {
+      particles.emit(this.x, this.y, 1, { color: this.auraColor, speed: 25, life: 0.35 });
+    }
+
+    if (!this.alive && !this.guardianProcessed) {
+      this.guardianProcessed = true;
+      if (particles && typeof particles.emit === 'function') {
+        particles.emit(this.x, this.y, 28, { color: this.auraColor, speed: 120, life: 0.8 });
+      }
+      // Sempre solta um coração garantido para sustentar o jogador no combate de missão!
+      return new HeartItem(this.x, this.y);
+    }
+    return drop;
+  }
+
+  draw(ctx, camera) {
+    if (!this.alive) return;
+    const screenX = this.x - camera.x;
+    const screenY = this.y - camera.y;
+
+    // 1. Rastro de Aura Rúnica Sob os Pés
+    ctx.save();
+    ctx.translate(screenX, screenY);
+
+    const pulse = 1 + Math.sin(this.animTime * 5) * 0.14;
+    ctx.strokeStyle = this.auraColor;
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = this.auraColor;
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.arc(0, 10, 16 * pulse, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Símbolo de Elite / Coroa
+    ctx.font = '11px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('👑', 0, -22);
+
+    // Nome da Criatura de Provação
+    ctx.font = '7px "Press Start 2P", monospace';
+    ctx.fillStyle = this.auraColor;
+    ctx.shadowColor = '#000000';
+    ctx.shadowBlur = 4;
+    ctx.fillText(this.guardianName, 0, -13);
+
+    // Barra de Vida do Guardião
+    const barW = 28;
+    const barH = 4;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+    ctx.fillRect(-barW / 2, -9, barW, barH);
+    const hpPct = Math.max(0, this.health / this.maxHealth);
+    ctx.fillStyle = this.auraColor;
+    ctx.fillRect(-barW / 2, -9, barW * hpPct, barH);
+
+    ctx.restore();
+
+    // 2. Renderização do corpo herdado de EnemyCreature
+    super.draw(ctx, camera);
   }
 }
 
@@ -2607,8 +3032,11 @@ class BossValdor extends Entity {
         break;
     }
 
-    if (player.isAttacking && player.attackHitbox && this.hitTimer <= 0) {
-      if (this.intersects(player.attackHitbox)) {
+    if (player.isAttacking && this.hitTimer <= 0) {
+      let hitByPlayer = player.attackHitbox && this.intersects(player.attackHitbox);
+      let hitByClone = player.cloneHitboxes && player.cloneHitboxes.some(ch => this.intersects(ch));
+      let hitByGhost = player.ghostHitboxes && player.ghostHitboxes.some(gh => this.intersects(gh));
+      if (hitByPlayer || hitByClone || hitByGhost) {
         const dmg = player.activeWeapon === 'SWORD' ? (player.swordLevel === 2 ? 3 : 2) : 1;
         this.takeDamage(dmg, audio, camera, particles);
         if (player.hasBurnPower) this.applyBurn(4.0);
@@ -3395,32 +3823,1225 @@ class ForgeAltar extends Entity {
   }
 }
 
-// Altar Sagrado de Missão Separada para Conquistar Armas e Poderes
-class PowerMissionAltar extends Entity {
-  constructor(x, y, type, name, promptText, rewardText, color, icon) {
-    super(x, y, 44, 44);
-    this.type = type; // 'COLOSSUS_POWER', 'SWORD', 'ASTRAL_BEAM', 'CHRONOS_LENS', 'ASTRAL_LANTERN'
+// ====================================================================
+// ENTIDADES DE MISSÕES DISTINTAS PARA CONQUISTA DE PODERES E ARMAS
+// (Cada fase possui uma mecânica única: Placas Tectônicas, Corrida Celeste,
+//  Degelo Solar da Tundra, Fendas de Cronos e Centelhas nas Sombras)
+// ====================================================================
+
+// 1. PLACAS DE PRESSÃO TECTÔNICAS (Fase 2: Caverna dos Cristais - Pisão Sísmico [R])
+class TitanPressurePlate extends Entity {
+  constructor(x, y, id, name = 'Placa Telúrica') {
+    super(x, y, 42, 42);
+    this.id = id;
     this.name = name;
+    this.chargeTimer = 0;
+    this.chargeTarget = 1.0; // 1.0s para energizar cada placa telúrica
+    this.charged = false;
+    this.isStanding = false;
+    this.glowAnim = Math.random() * Math.PI * 2;
+  }
+
+  update(player, dt, altar, game) {
+    this.glowAnim += dt * 3.5;
+    if (this.charged) return;
+
+    this.isStanding = Math.hypot(player.x - this.x, player.y - this.y) < 48;
+    if (this.isStanding) {
+      this.chargeTimer += dt;
+      if (game && game.particles && Math.random() < 0.4) {
+        game.particles.emit(this.x, this.y, 2, { color: '#38bdf8', speed: 45, life: 0.45 });
+      }
+      if (this.chargeTimer >= this.chargeTarget) {
+        this.charged = true;
+        this.chargeTimer = this.chargeTarget;
+        if (game && game.audio) game.audio.playPowerUp();
+        if (game && game.camera) game.camera.shake(8);
+        if (game && game.particles) {
+          game.particles.emit(this.x, this.y, 35, { color: '#38bdf8', speed: 120, life: 1.0 });
+          game.particles.emit(this.x, this.y, 20, { color: '#facc15', speed: 90, life: 0.8 });
+        }
+        altar.recordPlateCharged(game, this);
+      }
+    } else {
+      // Quase não perde carga ao sair brevemente da placa para desviar
+      this.chargeTimer = Math.max(0, this.chargeTimer - dt * 0.15);
+    }
+  }
+
+  draw(ctx, camera) {
+    const sx = this.x - camera.x;
+    const sy = this.y - camera.y;
+
+    ctx.save();
+    ctx.translate(sx, sy);
+
+    ctx.fillStyle = this.charged ? '#0369a1' : '#1e293b';
+    ctx.strokeStyle = this.charged ? '#38bdf8' : (this.isStanding ? '#7dd3fc' : '#475569');
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = this.charged ? '#38bdf8' : '#0284c7';
+    ctx.shadowBlur = this.charged ? 16 : (this.isStanding ? 10 : 2);
+
+    ctx.fillRect(-18, -18, 36, 36);
+    ctx.strokeRect(-18, -18, 36, 36);
+
+    ctx.fillStyle = this.charged ? '#e0f2fe' : (this.isStanding ? '#38bdf8' : '#64748b');
+    ctx.font = '12px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('⚡', 0, 0);
+
+    if (!this.charged && this.chargeTimer > 0) {
+      const pct = this.chargeTimer / this.chargeTarget;
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(0, 0, 23, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct);
+      ctx.stroke();
+
+      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.fillStyle = '#fef08a';
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 4;
+      ctx.fillText(`${Math.round(pct * 100)}%`, 0, -28);
+    } else if (this.charged) {
+      ctx.font = '7px "Press Start 2P", monospace';
+      ctx.fillStyle = '#86efac';
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 4;
+      ctx.fillText('ENERGIZADA', 0, -26);
+    }
+
+    ctx.restore();
+  }
+}
+
+// 2. CENTELHAS DO VENDAVAL CELESTE (Fase 4: Palácio dos Ventos - Espada Celeste [F])
+class StormSparkItem extends Entity {
+  constructor(x, y, id, name = 'Centelha do Vendaval') {
+    super(x, y, 28, 28);
+    this.id = id;
+    this.name = name;
+    this.collected = false;
+    this.floatAnim = Math.random() * Math.PI * 2;
+  }
+
+  update(player, dt, altar, game) {
+    if (this.collected) return;
+    this.floatAnim += dt * 4.0;
+
+    const dist = Math.hypot(player.x - this.x, player.y - this.y);
+    if (dist < 52) {
+      this.collected = true;
+      if (game && game.audio) game.audio.playCoin();
+      if (game && game.camera) game.camera.shake(6);
+      if (game && game.particles) {
+        game.particles.emit(this.x, this.y, 25, { color: '#facc15', speed: 110, life: 0.8 });
+        game.particles.emit(this.x, this.y, 15, { color: '#38bdf8', speed: 90, life: 0.6 });
+      }
+      player.speedBuffTimer = 7.0; // Buff de velocidade de 7 segundos!
+      altar.recordSparkCollected(game, this);
+    }
+  }
+
+  draw(ctx, camera) {
+    if (this.collected) return;
+    const sx = this.x - camera.x;
+    const sy = this.y - camera.y;
+    const bob = Math.sin(this.floatAnim) * 5;
+
+    ctx.save();
+    ctx.translate(sx, sy + bob);
+
+    const beamGrad = ctx.createLinearGradient(0, -60, 0, 10);
+    beamGrad.addColorStop(0, 'rgba(250, 204, 21, 0)');
+    beamGrad.addColorStop(1, 'rgba(250, 204, 21, 0.45)');
+    ctx.fillStyle = beamGrad;
+    ctx.fillRect(-6, -60, 12, 70);
+
+    ctx.fillStyle = '#facc15';
+    ctx.shadowColor = '#fef08a';
+    ctx.shadowBlur = 18;
+    ctx.beginPath();
+    ctx.arc(0, 0, 10, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 16, 6, this.floatAnim, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.font = '10px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('✨', 0, 0);
+
+    ctx.restore();
+  }
+}
+
+// 3. TOCHA DA AURORA E BRASEIROS GLACIAIS (Fase 8: Geleira de Niflheim - Raio Astral [C])
+class SolarTorch extends Entity {
+  constructor(x, y, name = 'Tocha da Aurora Solar') {
+    super(x, y, 32, 40);
+    this.name = name;
+    this.anim = 0;
+  }
+
+  update(player, dt) {
+    this.anim += dt * 4.0;
+    return Math.hypot(player.x - this.x, player.y - this.y) < 46;
+  }
+
+  draw(ctx, camera, isNear) {
+    const sx = this.x - camera.x;
+    const sy = this.y - camera.y;
+    const bob = Math.sin(this.anim) * 2;
+
+    ctx.save();
+    ctx.translate(sx, sy);
+
+    ctx.fillStyle = '#78350f';
+    ctx.fillRect(-6, 4, 12, 16);
+    ctx.fillStyle = '#b45309';
+    ctx.fillRect(-8, -2, 16, 6);
+
+    ctx.fillStyle = '#f97316';
+    ctx.shadowColor = '#fbbf24';
+    ctx.shadowBlur = 20;
+    ctx.beginPath();
+    ctx.arc(0, -9 + bob, 11, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#fef08a';
+    ctx.beginPath();
+    ctx.arc(0, -9 + bob, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (isNear) {
+      ctx.textAlign = 'center';
+      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.fillStyle = '#fef08a';
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 4;
+      ctx.fillText('[E] Pegar Chama Solar', 0, -26);
+    }
+
+    ctx.restore();
+  }
+}
+
+class GlacialBrazier extends Entity {
+  constructor(x, y, id, name = 'Braseiro Glacial') {
+    super(x, y, 36, 42);
+    this.id = id;
+    this.name = name;
+    this.lit = false;
+    this.anim = Math.random() * Math.PI * 2;
+  }
+
+  update(player, dt, altar, game) {
+    this.anim += dt * 3.5;
+    const near = Math.hypot(player.x - this.x, player.y - this.y) < 46;
+    if (near && !this.lit && altar.playerCarryingFlame && game && game.input && game.input.consumeInteract()) {
+      this.lit = true;
+      if (game.audio) game.audio.playCheckpoint();
+      if (game.camera) game.camera.shake(7);
+      if (game.particles) {
+        game.particles.emit(this.x, this.y, 35, { color: '#f97316', speed: 120, life: 1.0 });
+      }
+      altar.recordBrazierLit(game, this);
+    } else if (near && this.lit && !altar.playerCarryingFlame && game && game.input && game.input.consumeInteract()) {
+      altar.playerCarryingFlame = true;
+      player.carryingSolarFlame = true;
+      if (game.audio) game.audio.playCheckpoint();
+      if (game.particles) {
+        game.particles.emit(this.x, this.y, 20, { color: '#f97316', speed: 80, life: 0.6 });
+      }
+      game.showNotification('CHAMA REFORÇADA!', '🔥 Você pegou a Chama Solar deste braseiro para acender os próximos!');
+      game.updateHUD();
+    }
+    return near;
+  }
+
+  draw(ctx, camera, isNear, altar) {
+    const sx = this.x - camera.x;
+    const sy = this.y - camera.y;
+
+    ctx.save();
+    ctx.translate(sx, sy);
+
+    ctx.fillStyle = this.lit ? '#1e293b' : '#0c4a6e';
+    ctx.fillRect(-14, 4, 28, 16);
+    ctx.fillStyle = this.lit ? '#334155' : '#0369a1';
+    ctx.fillRect(-16, -2, 32, 6);
+
+    if (this.lit) {
+      const bob = Math.sin(this.anim) * 2;
+      ctx.fillStyle = '#ea580c';
+      ctx.shadowColor = '#facc15';
+      ctx.shadowBlur = 18;
+      ctx.beginPath();
+      ctx.arc(0, -9 + bob, 11, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath();
+      ctx.arc(0, -9 + bob, 6, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillStyle = '#38bdf8';
+      ctx.shadowColor = '#7dd3fc';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.arc(0, -5, 7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    if (isNear) {
+      ctx.textAlign = 'center';
+      ctx.font = '7px "Press Start 2P", monospace';
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 4;
+      if (!this.lit) {
+        if (altar && altar.playerCarryingFlame) {
+          ctx.fillStyle = '#fef08a';
+          ctx.fillText('[E] Acender Braseiro', 0, -24);
+        } else {
+          ctx.fillStyle = '#94a3b8';
+          ctx.fillText('(Pegue Fogo na Tocha)', 0, -24);
+        }
+      } else if (altar && !altar.playerCarryingFlame) {
+        ctx.fillStyle = '#fde047';
+        ctx.fillText('[E] Pegar Chama', 0, -24);
+      }
+    }
+
+    ctx.restore();
+
+    if (this.lit && altar && altar.missionState !== 'COMPLETED') {
+      const asx = altar.x - camera.x;
+      const asy = altar.y - camera.y;
+      ctx.save();
+      ctx.strokeStyle = 'rgba(249, 115, 22, 0.75)';
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = '#f59e0b';
+      ctx.shadowBlur = 10;
+      ctx.setLineDash([8, 4]);
+      ctx.lineDashOffset = -this.anim * 10;
+      ctx.beginPath();
+      ctx.moveTo(sx, sy - 9);
+      ctx.lineTo(asx, asy);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+}
+
+// 4. FENDAS TEMPORAIS DE CRONOS (Fase 10: Templo de Cronos - Lente de Cronos)
+class ChronosTimeRift extends Entity {
+  constructor(x, y, id, name = 'Fenda Temporal') {
+    super(x, y, 36, 36);
+    this.id = id;
+    this.name = name;
+    this.sealed = false;
+    this.angle = Math.random() * Math.PI * 2;
+    this.pulse = 0;
+  }
+
+  update(player, dt, altar, game) {
+    this.angle += dt * 3.5;
+    this.pulse += dt * 4.0;
+    const near = Math.hypot(player.x - this.x, player.y - this.y) < 58;
+    if (near && !this.sealed && game && game.input && game.input.consumeInteract()) {
+      this.sealed = true;
+      if (game.audio) game.audio.playPowerUp();
+      if (game.camera) game.camera.shake(9);
+      if (game.particles) {
+        game.particles.emit(this.x, this.y, 40, { color: '#facc15', speed: 120, life: 1.1 });
+        game.particles.emit(this.x, this.y, 25, { color: '#38bdf8', speed: 90, life: 0.8 });
+      }
+      altar.recordRiftSealed(game, this);
+    }
+    return near;
+  }
+
+  draw(ctx, camera, isNear) {
+    const sx = this.x - camera.x;
+    const sy = this.y - camera.y;
+
+    ctx.save();
+    ctx.translate(sx, sy);
+
+    if (!this.sealed) {
+      ctx.rotate(this.angle);
+      ctx.shadowColor = '#facc15';
+      ctx.shadowBlur = 18;
+
+      ctx.strokeStyle = '#facc15';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, 16 + Math.sin(this.pulse) * 3, 0, Math.PI * 1.5);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, 10, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '12px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('⏳', 0, 0);
+    } else {
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.5;
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 8;
+      ctx.strokeRect(-10, -10, 20, 20);
+
+      ctx.font = '7px "Press Start 2P", monospace';
+      ctx.fillStyle = '#86efac';
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 4;
+      ctx.textAlign = 'center';
+      ctx.fillText('ESTÁVEL', 0, -18);
+    }
+
+    if (isNear && !this.sealed) {
+      ctx.textAlign = 'center';
+      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.fillStyle = '#fef08a';
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 4;
+      ctx.fillText('[E] Estabilizar Fenda', 0, -26);
+    }
+
+    ctx.restore();
+  }
+}
+
+/// 5. CENTELHAS DA LUZ ASTRAL NAS SOMBRAS (Fase 12: Labirinto das Sombras - Lanterna Astral)
+class AstralLightSpark extends Entity {
+  constructor(x, y, id, name = 'Centelha da Luz Astral') {
+    super(x, y, 26, 26);
+    this.id = id;
+    this.name = name;
+    this.collected = false;
+    this.anim = Math.random() * Math.PI * 2;
+  }
+
+  update(player, dt, altar, game) {
+    if (this.collected) return;
+    this.anim += dt * 3.5;
+    const dist = Math.hypot(player.x - this.x, player.y - this.y);
+    if (dist < 54) {
+      this.collected = true;
+      if (game && game.audio) game.audio.playCoin();
+      if (game && game.camera) game.camera.shake(5);
+      if (game.particles) {
+        game.particles.emit(this.x, this.y, 30, { color: '#22d3ee', speed: 100, life: 0.9 });
+      }
+      altar.recordDarkSparkCollected(game, this);
+    }
+  }
+
+  draw(ctx, camera) {
+    if (this.collected) return;
+    const sx = this.x - camera.x;
+    const sy = this.y - camera.y;
+    const bob = Math.sin(this.anim) * 4;
+
+    ctx.save();
+    ctx.translate(sx, sy + bob);
+
+    const rad = 28 + Math.sin(this.anim) * 6;
+    const grad = ctx.createRadialGradient(0, 0, 4, 0, 0, rad);
+    grad.addColorStop(0, 'rgba(34, 211, 238, 0.9)');
+    grad.addColorStop(0.5, 'rgba(34, 211, 238, 0.35)');
+    grad.addColorStop(1, 'rgba(34, 211, 238, 0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(0, 0, rad, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#22d3ee';
+    ctx.shadowBlur = 14;
+    ctx.beginPath();
+    ctx.arc(0, 0, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.font = '9px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🕯️', 0, 0);
+
+    ctx.restore();
+  }
+}
+
+// 6. ESPELHOS CÓSMICOS DA TRÍADE (Fase 4: Palácio dos Ventos - Missão da Tríade 3X [T])
+class TriadMirror extends Entity {
+  constructor(x, y, id, name = 'Espelho da Tríade') {
+    super(x, y, 32, 40);
+    this.id = id;
+    this.name = name;
+    this.activated = false;
+    this.anim = Math.random() * Math.PI * 2;
+  }
+
+  update(player, dt, altar, game) {
+    this.anim += dt * 3.5;
+    const near = Math.hypot(player.x - this.x, player.y - this.y) < 48;
+    if (near && !this.activated && game && game.input && game.input.consumeInteract()) {
+      this.activated = true;
+      if (game.audio) game.audio.playPowerUp();
+      if (game.camera) game.camera.shake(8);
+      if (game.particles) {
+        game.particles.emit(this.x, this.y, 35, { color: '#a855f7', speed: 110, life: 1.0 });
+        game.particles.emit(this.x, this.y, 20, { color: '#38bdf8', speed: 85, life: 0.8 });
+      }
+      altar.recordMirrorActivated(game, this);
+    }
+    return near;
+  }
+
+  draw(ctx, camera, isNear) {
+    const sx = this.x - camera.x;
+    const sy = this.y - camera.y;
+
+    ctx.save();
+    ctx.translate(sx, sy);
+
+    const bob = Math.sin(this.anim) * 3;
+
+    // Base do pedestal
+    ctx.fillStyle = this.activated ? '#581c87' : '#1e1b4b';
+    ctx.fillRect(-12, 10, 24, 12);
+    ctx.fillStyle = this.activated ? '#7e22ce' : '#312e81';
+    ctx.fillRect(-10, 6, 20, 4);
+
+    // Moldura do espelho
+    ctx.strokeStyle = this.activated ? '#c084fc' : '#6366f1';
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = this.activated ? '#c084fc' : '#4338ca';
+    ctx.shadowBlur = this.activated ? 18 : 6;
+    ctx.fillStyle = this.activated ? 'rgba(192, 132, 252, 0.45)' : 'rgba(99, 102, 241, 0.2)';
+
+    ctx.beginPath();
+    ctx.ellipse(0, -6 + bob, 14, 20, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = '12px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(this.activated ? '👥' : '🪞', 0, -6 + bob);
+
+    if (isNear && !this.activated) {
+      ctx.textAlign = 'center';
+      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.fillStyle = '#fef08a';
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 4;
+      ctx.fillText('[E] Sintonizar Espelho', 0, -32);
+    }
+
+    ctx.restore();
+  }
+}
+
+// 7. RELÍQUIAS ESPECTRAIS DE CRONOS (Fase 10: Templo de Cronos - Missão dos Fantasmas [G] / [B])
+class ThunderGhostRelic extends Entity {
+  constructor(x, y, id, name = 'Relíquia Espectral') {
+    super(x, y, 32, 42);
+    this.id = id;
+    this.name = name;
+    this.activated = false;
+    this.anim = Math.random() * Math.PI * 2;
+  }
+
+  update(player, dt, altar, game) {
+    this.anim += dt * 3.8;
+    const near = Math.hypot(player.x - this.x, player.y - this.y) < 50;
+    if (near && !this.activated && game && game.input && game.input.consumeInteract()) {
+      this.activated = true;
+      if (game.audio) game.audio.playPowerUp();
+      if (game.camera) game.camera.shake(8);
+      if (game.particles) {
+        game.particles.emit(this.x, this.y, 35, { color: '#38bdf8', speed: 120, life: 1.0 });
+        game.particles.emit(this.x, this.y, 25, { color: '#facc15', speed: 90, life: 0.8 });
+      }
+      altar.recordRelicSintonized(game, this);
+    }
+    return near;
+  }
+
+  draw(ctx, camera, isNear) {
+    const sx = this.x - camera.x;
+    const sy = this.y - camera.y;
+
+    ctx.save();
+    ctx.translate(sx, sy);
+
+    const bob = Math.sin(this.anim) * 4;
+
+    // Base do pedestal de mármore e raio
+    ctx.fillStyle = this.activated ? '#0369a1' : '#1e293b';
+    ctx.fillRect(-14, 12, 28, 12);
+    ctx.fillStyle = this.activated ? '#0284c7' : '#334155';
+    ctx.fillRect(-11, 7, 22, 5);
+
+    // Orbe espectral e runa do trovão
+    ctx.strokeStyle = this.activated ? '#38bdf8' : '#64748b';
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = this.activated ? '#38bdf8' : '#0284c7';
+    ctx.shadowBlur = this.activated ? 20 : 6;
+    ctx.fillStyle = this.activated ? 'rgba(56, 189, 248, 0.45)' : 'rgba(30, 41, 59, 0.3)';
+
+    ctx.beginPath();
+    ctx.arc(0, -6 + bob, 15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Ícone central
+    ctx.font = '13px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(this.activated ? '👻' : '⚡', 0, -6 + bob);
+
+    if (isNear && !this.activated) {
+      ctx.textAlign = 'center';
+      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.fillStyle = '#38bdf8';
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 4;
+      ctx.fillText('[E] Sintonizar Espectro', 0, -32);
+    }
+
+    ctx.restore();
+  }
+}
+
+// 8. FANTASMAS ESPECTRAIS DO JOGADOR (Fase 10: Poder dos 2 Fantasmas Invulneráveis [G] / [B])
+class PlayerGhost extends Entity {
+  constructor(player, side = 'left') {
+    const offsetX = side === 'left' ? -34 : 34;
+    const offsetY = -14;
+    super(player.x + offsetX, player.y + offsetY, 22, 28);
+    this.player = player;
+    this.side = side; // 'left' ou 'right'
+    this.isGhost = true;
+    this.facing = player.facing;
+    this.animTime = Math.random() * Math.PI * 2;
+    this.floatOffset = Math.random() * Math.PI * 2;
+    this.attackCooldown = 0.8 + Math.random() * 0.4;
+    this.isAttacking = false;
+    this.attackTime = 0;
+    this.attackDuration = 0.22;
+    this.attackHitbox = null;
+    this.activeWeapon = player.activeWeapon;
+  }
+
+  takeDamage(amount, ...args) {
+    // REGRA FUNDAMENTAL OBRIGATÓRIA: "dois fantasmas não tomam dano"
+    // Os fantasmas são 100% invulneráveis a dano de qualquer chefe, monstro, feitiço ou projétil!
+    return false;
+  }
+
+  update(dt, map, audio, particles, projectiles, game) {
+    this.animTime += dt * 5;
+    this.floatOffset += dt * 3;
+    if (this.attackCooldown > 0) this.attackCooldown -= dt;
+
+    if (this.isAttacking) {
+      this.attackTime += dt;
+      if (this.attackTime >= this.attackDuration) {
+        this.isAttacking = false;
+        this.attackHitbox = null;
+      }
+    }
+
+    // Seguir suavemente a posição ao lado do jogador Kaelen
+    const walkBob = Math.sin(this.floatOffset) * 4;
+    const targetX = this.player.x + (this.side === 'left' ? -32 : 32);
+    const targetY = this.player.y - 12 + walkBob;
+
+    // Interpolação suave (lerp)
+    this.x += (targetX - this.x) * Math.min(1, dt * 8);
+    this.y += (targetY - this.y) * Math.min(1, dt * 8);
+    this.facing = this.player.facing;
+    this.activeWeapon = this.player.activeWeapon;
+
+    // Efeito de partículas espectrais constantes
+    if (Math.random() < 0.25 && particles && typeof particles.emit === 'function') {
+      particles.emit(this.x, this.y, 1, {
+        color: '#38bdf8',
+        speed: 25,
+        life: 0.4,
+        size: 3
+      });
+    }
+
+    // Ataque autônomo periódico se houver inimigos ou chefe nas proximidades
+    if (this.attackCooldown <= 0 && game) {
+      let target = null;
+      let minDist = 220;
+
+      if (game.boss && game.boss.health > 0) {
+        const d = Math.hypot(game.boss.x - this.x, game.boss.y - this.y);
+        if (d < minDist) {
+          minDist = d;
+          target = game.boss;
+        }
+      }
+
+      if (game.enemies && game.enemies.length > 0) {
+        for (const en of game.enemies) {
+          if (en.health > 0) {
+            const d = Math.hypot(en.x - this.x, en.y - this.y);
+            if (d < minDist) {
+              minDist = d;
+              target = en;
+            }
+          }
+        }
+      }
+
+      if (target) {
+        this.attackCooldown = 1.0 + Math.random() * 0.3;
+        const dx = target.x - this.x;
+        const dy = target.y - this.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        const dirX = dx / dist;
+        const dirY = dy / dist;
+
+        // Disparo espectral autônomo
+        if (projectiles) {
+          projectiles.push(new SpellProjectile(this.x, this.y, dirX, dirY, '#38bdf8', this.player.hasBurnPower));
+          if (audio && typeof audio.playShoot === 'function') audio.playShoot();
+          if (particles && typeof particles.emit === 'function') {
+            particles.emit(this.x, this.y, 4, { color: '#38bdf8', speed: 60, life: 0.3 });
+          }
+        }
+      }
+    }
+  }
+
+  triggerMirroredAttack(pDirX, pDirY, hx, hy, hw, hh, audio, particles, projectiles) {
+    this.isAttacking = true;
+    this.attackTime = 0;
+    const ghostHx = this.x + (this.facing === 'left' ? -20 : this.facing === 'right' ? 20 : 0);
+    const ghostHy = this.y + (this.facing === 'up' ? -20 : this.facing === 'down' ? 20 : 0);
+    this.attackHitbox = new Entity(ghostHx, ghostHy, hw, hh);
+
+    if (this.player.activeWeapon === 'STAFF' && this.player.hasAuroraGem && projectiles) {
+      projectiles.push(new SpellProjectile(this.x, this.y, pDirX, pDirY, '#38bdf8', this.player.hasBurnPower));
+    }
+
+    if (particles && typeof particles.emit === 'function') {
+      particles.emit(ghostHx, ghostHy, 5, { color: '#38bdf8', speed: 80, life: 0.4 });
+    }
+  }
+
+  draw(ctx, camera, player) {
+    const screenX = this.x - camera.x;
+    const screenY = this.y - camera.y;
+    const floatBob = Math.sin(this.floatOffset) * 3;
+
+    ctx.save();
+    // Translucidez espectral etérea
+    const pulseAlpha = 0.76 + Math.sin(this.animTime * 3) * 0.15;
+    ctx.globalAlpha = Math.max(0.4, Math.min(0.95, pulseAlpha));
+
+    // Brilho azul espectral reluzente
+    ctx.shadowColor = '#38bdf8';
+    ctx.shadowBlur = 14;
+
+    // Renderiza exatamente o modelo/sprite do jogador Kaelen com aura espectral azul-celeste
+    player.drawSprite(ctx, screenX, screenY + floatBob, this.facing, floatBob, '#38bdf8');
+
+    // Arco de golpe espectral durante ataque corpo a corpo
+    if (this.isAttacking) {
+      const isSword = this.activeWeapon === 'SWORD';
+      const progress = this.attackTime / this.attackDuration;
+      const angle = (progress - 0.5) * Math.PI;
+
+      let baseRot = 0;
+      if (this.facing === 'right') baseRot = 0;
+      if (this.facing === 'down') baseRot = Math.PI / 2;
+      if (this.facing === 'left') baseRot = Math.PI;
+      if (this.facing === 'up') baseRot = -Math.PI / 2;
+
+      ctx.save();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = isSword ? 4 : 3;
+      ctx.shadowColor = '#0284c7';
+      ctx.shadowBlur = 12;
+      ctx.translate(screenX, screenY + floatBob);
+      ctx.rotate(baseRot + angle);
+      ctx.beginPath();
+      ctx.arc(isSword ? 22 : 18, 0, isSword ? 24 : 20, -0.7, 0.7);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+}
+
+// Altar Sagrado de Missão Separada para Conquistar Armas e Poderes (Nenhum Poder é Gratuito!)
+class PowerMissionAltar extends Entity {
+  constructor(x, y, type, name, powerName, promptText, rewardText, color, icon, config = {}) {
+    super(x, y, 44, 44);
+    this.type = type; // 'COLOSSUS_POWER', 'SWORD', 'TRIAD_CLONE', 'ASTRAL_BEAM', 'CHRONOS_LENS', 'ASTRAL_LANTERN'
+    this.name = name;
+    this.powerName = powerName || 'Poder Sagrado';
     this.promptText = promptText;
     this.rewardText = rewardText;
     this.color = color;
     this.icon = icon;
     this.claimed = false;
+    this.discovered = false;
     this.animTime = Math.random() * Math.PI * 2;
+    this.barrierAngle = 0;
+
+    // Configuração de Missão Única
+    this.missionType = config.missionType || 'DEFAULT'; // 'TITAN_PLATES', 'STORM_RACE', 'TRIAD_MIRRORS', 'GLACIAL_THAW', 'CHRONOS_RIFTS', 'SHADOW_LANTERN'
+    this.missionState = 'IDLE'; // 'IDLE', 'ACTIVE', 'COMPLETED'
+    this.missionTitle = config.missionTitle || 'PROVAÇÃO SAGRADA';
+    this.missionLore = config.missionLore || 'Para canalizar este poder divino, você deve provar seu valor!';
+    this.missionEntities = [];
+
+    // 1. TITAN_PLATES (Caverna)
+    this.platesCharged = 0;
+    this.targetPlates = 3; // 3 Placas Rúnicas!
+    this.seismicTimer = 3.5;
+    this.shockwaveWarnings = [];
+
+    // 2. STORM_RACE (Palácio dos Ventos - Missão 1: Espada Celeste & Poder Glacial)
+    this.sparksCollected = 0;
+    this.targetSparks = 2; // 2 Centelhas!
+    this.timeRemaining = 45.0;
+
+    // 2.5 TRIAD_MIRRORS (Geleira de Niflheim - Fase 8: Poder dos 3 Clones Astrais)
+    this.mirrorsActivated = 0;
+    this.targetMirrors = 3; // 3 Espelhos Cósmicos!
+
+    // 2.7 THUNDER_SPIRITS (Templo de Cronos - Fase 10: Poder dos 2 Fantasmas Invulneráveis [G])
+    this.relicsSintonized = 0;
+    this.targetRelics = 2; // 2 Relíquias Espectrais!
+
+    // 3. GLACIAL_THAW (Geleira de Niflheim)
+    this.solarTorch = null;
+    this.iceMelt = 0;
+    this.targetBraziers = 3; // 3 Braseiros Glaciais!
+    this.playerCarryingFlame = false;
+
+    // 4. CHRONOS_RIFTS (Templo de Cronos)
+    this.riftsSealed = 0;
+    this.targetRifts = 3; // 3 Fendas Temporais!
+
+    // 5. SHADOW_LANTERN (Labirinto das Sombras)
+    this.sparksFound = 0;
+    this.targetDarkSparks = 3; // 3 Centelhas Astrais!
+    this.darknessActive = false;
+
+    // Fallback combat
+    this.targetKills = config.targetKills || 3;
+    this.currentKills = 0;
+    this.guardianBiome = config.guardianBiome || 'CAVE';
+    this.guardianName = config.guardianName || 'Guardião Ancestral';
+    this.guardianHp = config.guardianHp || 3;
   }
 
-  update(player, dt) {
+  update(player, dt, game = null) {
     this.animTime += dt * 2.8;
-    return Math.hypot(player.x - this.x, player.y - this.y) < 52;
+    this.barrierAngle += dt * 2.2;
+
+    if (this.missionState === 'ACTIVE' && game) {
+      if (this.missionType === 'TITAN_PLATES') {
+        this.missionEntities.forEach(plate => plate.update(player, dt, this, game));
+
+        this.seismicTimer -= dt;
+        if (this.seismicTimer <= 0) {
+          this.seismicTimer = 4.0;
+          this.shockwaveWarnings.push({
+            x: player.x + (Math.random() - 0.5) * 140,
+            y: player.y + (Math.random() - 0.5) * 140,
+            timer: 1.8,
+            maxTime: 1.8,
+            radius: 34
+          });
+        }
+
+        for (let i = this.shockwaveWarnings.length - 1; i >= 0; i--) {
+          const w = this.shockwaveWarnings[i];
+          w.timer -= dt;
+          if (w.timer <= 0) {
+            if (game.camera) game.camera.shake(6);
+            if (game.particles) {
+              game.particles.emit(w.x, w.y, 20, { color: '#ef4444', speed: 100, life: 0.6 });
+              game.particles.emit(w.x, w.y, 15, { color: '#f59e0b', speed: 80, life: 0.5 });
+            }
+            this.shockwaveWarnings.splice(i, 1);
+          }
+        }
+      } else if (this.missionType === 'STORM_RACE') {
+        this.timeRemaining -= dt;
+        this.missionEntities.forEach(spark => spark.update(player, dt, this, game));
+        if (this.timeRemaining <= 0) {
+          this.timeRemaining = 45.0;
+          if (game.audio) game.audio.playCheckpoint();
+          game.showNotification('VENDAVAL RENOVADO!', '⏱️ O vento celestial soprou novamente! +45 segundos concedidos para alcançar as centelhas!');
+          game.updateHUD();
+        }
+      } else if (this.missionType === 'TRIAD_MIRRORS') {
+        this.missionEntities.forEach(mirror => mirror.update(player, dt, this, game));
+      } else if (this.missionType === 'THUNDER_SPIRITS') {
+        this.missionEntities.forEach(relic => relic.update(player, dt, this, game));
+      } else if (this.missionType === 'GLACIAL_THAW') {
+        if (this.solarTorch) {
+          const nearTorch = this.solarTorch.update(player, dt);
+          if (nearTorch && game.input && game.input.consumeInteract()) {
+            this.playerCarryingFlame = true;
+            player.carryingSolarFlame = true;
+            if (game.audio) game.audio.playCheckpoint();
+            if (game.particles) {
+              game.particles.emit(this.solarTorch.x, this.solarTorch.y, 25, { color: '#f97316', speed: 90, life: 0.8 });
+            }
+            game.showNotification('CHAMA SOLAR OBTIDA!', '🔥 Você está carregando a Chama Sagrada! Corra até os Braseiros Glaciais e pressione [E]!');
+            game.updateHUD();
+          }
+        }
+        this.missionEntities.forEach(brazier => brazier.update(player, dt, this, game));
+      } else if (this.missionType === 'CHRONOS_RIFTS') {
+        this.timeRemaining -= dt;
+        this.missionEntities.forEach(rift => rift.update(player, dt, this, game));
+        if (this.timeRemaining <= 0) {
+          this.timeRemaining = 45.0;
+          if (game.audio) game.audio.playCheckpoint();
+          game.showNotification('TEMPO RESTAURADO!', '⏳ Uma onda temporal concedeu +45 segundos para fechar as fendas restantes!');
+          game.updateHUD();
+        }
+      } else if (this.missionType === 'SHADOW_LANTERN') {
+        this.missionEntities.forEach(spark => spark.update(player, dt, this, game));
+      }
+
+      this.hudTimer = (this.hudTimer || 0) + dt;
+      if (this.hudTimer > 0.18) {
+        this.hudTimer = 0;
+        const hText = document.getElementById('power-quest-text');
+        if (hText) hText.textContent = this.getQuestHUDText();
+      }
+    }
+
+    const nearAltar = Math.hypot(player.x - this.x, player.y - this.y) < 65;
+    if (nearAltar && !this.discovered && game) {
+      this.discovered = true;
+      if (game.audio) game.audio.playCheckpoint();
+      if (game.camera) game.camera.shake(6);
+      if (game.particles) {
+        game.particles.emit(this.x, this.y, 35, { color: this.color, speed: 110, life: 1.0 });
+      }
+      game.showNotification('🏛️ CÂMARA SECRETA ENCONTRADA!', `Você descobriu o ${this.name}! Pressione [E] para interagir.`);
+    }
+
+    return nearAltar;
+  }
+
+  interact(game) {
+    if (this.claimed) {
+      game.showNotification(this.name.toUpperCase(), 'Você já conquistou este poder sagrado com glória!');
+      return;
+    }
+
+    if (this.missionState === 'IDLE') {
+      this.startMission(game);
+    } else if (this.missionState === 'ACTIVE') {
+      if (this.missionType === 'SHADOW_LANTERN') {
+        if (this.sparksFound >= this.targetDarkSparks) {
+          this.darknessActive = false;
+          this.completeMission(game);
+          return;
+        } else {
+          game.showNotification(this.missionTitle, `🕯️ Resgate as ${this.targetDarkSparks - this.sparksFound} centelha(s) restantes nas profundezas da escuridão!`);
+        }
+      } else if (this.missionType === 'TITAN_PLATES') {
+        game.showNotification(this.missionTitle, `⚡ Energize as ${this.targetPlates - this.platesCharged} placa(s) telúrica(s) restantes e esquive-se dos tremores!`);
+      } else if (this.missionType === 'STORM_RACE') {
+        game.showNotification(this.missionTitle, `🌪️ Corra! Colete as ${this.targetSparks - this.sparksCollected} centelha(s) restantes antes do tempo acabar!`);
+      } else if (this.missionType === 'TRIAD_MIRRORS') {
+        game.showNotification(this.missionTitle, `👥 Sintonize os ${this.targetMirrors - this.mirrorsActivated} espelho(s) cósmico(s) restantes com [E]!`);
+      } else if (this.missionType === 'THUNDER_SPIRITS') {
+        game.showNotification(this.missionTitle, `👻 Sintonize as ${this.targetRelics - this.relicsSintonized} relíquia(s) espectral(is) restante(s) com [E]!`);
+      } else if (this.missionType === 'GLACIAL_THAW') {
+        const remaining = this.targetBraziers - this.iceMelt;
+        game.showNotification(this.missionTitle, this.playerCarryingFlame ? '🔥 Você possui a Chama Solar! Corra até um dos Braseiros Glaciais apagados [E]!' : `❄️ Pegue a Chama Solar na Tocha ao lado [E] e acenda os ${remaining} braseiro(s) restantes!`);
+      } else if (this.missionType === 'CHRONOS_RIFTS') {
+        game.showNotification(this.missionTitle, `⏳ Estabilize as ${this.targetRifts - this.riftsSealed} fenda(s) temporal(is) restantes antes do colapso!`);
+      } else {
+        const remaining = this.targetKills - this.currentKills;
+        game.showNotification(this.missionTitle, `⚔️ Derrote os ${remaining} guardião(ões) restantes!`);
+      }
+    } else if (this.missionState === 'COMPLETED') {
+      this.claim(game);
+    }
+  }
+
+  startMission(game) {
+    this.missionState = 'ACTIVE';
+    this.missionEntities = [];
+    this.shockwaveWarnings = [];
+
+    if (game.audio) {
+      if (typeof game.audio.playMissionStart === 'function') game.audio.playMissionStart();
+      else game.audio.playCheckpoint();
+    }
+    if (game.camera) game.camera.shake(10);
+    if (game.particles) {
+      game.particles.emit(this.x, this.y, 45, { color: this.color, speed: 130, life: 1.2 });
+    }
+
+    if (this.missionType === 'TITAN_PLATES') {
+      this.platesCharged = 0;
+      this.targetPlates = 3;
+      this.seismicTimer = 3.5;
+      this.missionEntities = [
+        new TitanPressurePlate(this.x - 70, this.y - 30, 1, 'Placa Rúnica Alpha'),
+        new TitanPressurePlate(this.x, this.y - 65, 2, 'Placa Rúnica Beta'),
+        new TitanPressurePlate(this.x + 70, this.y - 30, 3, 'Placa Rúnica Gama')
+      ];
+      game.triggerDialogue(this.name, this.icon, [
+        `Guardião dos Bosques! Você descobriu a Câmara Secreta do Titã!`,
+        this.missionLore,
+        `⚡ PROVAÇÃO INICIADA: Energize as 3 Placas Rúnicas diante do altar enquanto esquiva dos tremores para canalizar o Pisão Sísmico [R]!`
+      ]);
+      game.showNotification(this.missionTitle, `Energize as 3 Placas Rúnicas (0/3)!`);
+    } else if (this.missionType === 'STORM_RACE') {
+      this.sparksCollected = 0;
+      this.targetSparks = 2;
+      this.timeRemaining = 45.0;
+      this.missionEntities = [
+        new StormSparkItem(this.x - 65, this.y - 35, 1, 'Centelha Boreal'),
+        new StormSparkItem(this.x + 65, this.y - 35, 2, 'Centelha Austral')
+      ];
+      game.triggerDialogue(this.name, this.icon, [
+        `Você alcançou o Santuário Oculto dos Céus! A Espada Celeste e o Poder Glacial o aguardam!`,
+        this.missionLore,
+        `🌪️ JULGAMENTO INICIADO: Colete as 2 Centelhas Celestiais em 45 segundos usando Dash [Q] e Corrida [Shift] para desbloquear a Espada Celeste e o Poder Glacial de Niflheim!`
+      ]);
+      game.showNotification(this.missionTitle, `Colete as 2 Centelhas Celestiais (0/2)!`);
+    } else if (this.missionType === 'TRIAD_MIRRORS') {
+      this.mirrorsActivated = 0;
+      this.targetMirrors = 3;
+      this.missionEntities = [
+        new TriadMirror(this.x - 70, this.y - 30, 1, 'Espelho Cósmico Alfa'),
+        new TriadMirror(this.x + 70, this.y - 30, 2, 'Espelho Cósmico Beta'),
+        new TriadMirror(this.x, this.y - 65, 3, 'Espelho Cósmico Gama')
+      ];
+      game.triggerDialogue(this.name, this.icon, [
+        `Você adentrou o Santuário Astral de Niflheim!`,
+        this.missionLore,
+        `👥 PROVAÇÃO DA TRÍADE: Sintonize os 3 Espelhos Cósmicos diante do altar pressionando [E] para despertar o Poder dos 3 Clones Astrais [T]!`
+      ]);
+      game.showNotification(this.missionTitle, `Sintonize os 3 Espelhos Cósmicos com [E] (0/3)!`);
+    } else if (this.missionType === 'THUNDER_SPIRITS') {
+      this.relicsSintonized = 0;
+      this.targetRelics = 2;
+      this.missionEntities = [
+        new ThunderGhostRelic(this.x - 70, this.y - 30, 1, 'Relíquia Espectral Alpha'),
+        new ThunderGhostRelic(this.x + 70, this.y - 30, 2, 'Relíquia Espectral Beta')
+      ];
+      game.triggerDialogue(this.name, this.icon, [
+        `Você desbravou a Câmara dos Espectros do Tempo em Cronos!`,
+        this.missionLore,
+        `👻 PROVAÇÃO DOS ESPECTROS: Aproxime-se das 2 Relíquias Espectrais e pressione [E] para despertar 2 Fantasmas Invulneráveis [G] que NÃO TOMAM DANO!`
+      ]);
+      game.showNotification(this.missionTitle, `Sintonize as 2 Relíquias Espectrais com [E] (0/2)!`);
+    } else if (this.missionType === 'GLACIAL_THAW') {
+      this.iceMelt = 0;
+      this.targetBraziers = 3;
+      this.playerCarryingFlame = false;
+      this.solarTorch = new SolarTorch(this.x - 80, this.y);
+      this.missionEntities = [
+        new GlacialBrazier(this.x - 35, this.y - 50, 1, 'Braseiro Alpha'),
+        new GlacialBrazier(this.x + 35, this.y - 50, 2, 'Braseiro Beta'),
+        new GlacialBrazier(this.x + 80, this.y, 3, 'Braseiro Gama')
+      ];
+      game.triggerDialogue(this.name, this.icon, [
+        `Você desbravou a Cripta Glacial Secreta! O Relicário está selado no Gelo Eterno!`,
+        this.missionLore,
+        `❄️ PROVAÇÃO INICIADA: Pegue a Chama Solar na Tocha [E] e acenda os 3 Braseiros da cripta para derreter o permafrost e libertar o Raio Astral [C]!`
+      ]);
+      game.showNotification(this.missionTitle, `Acenda os 3 Braseiros Glaciais (0/3)!`);
+    } else if (this.missionType === 'CHRONOS_RIFTS') {
+      this.riftsSealed = 0;
+      this.targetRifts = 3;
+      this.timeRemaining = 60.0;
+      this.missionEntities = [
+        new ChronosTimeRift(this.x - 70, this.y - 35, 1, 'Fenda Alpha'),
+        new ChronosTimeRift(this.x, this.y - 65, 2, 'Fenda Beta'),
+        new ChronosTimeRift(this.x + 70, this.y - 35, 3, 'Fenda Gama')
+      ];
+      game.triggerDialogue(this.name, this.icon, [
+        `Você encontrou a Câmara do Vórtice Temporal! A Lente de Cronos causou dobras no continuum!`,
+        this.missionLore,
+        `⏳ PROVAÇÃO INICIADA: Aproxime-se das 3 Fendas Temporais e pressione [E] em até 60 segundos para obter a Lente de Cronos!`
+      ]);
+      game.showNotification(this.missionTitle, `Estabilize as 3 Fendas com [E] (0/3)!`);
+    } else if (this.missionType === 'SHADOW_LANTERN') {
+      this.sparksFound = 0;
+      this.targetDarkSparks = 3;
+      this.darknessActive = true;
+      this.missionEntities = [
+        new AstralLightSpark(this.x - 70, this.y - 30, 1, 'Centelha das Sombras I'),
+        new AstralLightSpark(this.x, this.y - 65, 2, 'Centelha das Sombras II'),
+        new AstralLightSpark(this.x + 70, this.y - 30, 3, 'Centelha das Sombras III')
+      ];
+      game.triggerDialogue(this.name, this.icon, [
+        `Você desvendou a Cripta Oculta da Luz Astral nas profundezas do labirinto!`,
+        this.missionLore,
+        `🕯️ PROVAÇÃO INICIADA: Resgate as 3 Centelhas Astrais no escuro para acender a Lanterna da Verdade e anular a lentidão do Vazio!`
+      ]);
+      game.showNotification(this.missionTitle, `Resgate as 3 Centelhas Astrais (0/3)!`);
+    } else {
+      // Fallback
+      const offsets = [{ dx: -120, dy: -50 }, { dx: 120, dy: -50 }, { dx: 0, dy: 100 }];
+      for (let i = 0; i < this.targetKills; i++) {
+        const off = offsets[i % offsets.length];
+        const gx = Math.max(3 * CONFIG.TILE_SIZE, Math.min((CONFIG.MAP_COLS - 3) * CONFIG.TILE_SIZE, this.x + off.dx));
+        const gy = Math.max(3 * CONFIG.TILE_SIZE, Math.min((CONFIG.MAP_ROWS - 3) * CONFIG.TILE_SIZE, this.y + off.dy));
+        game.enemies.push(new TrialGuardianCreature(gx, gy, this.guardianBiome, this.guardianName, this.color, this.guardianHp, this));
+      }
+    }
+
+    game.updateHUD();
+  }
+
+  recordMirrorActivated(game, mirror) {
+    this.mirrorsActivated++;
+    if (this.mirrorsActivated < this.targetMirrors) {
+      game.showNotification(this.missionTitle, `👥 Espelho Cósmico Sintonizado! (${this.mirrorsActivated}/${this.targetMirrors})`);
+    } else {
+      this.completeMission(game);
+    }
+    game.updateHUD();
+  }
+
+  recordRelicSintonized(game, relic) {
+    this.relicsSintonized++;
+    if (this.relicsSintonized < this.targetRelics) {
+      game.showNotification(this.missionTitle, `⚡ Relíquia Espectral Sintonizada! (${this.relicsSintonized}/${this.targetRelics})`);
+    } else {
+      this.completeMission(game);
+    }
+    game.updateHUD();
+  }
+
+  recordPlateCharged(game, plate) {
+    this.platesCharged++;
+    if (this.platesCharged < this.targetPlates) {
+      game.showNotification(this.missionTitle, `⚡ Placa Telúrica Energizada! (${this.platesCharged}/${this.targetPlates})`);
+    } else {
+      this.completeMission(game);
+    }
+    game.updateHUD();
+  }
+
+  recordSparkCollected(game, spark) {
+    this.sparksCollected++;
+    this.timeRemaining = Math.min(50.0, this.timeRemaining + 5.0);
+    if (this.sparksCollected < this.targetSparks) {
+      game.showNotification(this.missionTitle, `🌪️ Centelha Celeste Coletada! (${this.sparksCollected}/${this.targetSparks}) +5s de Bônus!`);
+    } else {
+      this.completeMission(game);
+    }
+    game.updateHUD();
+  }
+
+  recordBrazierLit(game, brazier) {
+    this.iceMelt++;
+    // A chama sagrada permanece com o jogador para acender todos os braseiros de forma contínua e sem dificuldade!
+    if (this.iceMelt < this.targetBraziers) {
+      if (game.player) game.player.carryingSolarFlame = true;
+      this.playerCarryingFlame = true;
+      game.showNotification(this.missionTitle, `🔥 Braseiro Glacial Aceso! (${this.iceMelt}/${this.targetBraziers}) - A Chama Sagrada continua com você!`);
+    } else {
+      if (game.player) game.player.carryingSolarFlame = false;
+      this.playerCarryingFlame = false;
+      this.completeMission(game);
+    }
+    game.updateHUD();
+  }
+
+  recordRiftSealed(game, rift) {
+    this.riftsSealed++;
+    this.timeRemaining = Math.min(50.0, this.timeRemaining + 6.0);
+    if (this.riftsSealed < this.targetRifts) {
+      game.showNotification(this.missionTitle, `⏳ Fenda Temporal Estabilizada! (${this.riftsSealed}/${this.targetRifts}) +6s de Estabilidade!`);
+    } else {
+      this.completeMission(game);
+    }
+    game.updateHUD();
+  }
+
+  recordDarkSparkCollected(game, spark) {
+    this.sparksFound++;
+    if (this.sparksFound >= this.targetDarkSparks) {
+      this.darknessActive = false;
+      this.completeMission(game);
+    } else {
+      game.showNotification(this.missionTitle, `🕯️ Centelha Astral Resgatada (${this.sparksFound}/${this.targetDarkSparks})!`);
+    }
+    game.updateHUD();
+  }
+
+  recordGuardianKill(game) {
+    if (this.missionState !== 'ACTIVE' || this.claimed) return;
+    this.currentKills++;
+    if (game.particles) {
+      game.particles.emit(this.x, this.y, 16, { color: this.color, speed: 90, life: 0.6 });
+    }
+    if (this.currentKills < this.targetKills) {
+      if (game.audio) game.audio.playHit();
+      game.showNotification(this.missionTitle, `💥 Guardião Purificado! (${this.currentKills}/${this.targetKills})`);
+    } else {
+      this.completeMission(game);
+    }
+    game.updateHUD();
+  }
+
+  completeMission(game) {
+    this.missionState = 'COMPLETED';
+    this.darknessActive = false;
+    if (game.player) game.player.carryingSolarFlame = false;
+    if (game.audio) {
+      if (typeof game.audio.playMissionComplete === 'function') game.audio.playMissionComplete();
+      else game.audio.playVictory();
+    }
+    if (game.camera) game.camera.shake(14);
+    if (game.particles) {
+      game.particles.emit(this.x, this.y, 60, { color: this.color, speed: 150, life: 1.5 });
+    }
+    game.showNotification('PROVAÇÃO SUPERADA!', `✨ O selo de ${this.name} foi estilhaçado! Aproxime-se e pressione [E] para absorver ${this.powerName}!`);
+    game.updateHUD();
   }
 
   claim(game) {
-    if (this.claimed) return;
+    if (this.claimed || this.missionState !== 'COMPLETED') return;
     this.claimed = true;
     if (game.audio && typeof game.audio.playVictory === 'function') game.audio.playVictory();
     if (game.camera && typeof game.camera.shake === 'function') game.camera.shake(14);
     if (game.particles && typeof game.particles.emit === 'function') {
-      game.particles.emit(this.x, this.y, 40, { color: this.color, speed: 130, life: 1.2 });
+      game.particles.emit(this.x, this.y, 50, { color: this.color, speed: 140, life: 1.2 });
     }
     game.showNotification(this.name.toUpperCase(), this.rewardText);
 
@@ -3431,7 +5052,18 @@ class PowerMissionAltar extends Entity {
       game.gameState = 'DIALOGUE';
     } else if (this.type === 'SWORD') {
       game.player.hasSword = true;
+      game.player.hasGlacialFrostPower = true;
       const b = document.getElementById('sword-unlock-banner');
+      if (b) b.classList.remove('hidden');
+      game.gameState = 'DIALOGUE';
+    } else if (this.type === 'TRIAD_CLONE') {
+      game.player.hasTriadClonePower = true;
+      const b = document.getElementById('triad-unlock-banner');
+      if (b) b.classList.remove('hidden');
+      game.gameState = 'DIALOGUE';
+    } else if (this.type === 'GHOST_POWER') {
+      game.player.hasGhostPower = true;
+      const b = document.getElementById('ghost-unlock-banner');
       if (b) b.classList.remove('hidden');
       game.gameState = 'DIALOGUE';
     } else if (this.type === 'ASTRAL_BEAM') {
@@ -3451,9 +5083,110 @@ class PowerMissionAltar extends Entity {
       game.gameState = 'DIALOGUE';
     }
     game.updateHUD();
+    game.saveGame(true, `Poder conquistado e salvo: ${this.powerName}!`);
   }
 
-  draw(ctx, camera, isNear) {
+  getQuestHUDText() {
+    if (this.missionState === 'IDLE') {
+      return `📜 ${this.name}: Aproxime-se e pressione [E] para iniciar a ${this.missionTitle}!`;
+    } else if (this.missionState === 'COMPLETED') {
+      return `✨ Provação Cumprida! Aproxime-se do Altar [E] para absorver ${this.powerName}!`;
+    } else if (this.missionState === 'ACTIVE') {
+      if (this.missionType === 'TITAN_PLATES') {
+        return `⚡ Provação Telúrica: Placas Rúnicas (${this.platesCharged}/${this.targetPlates}) | Pise nas placas e desvie dos tremores!`;
+      } else if (this.missionType === 'STORM_RACE') {
+        return `🌪️ Julgamento do Vendaval: Centelhas (${this.sparksCollected}/${this.targetSparks}) | ⏱️ ${Math.max(0, Math.ceil(this.timeRemaining))}s`;
+      } else if (this.missionType === 'TRIAD_MIRRORS') {
+        return `👥 Provação da Tríade: Espelhos Sintonizados (${this.mirrorsActivated}/${this.targetMirrors}) | Pressione [E] diante dos espelhos!`;
+      } else if (this.missionType === 'THUNDER_SPIRITS') {
+        return `👻 Provação dos Espectros: Relíquias Sintonizadas (${this.relicsSintonized}/${this.targetRelics}) | Pressione [E] nas relíquias!`;
+      } else if (this.missionType === 'GLACIAL_THAW') {
+        const flameStatus = this.playerCarryingFlame ? ' [🔥 Leve ao Braseiro [E]!]' : ' [Pegue a Chama na Tocha [E]]';
+        return `❄️ Degelo Solar: Braseiros (${this.iceMelt}/${this.targetBraziers})${flameStatus}`;
+      } else if (this.missionType === 'CHRONOS_RIFTS') {
+        return `⏳ Sincronia de Cronos: Fendas Temporais (${this.riftsSealed}/${this.targetRifts}) | ⏱️ ${Math.max(0, Math.ceil(this.timeRemaining))}s`;
+      } else if (this.missionType === 'SHADOW_LANTERN') {
+        return `🕯️ Chama nas Sombras: Centelhas (${this.sparksFound}/${this.targetDarkSparks}) | Resgate nas trevas!`;
+      } else {
+        return `⚔️ ${this.missionTitle}: Derrote os guardiões (${this.currentKills}/${this.targetKills})!`;
+      }
+    }
+    return '';
+  }
+
+  draw(ctx, camera, isNear, player = null) {
+    // 1. Desenhar entidades ativas da missão
+    if (this.missionEntities && this.missionEntities.length > 0) {
+      this.missionEntities.forEach(ent => {
+        if (typeof ent.draw === 'function') {
+          const nearEnt = player ? Math.hypot(player.x - ent.x, player.y - ent.y) < 46 : false;
+          ent.draw(ctx, camera, nearEnt, this);
+        }
+      });
+    }
+
+    // 2. Desenhar Tocha Solar se existir
+    if (this.solarTorch) {
+      const nearTorch = player ? Math.hypot(player.x - this.solarTorch.x, player.y - this.solarTorch.y) < 46 : false;
+      this.solarTorch.draw(ctx, camera, nearTorch);
+    }
+
+    // 3. Desenhar avisos telegrafados de tremores sísmicos (TITAN_PLATES)
+    if (this.shockwaveWarnings && this.shockwaveWarnings.length > 0) {
+      this.shockwaveWarnings.forEach(w => {
+        const wsx = w.x - camera.x;
+        const wsy = w.y - camera.y;
+        const progress = 1 - (w.timer / w.maxTime);
+
+        ctx.save();
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.22)';
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 6]);
+
+        ctx.beginPath();
+        ctx.arc(wsx, wsy, w.radius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(wsx, wsy, w.radius * progress, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+    }
+
+    // 4. Guia de direção para o vendaval (STORM_RACE)
+    if (this.missionType === 'STORM_RACE' && this.missionState === 'ACTIVE' && player) {
+      const remainingSparks = this.missionEntities.filter(s => !s.collected);
+      if (remainingSparks.length > 0) {
+        let closest = remainingSparks[0];
+        let minDist = Math.hypot(player.x - closest.x, player.y - closest.y);
+        for (let i = 1; i < remainingSparks.length; i++) {
+          const d = Math.hypot(player.x - remainingSparks[i].x, player.y - remainingSparks[i].y);
+          if (d < minDist) { minDist = d; closest = remainingSparks[i]; }
+        }
+
+        const psx = player.x - camera.x;
+        const psy = player.y - camera.y;
+        const angle = Math.atan2(closest.y - player.y, closest.x - player.x);
+
+        ctx.save();
+        ctx.translate(psx + Math.cos(angle) * 32, psy + Math.sin(angle) * 32);
+        ctx.rotate(angle);
+        ctx.fillStyle = '#facc15';
+        ctx.shadowColor = '#fef08a';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.moveTo(8, 0);
+        ctx.lineTo(-6, -5);
+        ctx.lineTo(-3, 0);
+        ctx.lineTo(-6, 5);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
     const sx = this.x - camera.x;
     const sy = this.y - camera.y;
     const bob = Math.sin(this.animTime) * 3;
@@ -3461,17 +5194,26 @@ class PowerMissionAltar extends Entity {
     ctx.save();
     ctx.translate(sx, sy);
 
-    // Pedestal de Pedra Sagrada
+    // 5. Pedestal de Pedra Sagrada
     ctx.fillStyle = '#1e1b4b';
     ctx.fillRect(-20, 10, 40, 16);
     ctx.fillStyle = '#312e81';
     ctx.fillRect(-16, 6, 32, 5);
 
-    // Relíquia Flutuante no Topo
+    // 6. Coluna de Luz Celestial quando a missão está cumprida
+    if (this.missionState === 'COMPLETED' && !this.claimed) {
+      const grad = ctx.createLinearGradient(0, 10, 0, -80);
+      grad.addColorStop(0, this.color);
+      grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(-12, -80, 24, 90);
+    }
+
+    // 7. Relíquia Flutuante no Topo
     if (!this.claimed) {
       ctx.fillStyle = this.color;
       ctx.shadowColor = this.color;
-      ctx.shadowBlur = 20;
+      ctx.shadowBlur = this.missionState === 'COMPLETED' ? 26 : 18;
 
       ctx.beginPath();
       ctx.arc(0, -10 + bob, 14, 0, Math.PI * 2);
@@ -3483,8 +5225,43 @@ class PowerMissionAltar extends Entity {
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#ffffff';
       ctx.fillText(this.icon, 0, -10 + bob);
+
+      // Crosta de Gelo Glacial se for a missão GLACIAL_THAW
+      if (this.missionType === 'GLACIAL_THAW' && this.iceMelt < 3 && this.missionState !== 'COMPLETED') {
+        const iceAlpha = 0.85 - (this.iceMelt * 0.25);
+        ctx.save();
+        ctx.fillStyle = `rgba(56, 189, 248, ${iceAlpha})`;
+        ctx.strokeStyle = '#e0f2fe';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, -28 + bob);
+        ctx.lineTo(18, -10 + bob);
+        ctx.lineTo(12, 10 + bob);
+        ctx.lineTo(-12, 10 + bob);
+        ctx.lineTo(-18, -10 + bob);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Barreira de Proteção Rúnica quando a missão não foi concluída
+      if (this.missionState !== 'COMPLETED') {
+        ctx.save();
+        ctx.rotate(this.barrierAngle);
+        ctx.strokeStyle = this.missionState === 'ACTIVE' ? '#ef4444' : this.color;
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.arc(0, 0, 23, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.font = '10px serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(this.missionState === 'ACTIVE' ? '⚔️' : '🔒', 0, -30 + bob);
+      }
     } else {
-      // Reivindicado: Brilho residual sagrado
       ctx.strokeStyle = this.color;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
@@ -3494,15 +5271,69 @@ class PowerMissionAltar extends Entity {
 
     ctx.restore();
 
-    // Rótulo da Missão ao se aproximar
+    // 8. Rótulo Dinâmico da Missão ao se aproximar
     if (isNear) {
       ctx.save();
-      ctx.font = '8px "Press Start 2P", monospace';
-      ctx.fillStyle = this.claimed ? '#94a3b8' : this.color;
+      ctx.textAlign = 'center';
       ctx.shadowColor = '#000000';
       ctx.shadowBlur = 6;
-      ctx.textAlign = 'center';
-      ctx.fillText(this.claimed ? `✨ ${this.name} (Concluído)` : `[E] ${this.promptText}`, sx, sy - 34);
+
+      if (this.claimed) {
+        ctx.font = '8px "Press Start 2P", monospace';
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText(`✨ ${this.name} (Concluído)`, sx, sy - 34);
+      } else if (this.missionState === 'IDLE') {
+        ctx.font = '8px "Press Start 2P", monospace';
+        ctx.fillStyle = '#fef08a';
+        ctx.fillText(`[E] Missão: ${this.missionTitle}`, sx, sy - 36);
+        ctx.font = '7px "Press Start 2P", monospace';
+        ctx.fillStyle = this.color;
+        ctx.fillText(`🔒 (Provação Necessária)`, sx, sy - 24);
+      } else if (this.missionState === 'ACTIVE') {
+        ctx.font = '8px "Press Start 2P", monospace';
+        ctx.fillStyle = '#f87171';
+
+        if (this.missionType === 'TITAN_PLATES') {
+          ctx.fillText(`⚡ Placas Telúricas: ${this.platesCharged}/${this.targetPlates}`, sx, sy - 36);
+          ctx.font = '7px "Press Start 2P", monospace';
+          ctx.fillStyle = '#fef08a';
+          ctx.fillText(`(Pise 2s em cada placa e desvie!)`, sx, sy - 24);
+        } else if (this.missionType === 'STORM_RACE') {
+          ctx.fillText(`🌪️ Centelhas: ${this.sparksCollected}/${this.targetSparks} | ⏱️ ${Math.max(0, Math.ceil(this.timeRemaining))}s`, sx, sy - 36);
+          ctx.font = '7px "Press Start 2P", monospace';
+          ctx.fillStyle = '#fef08a';
+          ctx.fillText(`(Use Dash [Q] e Correr [Shift])`, sx, sy - 24);
+        } else if (this.missionType === 'TRIAD_MIRRORS') {
+          ctx.fillText(`👥 Espelhos: ${this.mirrorsActivated}/${this.targetMirrors}`, sx, sy - 36);
+          ctx.font = '7px "Press Start 2P", monospace';
+          ctx.fillStyle = '#fef08a';
+          ctx.fillText(`(Aproxime-se e pressione [E])`, sx, sy - 24);
+        } else if (this.missionType === 'GLACIAL_THAW') {
+          ctx.fillText(`🔥 Braseiros: ${this.iceMelt}/${this.targetBraziers} Acesos`, sx, sy - 36);
+          ctx.font = '7px "Press Start 2P", monospace';
+          ctx.fillStyle = '#fef08a';
+          ctx.fillText(this.playerCarryingFlame ? `(Leve o fogo aos braseiros!)` : `(Pegue fogo na Tocha da Aurora [E])`, sx, sy - 24);
+        } else if (this.missionType === 'CHRONOS_RIFTS') {
+          ctx.fillText(`⏳ Fendas: ${this.riftsSealed}/${this.targetRifts} | ⏱️ ${Math.max(0, Math.ceil(this.timeRemaining))}s`, sx, sy - 36);
+          ctx.font = '7px "Press Start 2P", monospace';
+          ctx.fillStyle = '#fef08a';
+          ctx.fillText(`(Aproxime-se e pressione [E])`, sx, sy - 24);
+        } else if (this.missionType === 'SHADOW_LANTERN') {
+          ctx.fillText(`🕯️ Centelhas: ${this.sparksFound}/${this.targetDarkSparks}`, sx, sy - 36);
+          ctx.font = '7px "Press Start 2P", monospace';
+          ctx.fillStyle = '#fef08a';
+          ctx.fillText(this.sparksFound >= this.targetDarkSparks ? `[E] Entregar Centelhas ao Braseiro!` : `(Encontre as centelhas no escuro)`, sx, sy - 24);
+        } else {
+          ctx.fillText(`⚔️ Guardiões: ${this.currentKills}/${this.targetKills} Derrotados`, sx, sy - 36);
+        }
+      } else if (this.missionState === 'COMPLETED') {
+        ctx.font = '8px "Press Start 2P", monospace';
+        ctx.fillStyle = '#86efac';
+        ctx.fillText(`✨ [E] ${this.promptText}`, sx, sy - 36);
+        ctx.font = '7px "Press Start 2P", monospace';
+        ctx.fillStyle = '#fef08a';
+        ctx.fillText(`(Provação Superada! Pressione [E])`, sx, sy - 24);
+      }
       ctx.restore();
     }
   }
@@ -3602,7 +5433,7 @@ class CheckpointMonument extends Entity {
 // 2. ENIGMA 4 (FASE 8): PRISMA GLACIAL REFLETOR DE LUZ
 class IcePrismMirror extends Entity {
   constructor(x, y, rotation = 0, name = 'Prisma Glacial') {
-    super(x, y, 36, 36);
+    super(x, y, 48, 48); // Zona ampla de interceptação de 48px para capturar e alinhar perfeitamente o feixe
     this.name = name;
     // rotation:
     // 0: '/' (UP -> RIGHT, LEFT -> DOWN, DOWN -> LEFT, RIGHT -> UP)
@@ -3613,7 +5444,7 @@ class IcePrismMirror extends Entity {
 
   update(player, dt) {
     this.anim += dt * 3;
-    return Math.hypot(player.x - this.x, player.y - this.y) < 46;
+    return Math.hypot(player.x - this.x, player.y - this.y) < 52;
   }
 
   rotate(audio, particles) {
@@ -3629,6 +5460,7 @@ class IcePrismMirror extends Entity {
     const curVx = beam.vx;
     const curVy = beam.vy;
 
+    // Alinha perfeitamente o feixe no eixo ótico central do prisma
     beam.x = this.x;
     beam.y = this.y;
 
@@ -3648,7 +5480,7 @@ class IcePrismMirror extends Entity {
 
     if (audio && typeof audio.playPrismRotate === 'function') audio.playPrismRotate();
     if (particles && typeof particles.emit === 'function') {
-      particles.emit(this.x, this.y, 20, { color: '#67e8f9', speed: 110 });
+      particles.emit(this.x, this.y, 22, { color: '#67e8f9', speed: 110 });
     }
   }
 
@@ -3662,13 +5494,13 @@ class IcePrismMirror extends Entity {
     // Suporte octogonal de gelo
     ctx.fillStyle = '#0f172a';
     ctx.beginPath();
-    ctx.arc(0, 0, 16, 0, Math.PI * 2);
+    ctx.arc(0, 0, 18, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(0, 0, 16, 0, Math.PI * 2);
+    ctx.arc(0, 0, 18, 0, Math.PI * 2);
     ctx.stroke();
 
     // Espelho de Quartzo Glacial Facetado
@@ -3679,11 +5511,11 @@ class IcePrismMirror extends Entity {
     ctx.shadowBlur = 12;
     ctx.beginPath();
     if (this.rotation === 0) {
-      ctx.moveTo(-11, 11);
-      ctx.lineTo(11, -11);
+      ctx.moveTo(-13, 13);
+      ctx.lineTo(13, -13);
     } else {
-      ctx.moveTo(-11, -11);
-      ctx.lineTo(11, 11);
+      ctx.moveTo(-13, -13);
+      ctx.lineTo(13, 13);
     }
     ctx.stroke();
     ctx.restore();
@@ -3691,7 +5523,7 @@ class IcePrismMirror extends Entity {
     // Cristal central
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.arc(0, 0, 3, 0, Math.PI * 2);
+    ctx.arc(0, 0, 3.5, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
@@ -3703,8 +5535,8 @@ class IcePrismMirror extends Entity {
       ctx.shadowColor = '#000000';
       ctx.shadowBlur = 6;
       ctx.textAlign = 'center';
-      const angleStr = this.rotation === 0 ? 'Orientação: ↗ /' : 'Orientação: ↘ \\';
-      ctx.fillText(`[E] Rotacionar (${angleStr})`, sx, sy - 24);
+      const angleStr = this.rotation === 0 ? 'Orientação [/] (Reflete Direita/Cima)' : 'Orientação [\\] (Reflete Esquerda/Baixo)';
+      ctx.fillText(`[E] Girar Prisma: ${angleStr}`, sx, sy - 28);
       ctx.restore();
     }
   }
@@ -5248,17 +7080,18 @@ class BossAethon extends Entity {
   breakShield(audio, camera, particles, game) {
     if (!this.shieldActive) return;
     this.shieldActive = false;
-    this.shieldBrokenTimer = 7.0; // 7 segundos vulnerável a ataques de Espada e Cajado!
+    this.shieldBrokenTimer = 9.0; // 9 segundos vulnerável a ataques de Espada e Cajado!
     if (audio && typeof audio.playShockwave === 'function') audio.playShockwave();
     if (audio && typeof audio.playBeamHit === 'function') audio.playBeamHit();
     if (audio && typeof audio.playVictory === 'function') audio.playVictory();
-    if (camera && typeof camera.shake === 'function') camera.shake(18);
+    if (camera && typeof camera.shake === 'function') camera.shake(20);
     if (particles && typeof particles.emit === 'function') {
-      particles.emit(this.x, this.y, 60, { color: '#c084fc', speed: 160, life: 1.5 });
-      particles.emit(this.x, this.y, 40, { color: '#38bdf8', speed: 120, life: 1.2 });
+      particles.emit(this.x, this.y, 70, { color: '#c084fc', speed: 180, life: 1.6 });
+      particles.emit(this.x, this.y, 50, { color: '#38bdf8', speed: 140, life: 1.3 });
+      particles.emit(this.x, this.y, 30, { color: '#facc15', speed: 110, life: 1.0 });
     }
     if (game && typeof game.showNotification === 'function') {
-      game.showNotification('BARREIRA DIMENSIONAL COLAPSADA!', 'O Arquiteto está vulnerável! Ataque com a Espada e Feitiços!');
+      game.showNotification('ESCUDO DESATIVADO NO [B]!', '🛡️ A Barreira Dimensional de Aethon foi desativada! Ataque agora!');
     }
   }
 
@@ -5448,7 +7281,7 @@ class BossAethon extends Entity {
         game.showAreaBanner('COLAPSO DAS DIMENSÕES!', 'O Arquiteto distorceu os Monólitos!');
       }
       if (game && typeof game.showNotification === 'function') {
-        game.showNotification('REDE DISTORCIDA!', 'Reajuste os Monólitos [E] e dispare o Raio [C] para romper o escudo final!');
+        game.showNotification('ESCUDO REATIVADO!', 'Pressione [B] para desativar a barreira final de Aethon e desferir seus golpes!');
       }
     }
 
@@ -5595,7 +7428,7 @@ class BossAethon extends Entity {
       ctx.shadowColor = '#000000';
       ctx.shadowBlur = 6;
       ctx.textAlign = 'center';
-      ctx.fillText('🛡️ ESCUDO DOS 4 MONÓLITOS! Refrate o Raio [C]', sx, sy - 54);
+      ctx.fillText('🛡️ ESCUDO ATIVO! Pressione [B] para Desativar', sx, sy - 54);
       ctx.restore();
     } else {
       ctx.save();
@@ -5690,12 +7523,29 @@ class AreaPortal extends Entity {
 
 // Baú, Totem, Coruja, Sementes, Coração, Arbustos
 class TreasureChest extends Entity {
-  constructor(x, y) { super(x, y, 28, 24); this.opened = false; }
-  draw(ctx, camera, isNear) {
+  constructor(x, y) { super(x, y, 28, 24); this.opened = false; this.animTime = 0; }
+  draw(ctx, camera, isNear, isLocked = false) {
+    this.animTime += 0.05;
     const sx = this.x - camera.x;
     const sy = this.y - camera.y;
     ctx.save();
     ctx.translate(sx, sy);
+
+    // Campo de força de cristais se estiver selado
+    if (!this.opened && isLocked) {
+      ctx.save();
+      const pulse = 1 + Math.sin(this.animTime * 3) * 0.08;
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(0, 2, 22 * pulse, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
     ctx.fillStyle = '#78350f';
     ctx.fillRect(-14, -8, 28, 20);
     ctx.fillStyle = '#eab308';
@@ -5710,10 +7560,17 @@ class TreasureChest extends Entity {
     ctx.restore();
     if (isNear && !this.opened) {
       ctx.save();
-      ctx.fillStyle = '#fef08a';
-      ctx.font = '9px "Press Start 2P", monospace';
+      ctx.font = '8px "Press Start 2P", monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('[E] Abrir Baú', sx, sy - 20);
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 6;
+      if (isLocked) {
+        ctx.fillStyle = '#ef4444';
+        ctx.fillText('🔒 [E] Baú Selado por Cristais', sx, sy - 20);
+      } else {
+        ctx.fillStyle = '#86efac';
+        ctx.fillText('✨ [E] Abrir: Gema da Aurora', sx, sy - 20);
+      }
       ctx.restore();
     }
   }
@@ -5895,48 +7752,105 @@ class GameMap {
       for (let r = 3; r < this.rows - 3; r++) { this.grid[r][midC] = 2; this.grid[r][midC + 1] = 2; }
       for (let r = 4; r < 14; r++) { this.grid[r][8] = 3; this.grid[r][9] = 3; }
     } else if (this.areaType === 'CAVE') {
-      for (let i = 0; i < 22; i++) {
+      for (let i = 0; i < 18; i++) {
         const cr = Math.floor(Math.random() * (this.rows - 6)) + 3;
         const cc = Math.floor(Math.random() * (this.cols - 6)) + 3;
+        if (cc >= 27 && cr >= 16) continue; // Proteger câmara secreta do titã no sudeste
         this.grid[cr][cc] = 1;
+      }
+      // Paredes ancestrais da Câmara Secreta do Titã (Sudeste: col 28..33, row 17..23)
+      for (let r = 17; r <= 23; r++) {
+        if (r !== 20) this.grid[r][28] = 1; // Passagem secreta na linha 20
+      }
+      for (let c = 28; c <= 33; c++) {
+        this.grid[17][c] = 1; // Teto da câmara secreta
       }
     } else if (this.areaType === 'SKY_ISLANDS') {
       // Plataformas nos céus
       for (let i = 0; i < 16; i++) {
         const cr = Math.floor(Math.random() * (this.rows - 6)) + 3;
         const cc = Math.floor(Math.random() * (this.cols - 6)) + 3;
+        if (cc <= 10 && cr >= 16) continue; // Proteger santuário secreto no sudoeste (Missão da Espada Celeste)
         this.grid[cr][cc] = 1;
+      }
+      // Enseada secreta do Santuário Oculto dos Céus no sudoeste (Missão: Espada Celeste e Gelo)
+      for (let r = 16; r <= 23; r++) {
+        if (r !== 20) this.grid[r][9] = 1; // Abismo/colunas com ponte celestial na linha 20
       }
     } else if (this.areaType === 'MAGMA_CORE') {
       // Lava nos cantos (Tile 3: Água/Lava)
       for (let r = 5; r < 20; r++) { this.grid[r][6] = 3; this.grid[r][28] = 3; }
     } else if (this.areaType === 'FROZEN_TUNDRA') {
+      // Cripta Glacial Secreta do Noroeste (col 3..7, row 3..8) - Raio Astral
+      for (let r = 3; r <= 7; r++) {
+        if (r !== 5) this.grid[r][7] = 1; // Parede de gelo com passagem oculta na linha 5
+      }
+      for (let c = 3; c <= 7; c++) {
+        this.grid[8][c] = 1; // Parede sul da cripta
+      }
+      // Santuário Astral dos 3 Clones no Sudeste (col 27..33, row 18..23) - 3 Clones Astrais
+      for (let r = 18; r <= 23; r++) {
+        if (r !== 20) this.grid[r][27] = 1; // Parede de gelo com portal rúnico na linha 20
+      }
+      for (let c = 27; c <= 33; c++) {
+        this.grid[18][c] = 1; // Parede norte do santuário
+      }
       // Abismo Glacial dividindo o mapa leste/oeste (colunas 17 e 18)
       for (let r = 4; r < 23; r++) {
-        if (r !== 7 && r !== 18) { // Deixa duas passagens limpas para o feixe passar
-          this.grid[r][17] = 3;
-          this.grid[r][18] = 3;
-        }
+        // Deixar corredores amplos (linhas 6-8 e 17-19) 100% livres de abismo para passagem desimpedida do feixe e do herói
+        if ((r >= 6 && r <= 8) || (r >= 17 && r <= 19)) continue;
+        this.grid[r][17] = 3;
+        this.grid[r][18] = 3;
       }
-      // Pequenas estalagmites de gelo
-      for (let i = 0; i < 10; i++) {
+      // Pequenas estalagmites de gelo decorativas nas bordas, estritamente fora de qualquer corredor de luz ou câmara secreta
+      for (let i = 0; i < 8; i++) {
         const cr = Math.floor(Math.random() * (this.rows - 6)) + 3;
         const cc = Math.floor(Math.random() * (this.cols - 6)) + 3;
-        if (cc !== 10 && cc !== 25 && cc !== 16) this.grid[cr][cc] = 1;
+        if (cc <= 8 && cr <= 13) continue; // Proteger área da cripta secreta Noroeste
+        if (cc >= 26 && cr >= 17) continue; // Proteger Santuário Astral dos 3 Clones no Sudeste
+        const inTopBeam = (cr >= 5 && cr <= 9 && cc >= 8 && cc <= 27);
+        const inEastBeam = (cr >= 5 && cr <= 20 && cc >= 23 && cc <= 27);
+        const inBottomBeam = (cr >= 16 && cr <= 20 && cc >= 14 && cc <= 27);
+        const inShootLane = (cr >= 5 && cr <= 24 && cc >= 8 && cc <= 12);
+        if (!inTopBeam && !inEastBeam && !inBottomBeam && !inShootLane) {
+          this.grid[cr][cc] = 1;
+        }
       }
     } else if (this.areaType === 'CHRONOS_TEMPLE') {
+      // Câmara Secreta do Vórtice Temporal (Sudeste: col 28..33, row 16..22) - Lente de Cronos
+      for (let r = 16; r <= 22; r++) {
+        if (r !== 19) this.grid[r][28] = 1; // Parede do templo com arco secreto na linha 19
+      }
+      for (let c = 28; c <= 33; c++) {
+        this.grid[16][c] = 1; // Teto da câmara
+      }
+      // Câmara Secreta dos Espectros do Tempo (Sudoeste: col 2..8, row 16..22) - 2 Fantasmas Invulneráveis
+      for (let r = 16; r <= 22; r++) {
+        if (r !== 19) this.grid[r][8] = 1; // Parede com portal místico na linha 19
+      }
+      for (let c = 2; c <= 8; c++) {
+        this.grid[16][c] = 1; // Teto da câmara
+      }
       // Fossos temporais (Tile 3) isolando as plataformas dos totens
       for (let c = 5; c <= 9; c++) { this.grid[8][c] = 3; }
       for (let c = 25; c <= 29; c++) { this.grid[8][c] = 3; }
       for (let c = 14; c <= 20; c++) { this.grid[20][c] = 3; }
     } else if (this.areaType === 'SHADOW_LABYRINTH') {
+      // Cripta Oculta da Luz Astral no Extremo Leste (col 29..33, row 10..16)
+      for (let r = 10; r <= 16; r++) {
+        if (r !== 13) this.grid[r][29] = 1; // Parede com passagem oculta na linha 13
+      }
+      for (let c = 29; c <= 33; c++) {
+        this.grid[10][c] = 1;
+        this.grid[16][c] = 1;
+      }
       // Paredes de obsidiana labirínticas
-      for (let c = 6; c < 30; c += 4) {
+      for (let c = 6; c < 28; c += 4) {
         for (let r = 5; r < 22; r += 3) {
           if (r !== 14 && c !== 18) this.grid[r][c] = 1;
         }
       }
-    } else if (this.areaType === 'GLACIAL_ARENA' || this.areaType === 'CHRONOS_NEXUS' || this.areaType === 'SHADOW_SANCTUM' || this.areaType === 'AETHER_CITADEL') {
+    } else if (this.areaType === 'GLACIAL_ARENA' || this.areaType === 'CHRONOS_NEXUS' || this.areaType === 'SHADOW_SANCTUM' || this.areaType === 'AETHER_CITADEL' || this.areaType === 'AETHER_THRONE') {
       // Arenas de Chefes: colunas celestiais nas quatro extremidades da arena
       this.grid[6][6] = 1; this.grid[6][29] = 1;
       this.grid[21][6] = 1; this.grid[21][29] = 1;
@@ -5962,12 +7876,25 @@ class GameMap {
       }
     }
 
-    // Garantir desobstrução dos pontos de enigma (cristais, rosa dos ventos, caldeiras, prismas, totens e orbes)
+    // Garantir desobstrução dos pontos de enigma e das Câmaras Secretas dos Altares
     const puzzleSpots = [
       [8, 7], [26, 7], [12, 21],          // Cristais da Caverna
-      [9, 8], [25, 8], [9, 20], [25, 20], // Caldeiras Térmicas
+      [9, 8], [25, 8], [9, 20], [25, 20], // Caldeiras Térmicas (Abismo de Magma)
       [10, 7], [25, 7], [25, 18], [16, 18], // Prismas Glaciais & Runa de Niflheim
-      [7, 6], [27, 6], [17, 22]           // Totens de Cronos
+      [7, 6], [27, 6], [17, 22],           // Totens de Cronos
+
+      // 1. Caverna - Câmara Secreta do Titã (SE)
+      [31, 20], [30, 19], [32, 19], [31, 21], [28, 20], [29, 20], [30, 20], [32, 20], [27, 20],
+      // 2. Palácio dos Ventos - Santuário Oculto dos Céus (SW - Missão 1)
+      [5, 20], [5, 18], [7, 20], [5, 22], [9, 20], [8, 20], [6, 20], [4, 20], [10, 20],
+      // 2.5 Palácio dos Ventos - Câmara da Tríade Cósmica (SE - Missão 2)
+      [29, 20], [28, 18], [31, 22], [26, 20], [27, 20], [28, 20], [30, 20], [31, 20], [32, 20],
+      // 3. Geleira - Cripta Glacial Secreta do Noroeste (NW)
+      [5, 5], [4, 4], [6, 6], [5, 9], [4, 12], [7, 5], [8, 5], [6, 5],
+      // 4. Templo de Cronos - Câmara do Vórtice Temporal (SE)
+      [31, 19], [30, 18], [32, 18], [31, 20], [28, 19], [29, 19], [30, 19], [27, 19],
+      // 5. Labirinto - Cripta Oculta da Luz Astral (E)
+      [31, 13], [30, 12], [32, 14], [27, 13], [28, 13], [29, 13], [30, 13], [32, 13]
     ];
     for (let [col, row] of puzzleSpots) {
       for (let r = row - 1; r <= row + 1; r++) {
@@ -5975,6 +7902,34 @@ class GameMap {
           if (r >= 2 && r < this.rows - 2 && c >= 2 && c < this.cols - 2) {
             this.grid[r][c] = 0;
           }
+        }
+      }
+    }
+
+    // Garantir com 100% de certeza que todas as rotas do enigma dos prismas na Geleira fiquem livres
+    if (this.areaType === 'FROZEN_TUNDRA') {
+      // Corredor horizontal superior (Alfa -> Beta)
+      for (let c = 8; c <= 27; c++) {
+        for (let r = 6; r <= 8; r++) {
+          if (r >= 2 && r < this.rows - 2 && c >= 2 && c < this.cols - 2) this.grid[r][c] = 0;
+        }
+      }
+      // Corredor vertical oriental (Beta -> Gama)
+      for (let r = 6; r <= 20; r++) {
+        for (let c = 24; c <= 26; c++) {
+          if (r >= 2 && r < this.rows - 2 && c >= 2 && c < this.cols - 2) this.grid[r][c] = 0;
+        }
+      }
+      // Corredor horizontal inferior (Gama -> Runa)
+      for (let c = 14; c <= 27; c++) {
+        for (let r = 17; r <= 19; r++) {
+          if (r >= 2 && r < this.rows - 2 && c >= 2 && c < this.cols - 2) this.grid[r][c] = 0;
+        }
+      }
+      // Corredor vertical de disparo do jogador (Sul -> Alfa)
+      for (let r = 6; r <= 24; r++) {
+        for (let c = 9; c <= 11; c++) {
+          if (r >= 2 && r < this.rows - 2 && c >= 2 && c < this.cols - 2) this.grid[r][c] = 0;
         }
       }
     }
@@ -6103,7 +8058,7 @@ class GameMap {
               ctx.fillStyle = '#c084fc'; ctx.fillRect(sx + 12, sy + 12, 3, 3);
             }
           }
-        } else if (this.areaType === 'AETHER_CITADEL') {
+        } else if (this.areaType === 'AETHER_CITADEL' || this.areaType === 'AETHER_THRONE') {
           if (tile === 1) {
             ctx.fillStyle = '#312e81'; ctx.fillRect(sx, sy, this.tileSize, this.tileSize);
             ctx.fillStyle = '#facc15'; ctx.fillRect(sx + 8, sy + 8, 16, 16);
@@ -6126,6 +8081,24 @@ class GameMap {
 }
 
 // --- 8. GERENCIADOR DO JOGO PRINCIPAL (GAME ENGINE) ---
+const AREA_NAMES = {
+  'FOREST': 'Fase 1: Bosque dos Ecos',
+  'CAVE': 'Fase 2: Caverna dos Cristais',
+  'SANCTUARY': 'Fase 3: Santuário (Malakar)',
+  'SKY_ISLANDS': 'Fase 4: Palácio dos Ventos',
+  'SKY_THRONE': 'Fase 5: Trono do Trovão (Valdor)',
+  'MAGMA_CORE': 'Fase 6: Abismo da Forja de Magma',
+  'VOID_CORE': 'Fase 7: Núcleo do Eclipse (Kharon)',
+  'FROZEN_TUNDRA': 'Fase 8: Geleira de Niflheim',
+  'GLACIAL_ARENA': 'Fase 9: Arena Glacial (Trinit)',
+  'CHRONOS_TEMPLE': 'Fase 10: Templo de Cronos',
+  'CHRONOS_NEXUS': 'Fase 11: Nexus de Cronos (Mirage)',
+  'SHADOW_LABYRINTH': 'Fase 12: Labirinto das Sombras',
+  'SHADOW_SANCTUM': 'Fase 13: Santuário do Abismo (Nocturnus)',
+  'AETHER_CITADEL': 'Fase 14: Cidadela do Éter',
+  'AETHER_THRONE': 'Fase 15: Trono do Éter (Aethon)'
+};
+
 class GameEngine {
   constructor() {
     this.canvas = document.getElementById('game-canvas');
@@ -6184,7 +8157,13 @@ class GameEngine {
     this.lastTime = performance.now();
     this.questStep = 1;
 
+    // Sistema de Salvamento Contínuo a Toda Hora (Auto-Save de 4s + Saída de Página)
+    this.autoSaveTimer = 0;
+    this.autoSaveInterval = 4.0;
+    this._autoSavePillTimeout = null;
+
     this.setupUI();
+    this.updateSaveSlotUI();
     this.loadArea('FOREST');
 
     requestAnimationFrame((t) => this.gameLoop(t));
@@ -6199,6 +8178,224 @@ class GameEngine {
     }
   }
 
+  flashAutoSaveIndicator() {
+    const pill = document.getElementById('autosave-pill');
+    const text = document.getElementById('autosave-text');
+    if (!pill || !text) return;
+    pill.classList.add('saving');
+    text.textContent = 'SALVO!';
+    clearTimeout(this._autoSavePillTimeout);
+    this._autoSavePillTimeout = setTimeout(() => {
+      pill.classList.remove('saving');
+      text.textContent = 'AUTO-SAVE ON';
+    }, 1200);
+  }
+
+  saveGame(showNotification = true, customMessage = null) {
+    try {
+      const saveData = {
+        version: '1.0.0',
+        timestamp: Date.now(),
+        dateStr: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }),
+        currentArea: this.currentArea,
+        questStep: this.questStep,
+        activeCheckpoint: this.activeCheckpoint ? { ...this.activeCheckpoint } : null,
+        discoveredCheckpoints: Array.from(this.discoveredCheckpoints || []),
+        player: {
+          x: Math.round(this.player.x),
+          y: Math.round(this.player.y),
+          facing: this.player.facing,
+          health: this.player.health,
+          maxHealth: this.player.maxHealth,
+          lives: this.player.lives,
+          maxLives: this.player.maxLives,
+          seedsCollected: this.player.seedsCollected,
+          activeWeapon: this.player.activeWeapon,
+          hasSword: Boolean(this.player.hasSword),
+          swordLevel: this.player.swordLevel || 1,
+          hasAuroraGem: Boolean(this.player.hasAuroraGem),
+          hasColossusPower: Boolean(this.player.hasColossusPower),
+          hasBurnPower: Boolean(this.player.hasBurnPower),
+          hasGlacialFrostPower: Boolean(this.player.hasGlacialFrostPower),
+          hasTriadClonePower: Boolean(this.player.hasTriadClonePower),
+          hasGhostPower: Boolean(this.player.hasGhostPower),
+          hasAstralBeam: Boolean(this.player.hasAstralBeam),
+          hasChronosLens: Boolean(this.player.hasChronosLens),
+          hasAstralLantern: Boolean(this.player.hasAstralLantern)
+        }
+      };
+
+      localStorage.setItem('JORNADA_SAVE_DATA', JSON.stringify(saveData));
+
+      if (showNotification) {
+        const areaLabel = AREA_NAMES[this.currentArea] || this.currentArea;
+        const msg = customMessage || `Progresso salvo com sucesso! (${areaLabel})`;
+        this.showNotification('💾 JOGO SALVO!', msg);
+        if (this.audio) this.audio.playHeal();
+      }
+
+      this.updateSaveSlotUI();
+      this.flashAutoSaveIndicator();
+      return true;
+    } catch (e) {
+      console.error('Erro ao salvar jogo:', e);
+      if (showNotification) {
+        this.showNotification('⚠️ ERRO AO SALVAR', 'Não foi possível gravar no navegador.');
+      }
+      return false;
+    }
+  }
+
+  hasSavedGame() {
+    try {
+      return localStorage.getItem('JORNADA_SAVE_DATA') !== null;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  getSavedGame() {
+    try {
+      const data = localStorage.getItem('JORNADA_SAVE_DATA');
+      if (!data) return null;
+      return JSON.parse(data);
+    } catch (e) {
+      console.error('Erro ao ler save:', e);
+      return null;
+    }
+  }
+
+  loadGame() {
+    const save = this.getSavedGame();
+    if (!save) {
+      this.showNotification('SEM DADOS SALVOS', 'Nenhum jogo salvo encontrado.');
+      return false;
+    }
+
+    try {
+      // 1. Fechar telas de menus
+      const titleScreen = document.getElementById('title-screen');
+      if (titleScreen) titleScreen.classList.add('hidden');
+      const gameOverScreen = document.getElementById('game-over-screen');
+      if (gameOverScreen) gameOverScreen.classList.add('hidden');
+      const victoryScreen = document.getElementById('victory-screen');
+      if (victoryScreen) victoryScreen.classList.add('hidden');
+
+      // 2. Restaurar progresso e checkpoints
+      this.questStep = save.questStep || 1;
+      this.activeCheckpoint = save.activeCheckpoint || null;
+      this.discoveredCheckpoints = new Set(save.discoveredCheckpoints || []);
+
+      // 3. Restaurar atributos e poderes do jogador
+      const p = save.player || {};
+      this.player.maxHealth = p.maxHealth || CONFIG.MAX_HEALTH;
+      this.player.maxLives = p.maxLives || 4;
+      this.player.lives = (p.lives !== undefined && p.lives > 0) ? p.lives : 3;
+      this.player.seedsCollected = p.seedsCollected || 0;
+      this.player.facing = p.facing || 'down';
+      this.player.activeWeapon = p.activeWeapon || 'STAFF';
+      this.player.hasSword = Boolean(p.hasSword);
+      this.player.swordLevel = p.swordLevel || 1;
+      this.player.hasAuroraGem = Boolean(p.hasAuroraGem);
+      this.player.hasColossusPower = Boolean(p.hasColossusPower);
+      this.player.hasBurnPower = Boolean(p.hasBurnPower);
+      this.player.hasGlacialFrostPower = Boolean(p.hasGlacialFrostPower);
+      this.player.hasTriadClonePower = Boolean(p.hasTriadClonePower);
+      this.player.hasGhostPower = Boolean(p.hasGhostPower);
+      this.player.hasAstralBeam = Boolean(p.hasAstralBeam);
+      this.player.hasChronosLens = Boolean(p.hasChronosLens);
+      this.player.hasAstralLantern = Boolean(p.hasAstralLantern);
+      this.player.ghostPowerTimer = 0;
+      this.player.ghosts = [];
+      this.player.ghostHitboxes = [];
+      this.player.triadCloneTimer = 0;
+      this.player.cloneHitboxes = [];
+
+      // 4. Carregar a área salva exatamente nas coordenadas
+      const targetArea = save.currentArea || 'FOREST';
+      const spawnX = p.x !== undefined ? p.x : null;
+      const spawnY = p.y !== undefined ? p.y : null;
+      this.loadArea(targetArea, spawnX, spawnY);
+
+      // 5. Garantir que a vida e coordenadas restauradas permaneçam
+      if (p.health !== undefined) {
+        this.player.health = Math.min(p.health, this.player.maxHealth);
+      }
+      if (spawnX !== null && spawnY !== null) {
+        this.player.x = spawnX;
+        this.player.y = spawnY;
+      }
+
+      // 6. Atualizar badge de checkpoint se houver
+      const badge = document.getElementById('checkpoint-badge');
+      const text = document.getElementById('checkpoint-text');
+      if (this.activeCheckpoint && badge && text) {
+        badge.classList.remove('hidden');
+        text.textContent = `Checkpoint: ${this.activeCheckpoint.name}`;
+      } else if (badge) {
+        badge.classList.add('hidden');
+      }
+
+      // 7. Inicializar áudio, HUD e estado
+      this.audio.init();
+      this.gameState = 'PLAYING';
+      this.updateHUD();
+
+      const areaLabel = AREA_NAMES[targetArea] || targetArea;
+      this.showNotification('CONTINUANDO JORNADA...', `Progresso restaurado na ${areaLabel}!`);
+      return true;
+    } catch (e) {
+      console.error('Erro ao carregar o jogo:', e);
+      this.showNotification('ERRO NO SAVE', 'Falha ao restaurar o jogo salvo.');
+      return false;
+    }
+  }
+
+  updateSaveSlotUI() {
+    const save = this.getSavedGame();
+    const card = document.getElementById('save-slot-card');
+    const startBtn = document.getElementById('start-btn');
+    if (!card) return;
+
+    if (save && save.currentArea) {
+      card.classList.remove('hidden');
+      const areaLabel = AREA_NAMES[save.currentArea] || save.currentArea;
+      const dateEl = document.getElementById('save-slot-date');
+      const areaEl = document.getElementById('save-slot-area');
+      const statsEl = document.getElementById('save-slot-stats');
+      if (dateEl) dateEl.textContent = save.dateStr || 'Salvo';
+      if (areaEl) areaEl.textContent = `📍 ${areaLabel}`;
+      
+      const p = save.player || {};
+      const hearts = '❤️'.repeat(Math.max(1, p.health || 4));
+      const weapon = p.hasSword ? (p.swordLevel === 2 ? '🗡️ Espada de Fogo' : '⚔️ Espada Celeste') : '🪄 Cajado';
+      let powers = [];
+      if (p.hasColossusPower) powers.push('⚡Sís');
+      if (p.hasGlacialFrostPower) powers.push('❄️Glac');
+      if (p.hasTriadClonePower) powers.push('👥3Clon');
+      if (p.hasGhostPower) powers.push('👻Fant');
+      if (p.hasAstralBeam) powers.push('🏹Raio');
+      const powersStr = powers.length > 0 ? ` | ${powers.join(' ')}` : '';
+
+      if (statsEl) {
+        statsEl.textContent = `${hearts} | 🛡️ ${p.lives || 3} Vidas | ${weapon}${powersStr}`;
+      }
+
+      if (startBtn) {
+        startBtn.textContent = 'NOVO JOGO (DO ZERO)';
+        startBtn.classList.add('btn-secondary');
+        startBtn.classList.remove('btn-primary');
+      }
+    } else {
+      card.classList.add('hidden');
+      if (startBtn) {
+        startBtn.textContent = 'INICIAR AVENTURA';
+        startBtn.classList.add('btn-primary');
+        startBtn.classList.remove('btn-secondary');
+      }
+    }
+  }
+
   registerCheckpoint(name, x, y, area) {
     this.discoveredCheckpoints.add(name);
     this.activeCheckpoint = { name, x, y, area };
@@ -6208,6 +8405,7 @@ class GameEngine {
       badge.classList.remove('hidden');
       text.textContent = `Checkpoint: ${name}`;
     }
+    this.saveGame(true, `Checkpoint ativado e salvo: ${name}!`);
   }
 
   loadArea(areaType, spawnX = null, spawnY = null) {
@@ -6266,7 +8464,7 @@ class GameEngine {
     if (areaType === 'FOREST') {
       this.audio.startBGM('FOREST');
       this.showAreaBanner('BOSQUE DOS ECOS', 'Santuário da Seiva');
-      document.getElementById('area-indicator').textContent = '📍 Bosque dos Ecos';
+      document.getElementById('area-indicator').textContent = '📍 Fase 1: Bosque dos Ecos';
 
       this.owl = new OwlNPC(centerX, centerY - 48);
       this.totem = new AncientTotem(centerX, centerY);
@@ -6284,7 +8482,8 @@ class GameEngine {
           { x: 30 * CONFIG.TILE_SIZE, y: 22 * CONFIG.TILE_SIZE },
           { x: 18 * CONFIG.TILE_SIZE, y: 8 * CONFIG.TILE_SIZE },
         ];
-        this.seeds = seedCoords.map(pos => new SeedItem(pos.x, pos.y));
+        const remainingCoords = seedCoords.slice(this.player.seedsCollected || 0);
+        this.seeds = remainingCoords.map(pos => new SeedItem(pos.x, pos.y));
       }
 
       this.enemies = [
@@ -6306,7 +8505,7 @@ class GameEngine {
     } else if (areaType === 'CAVE') {
       this.audio.startBGM('CAVE');
       this.showAreaBanner('CAVERNA DOS CRISTAIS', 'Profundezas Luminescentes');
-      document.getElementById('area-indicator').textContent = '📍 Caverna dos Cristais';
+      document.getElementById('area-indicator').textContent = '📍 Fase 2: Caverna dos Cristais';
 
       this.chest = new TreasureChest(centerX, centerY);
       if (this.player.hasAuroraGem) this.chest.opened = true;
@@ -6316,17 +8515,31 @@ class GameEngine {
         ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Monólito da Caverna')]
         : [];
 
-      // Altar Sagrado de Missão Separada para o Pisão Sísmico [R]
+      // Altar Sagrado de Missão Separada para o Pisão Sísmico [R] (Escondido na Câmara Secreta do Titã no Sudeste!)
       this.powerAltars = [
-        new PowerMissionAltar(centerX + 80, centerY, 'COLOSSUS_POWER', 'Altar Telúrico do Titã', 'Absorver Pisão Sísmico [R]', 'A terra ancestral vibra em você! O Pisão Sísmico [R] foi conquistado contra Malakar!', '#38bdf8', '⚡')
+        new PowerMissionAltar(
+          31 * CONFIG.TILE_SIZE + 24, 20 * CONFIG.TILE_SIZE + 24,
+          'COLOSSUS_POWER', 'Altar Telúrico do Titã', 'Pisão Sísmico [R]',
+          'Absorver Pisão Sísmico [R]',
+          'A terra ancestral vibra em você! O Pisão Sísmico [R] foi conquistado com honra diante dos Tremores Tectônicos!',
+          '#38bdf8', '⚡',
+          {
+            missionType: 'TITAN_PLATES',
+            missionTitle: 'PROVAÇÃO TELÚRICA DO TITÃ',
+            missionLore: 'O Pisão Sísmico do Titã exige comunhão com as placas tectônicas da caverna. Canalize sua energia sobre as 3 Placas Rúnicas de Pressão enquanto resiste aos tremores sísmicos!'
+          }
+        )
       ];
-      if (this.player.hasColossusPower) this.powerAltars[0].claimed = true;
+      if (this.player.hasColossusPower) {
+        this.powerAltars[0].claimed = true;
+        this.powerAltars[0].missionState = 'COMPLETED';
+      }
 
       // Monólito decifrável com o Enigma do Portal e a Missão do Altar
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 52,
         'Tabuleta da Caverna Ancestral',
-        'ENIGMA DO PORTAL: Harmonize os 3 Cristais Musicais (Safira, Topázio, Ametista) para abrir o Santuário de Malakar!\nMISSÃO DO ALTAR: Aproxime-se do Altar Telúrico [E] para absorver o PISÃO SÍSMICO [R], essencial para estilhaçar a armadura de pedra de Malakar!'
+        'ENIGMA DO PORTAL: Harmonize os 3 Cristais Musicais (Safira, Topázio, Ametista) para abrir o Santuário de Malakar e quebrar o selo do Baú da Aurora!\nCÂMARA SECRETA DO TITÃ: Explore o sudeste da caverna para descobrir a passagem secreta até o Altar Telúrico do Titã! Pise nas 3 Placas Rúnicas diante do altar por 1s para despertar o PISÃO SÍSMICO [R]!'
       );
 
       // 3 Cristais Harmônicos Sequenciais Musicais (Dó, Mi, Sol)
@@ -6358,7 +8571,7 @@ class GameEngine {
     } else if (areaType === 'SANCTUARY') {
       this.audio.startBGM('BOSS');
       this.showAreaBanner('SANTUÁRIO ANCESTRAL', 'Arena do 1º Chefe: Malakar');
-      document.getElementById('area-indicator').textContent = '📍 Santuário da Árvore Mãe';
+      document.getElementById('area-indicator').textContent = '📍 Fase 3: Chefe Malakar';
 
       // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
       this.checkpointMonuments = [];
@@ -6379,27 +8592,42 @@ class GameEngine {
       }
 
     } else if (areaType === 'SKY_ISLANDS') {
-      // FASE PRÉ-BOSS 2: PALÁCIO DOS VENTOS!
+      // FASE PRÉ-BOSS 2: PALÁCIO DOS VENTOS (COM MISSÃO SECRETA!)
       this.audio.startBGM('SKY');
-      this.showAreaBanner('PALÁCIO DOS VENTOS', 'Ilhas Flutuantes Celestes');
-      document.getElementById('area-indicator').textContent = '📍 Palácio dos Ventos';
+      this.showAreaBanner('PALÁCIO DOS VENTOS', 'Ilhas Flutuantes Celestes (Missão Secreta)');
+      document.getElementById('area-indicator').textContent = '📍 Fase 4: Palácio dos Ventos';
 
       // Checkpoint das Ilhas dos Ventos (Desaparece ao ser descoberto!)
       this.checkpointMonuments = !this.discoveredCheckpoints.has('Torre dos Ventos')
         ? [new CheckpointMonument(centerX, centerY + 80, 'Torre dos Ventos')]
         : [];
 
-      // Pedra da Lâmina dos Ventos (Missão Separada para a Espada Celeste [F])
+      // MISSÃO NA FASE 4:
+      // Santuário Oculto dos Ventos (SW) -> Espada Celeste + Poder Glacial de Niflheim
       this.powerAltars = [
-        new PowerMissionAltar(centerX, centerY, 'SWORD', 'Pedra da Lâmina dos Ventos', 'Desembainhar a Espada Celeste [F]', 'A Lâmina Celestial foi desembainhada! Pressione [F] para alternar entre Cajado e Espada!', '#facc15', '⚔️')
+        new PowerMissionAltar(
+          5 * CONFIG.TILE_SIZE + 24, 20 * CONFIG.TILE_SIZE + 24,
+          'SWORD', 'Pedra da Lâmina dos Ventos', 'Espada Celeste & Gelo de Niflheim',
+          'Desembainhar a Espada Celeste [F]',
+          'A Lâmina Celestial e o Poder Glacial de Niflheim despertaram! Ataques de espada e magia agora desaceleram e congelam os inimigos por 3s!',
+          '#38bdf8', '❄️⚔️',
+          {
+            missionType: 'STORM_RACE',
+            missionTitle: 'MISSÃO: JULGAMENTO DO VENDAVAL CELESTE',
+            missionLore: 'A Espada Celeste é a lâmina da velocidade e o Gelo de Niflheim congela o ar. Colete as 2 Centelhas do Vendaval espalhadas pelas ilhas flutuantes usando Dash [Q] antes do tempo esgotar!'
+          }
+        )
       ];
-      if (this.player.hasSword) this.powerAltars[0].claimed = true;
+      if (this.player.hasSword) {
+        this.powerAltars[0].claimed = true;
+        this.powerAltars[0].missionState = 'COMPLETED';
+      }
 
-      // Estela do Palácio dos Ventos
+      // Estela do Palácio dos Ventos detalhando o Enigma da Rosa dos Ventos e a Missão Secreta
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX, centerY - 64,
         'Estela do Palácio dos Ventos',
-        'ENIGMA DO PORTAL: Gire os 4 cataventos sagrados até que todas as correntes convirjam para o centro para revelar o Trono de Valdor!\nMISSÃO DA LÂMINA: Desembainhe a lendária ESPADA CELESTE [F] na Rocha Central [E] para golpear na velocidade da tempestade e confrontar Valdor no corpo a corpo!'
+        'ENIGMA DO PORTAL: Gire os 4 cataventos sagrados até que todas as correntes convirjam para o centro para abrir o Trono de Valdor!\nMISSÃO SECRETA:\n• Sudoeste (SW): Julgamento do Vendaval -> Colete as 2 Centelhas antes do tempo esgotar usando Dash [Q] para forjar a ESPADA CELESTE & PODER GLACIAL!'
       );
 
       // 4 Cataventos da Rosa dos Ventos ao redor do templo
@@ -6427,10 +8655,11 @@ class GameEngine {
       // ARENA DO 2º BOSS (VALDOR)!
       this.audio.startBGM('BOSS');
       this.showAreaBanner('TRONO DO TROVÃO', 'Arena do 2º Chefe: Valdor');
-      document.getElementById('area-indicator').textContent = '📍 Trono do Trovão';
+      document.getElementById('area-indicator').textContent = '📍 Fase 5: Chefe Valdor';
 
-      // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
+      // ARENA DO CHEFE: Sem checkpoints nem altares nas arenas de chefes!
       this.checkpointMonuments = [];
+      this.powerAltars = [];
 
       if (this.questStep >= 5) {
         this.portal = new AreaPortal(centerX, centerY - 40, 'MAGMA_CORE', 'Abismo de Magma', true);
@@ -6451,7 +8680,7 @@ class GameEngine {
       // FASE PRÉ-BOSS 3: O ABISMO DA FORJA!
       this.audio.startBGM('MAGMA');
       this.showAreaBanner('ABISMO DA FORJA', 'Cavernas de Fogo e Magma');
-      document.getElementById('area-indicator').textContent = '📍 Abismo de Magma';
+      document.getElementById('area-indicator').textContent = '📍 Fase 6: Abismo da Forja';
 
       this.forgeAltar = new ForgeAltar(centerX, centerY);
 
@@ -6464,7 +8693,7 @@ class GameEngine {
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 54,
         'Tabuleta do Abismo de Magma',
-        'ENIGMA DO PORTAL: Calibre as 4 caldeiras para somar EXATAMENTE 10 ºC (+4 Enxofre, +6 Brasas, +7 Magma, -3 Obsidiana) para abrir o Núcleo do Eclipse!\nMISSÃO DA FORJA: Aproxime-se da Forja Central [E] para forjar a LÂMINA DO FOGO ESTELAR (DoT) e queimar as sombras de Kharon!'
+        'ENIGMA DO PORTAL: Calibre as 4 caldeiras para somar EXATAMENTE 10 ºC (+4 Enxofre, +6 Brasas, +7 Magma, -3 Obsidiana) para abrir o Núcleo do Eclipse!\nPROVAÇÃO DA FORJA: Aproxime-se diretamente do Altar da Forja [E] para forjar a LÂMINA DO FOGO ESTELAR (DoT) e incinerar as sombras de Kharon!'
       );
 
       // 4 Caldeiras Térmicas com valores combinatórios (+4, +6, +7, -3)
@@ -6498,7 +8727,7 @@ class GameEngine {
       // ARENA DO 3º CHEFE SUPREMO: KHARON!
       this.audio.startBGM('VOID');
       this.showAreaBanner('NÚCLEO DO ECLIPSE', 'Confronto Supremo: Kharon');
-      document.getElementById('area-indicator').textContent = '📍 Núcleo do Eclipse';
+      document.getElementById('area-indicator').textContent = '📍 Fase 7: Chefe Kharon';
 
       // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
       this.checkpointMonuments = [];
@@ -6519,38 +8748,71 @@ class GameEngine {
       }
 
     } else if (areaType === 'FROZEN_TUNDRA') {
-      // FASE 8: GELEIRA ANCESTRAL DE NIFLHEIM (ENIGMA DE REFRAÇÃO DE PRISMAS)
+      // FASE 8: GELEIRA ANCESTRAL DE NIFLHEIM (ENIGMA DE REFRAÇÃO DE PRISMAS & 2 MISSÕES)
       this.audio.startBGM('FROZEN');
-      this.showAreaBanner('GELEIRA DE NIFLHEIM', 'Enigma Glacial dos Três Prismas');
-      document.getElementById('area-indicator').textContent = '📍 Geleira de Niflheim';
+      this.showAreaBanner('GELEIRA DE NIFLHEIM', 'Enigma dos Três Prismas (2 Missões)');
+      document.getElementById('area-indicator').textContent = '📍 Fase 8: Geleira de Niflheim';
 
       // Checkpoint da Tundra (Desaparece ao ser descoberto!)
       this.checkpointMonuments = !this.discoveredCheckpoints.has('Monólito Glacial')
         ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Monólito Glacial')]
         : [];
 
-      // Relicário Glacial de Luz (Missão Separada para o Raio Astral [C])
+      // DUAS MISSÕES NA FASE 8:
+      // Missão 1: Relicário Glacial de Luz (Cripta a Noroeste) -> Raio Astral [C]
+      // Missão 2: Altar dos 3 Clones Astrais (Santuário Astral a Sudeste) -> Poder dos 3 Clones [T] (3 Clones simultâneos)
       this.powerAltars = [
-        new PowerMissionAltar(centerX - 80, centerY + 80, 'ASTRAL_BEAM', 'Relicário Glacial de Luz', 'Canalizar o Raio Astral [C]', 'O feixe cósmico foi canalizado no cajado! Pressione [C] ou [X] para disparar!', '#38bdf8', '🏹')
+        new PowerMissionAltar(
+          5 * CONFIG.TILE_SIZE + 24, 5 * CONFIG.TILE_SIZE + 24,
+          'ASTRAL_BEAM', 'Relicário Glacial de Luz', 'Raio Astral [C]',
+          'Canalizar o Raio Astral [C]',
+          'O feixe cósmico foi canalizado no cajado! Pressione [C] ou [X] para disparar!',
+          '#38bdf8', '🏹',
+          {
+            missionType: 'GLACIAL_THAW',
+            missionTitle: 'MISSÃO 1: PROVAÇÃO DO DEGELO SOLAR',
+            missionLore: 'O Relicário Glacial está aprisionado no Gelo Eterno. Pegue a Chama Solar na Tocha da Aurora [E] e acenda os 3 Braseiros da Aurora para derreter o permafrost!'
+          }
+        ),
+        new PowerMissionAltar(
+          29 * CONFIG.TILE_SIZE + 24, 20 * CONFIG.TILE_SIZE + 24,
+          'TRIAD_CLONE', 'Altar dos 3 Clones Astrais', 'Poder dos 3 Clones [T]',
+          'Despertar os 3 Clones Astrais [T]',
+          'O Poder dos 3 Clones Astrais foi conquistado! Pressione [T] ou [V] para conjurar 3 Clones Astrais simultâneos por 10s que multiplicam seus ataques e feitiços por 3!',
+          '#c084fc', '👥',
+          {
+            missionType: 'TRIAD_MIRRORS',
+            missionTitle: 'MISSÃO 2: PROVAÇÃO DOS 3 ESPELHOS CÓSMICOS',
+            missionLore: 'O Santuário Astral de Niflheim canaliza a multiplicação por três! Harmonize os 3 Espelhos Cósmicos [E] da câmara sudeste para invocar os 3 Clones Astrais de Kaelen!'
+          }
+        )
       ];
-      if (this.player.hasAstralBeam) this.powerAltars[0].claimed = true;
+      if (this.player.hasAstralBeam) {
+        this.powerAltars[0].claimed = true;
+        this.powerAltars[0].missionState = 'COMPLETED';
+      }
+      if (this.player.hasTriadClonePower) {
+        this.powerAltars[1].claimed = true;
+        this.powerAltars[1].missionState = 'COMPLETED';
+      }
 
-      // Tabuleta da Geleira de Niflheim
+      // Tabuleta da Geleira de Niflheim detalhando o Enigma da Refração e as Duas Missões Secretas
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 60,
         'Tabuleta da Geleira de Niflheim',
-        'ENIGMA DO PORTAL: Ajuste a rotação dos 3 Prismas Glaciais [E] e dispare do sul para o norte para guiar o feixe até a Runa Glacial e abrir a Arena de Trinit!\nMISSÃO DO RELICÁRIO: Aproxime-se do Relicário Glacial [E] para despertar o RAIO ASTRAL [C] e abater a Tríade de Trinit à distância com precisão cirúrgica!'
+        'ENIGMA DA REFRAÇÃO: Posicione-se ao SUL do Prisma Alfa e dispare para o NORTE [C]!\nROTAS DOS PRISMAS:\n• Prisma Alfa (Oeste): Orientação [/] -> Reflete para Leste até Beta\n• Prisma Beta (Nordeste): Orientação [\\] -> Reflete para Sul até Gama\n• Prisma Gama (Sudeste): Orientação [/] -> Reflete para Oeste até a Runa\nDUAS MISSÕES SECRETAS:\n• Noroeste (NW): Degelo Solar -> Acenda os 3 Braseiros com a Chama Solar [E] para libertar o RAIO ASTRAL [C]!\n• Sudeste (SE): Provação dos 3 Clones -> Sintonize os 3 Espelhos Cósmicos [E] para despertar o PODER DOS 3 CLONES ASTRAIS [T] (3 Clones simultâneos)!'
       );
 
-      // 3 Prismas Glaciais
+      // 3 Prismas Glaciais centralizados nos ladrilhos
+      const halfTile = CONFIG.TILE_SIZE / 2;
       this.icePrisms = [
-        new IcePrismMirror(10 * CONFIG.TILE_SIZE, 7 * CONFIG.TILE_SIZE, 1, 'Prisma Glacial Alfa (Oeste)'),
-        new IcePrismMirror(25 * CONFIG.TILE_SIZE, 7 * CONFIG.TILE_SIZE, 0, 'Prisma Glacial Beta (Nordeste)'),
-        new IcePrismMirror(25 * CONFIG.TILE_SIZE, 18 * CONFIG.TILE_SIZE, 1, 'Prisma Glacial Gama (Sudeste)')
+        new IcePrismMirror(10 * CONFIG.TILE_SIZE + halfTile, 7 * CONFIG.TILE_SIZE + halfTile, 1, 'Prisma Glacial Alfa (Oeste)'),
+        new IcePrismMirror(25 * CONFIG.TILE_SIZE + halfTile, 7 * CONFIG.TILE_SIZE + halfTile, 0, 'Prisma Glacial Beta (Nordeste)'),
+        new IcePrismMirror(25 * CONFIG.TILE_SIZE + halfTile, 18 * CONFIG.TILE_SIZE + halfTile, 1, 'Prisma Glacial Gama (Sudeste)')
       ];
 
-      // Runa Cristalina Alvo
-      this.iceRune = new IcePortalCrystalRune(16 * CONFIG.TILE_SIZE, 18 * CONFIG.TILE_SIZE);
+      // Runa Cristalina Alvo centralizada
+      this.iceRune = new IcePortalCrystalRune(16 * CONFIG.TILE_SIZE + halfTile, 18 * CONFIG.TILE_SIZE + halfTile);
 
       this.enemies = [
         new EnemyCreature(8 * CONFIG.TILE_SIZE, 8 * CONFIG.TILE_SIZE, 'FROZEN'),
@@ -6569,7 +8831,7 @@ class GameEngine {
       // FASE 9: ARENA GLACIAL (4º CHEFE: TRINIT, A TRÍADE GLACIAL)
       this.audio.startBGM('BOSS');
       this.showAreaBanner('ARENA GLACIAL', '4º Chefe: Trinit, a Tríade Glacial');
-      document.getElementById('area-indicator').textContent = '❄️ Arena Glacial';
+      document.getElementById('area-indicator').textContent = '📍 Fase 9: Chefe Trinit';
 
       // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
       this.checkpointMonuments = [];
@@ -6589,27 +8851,59 @@ class GameEngine {
       }
 
     } else if (areaType === 'CHRONOS_TEMPLE') {
-      // FASE 10: TEMPLO DE CRONOS (SINCRONIA TEMPORAL DE LONGA DISTÂNCIA)
+      // FASE 10: TEMPLO DE CRONOS (SINCRONIA TEMPORAL DE LONGA DISTÂNCIA & 2 MISSÕES)
       this.audio.startBGM('CHRONOS');
-      this.showAreaBanner('TEMPLO DE CRONOS', 'Sincronia das Areias Temporais');
-      document.getElementById('area-indicator').textContent = '📍 Templo de Cronos';
+      this.showAreaBanner('TEMPLO DE CRONOS', 'Sincronia das Areias Temporais (2 Missões)');
+      document.getElementById('area-indicator').textContent = '📍 Fase 10: Templo de Cronos';
 
       // Checkpoint de Cronos (Desaparece ao ser descoberto!)
       this.checkpointMonuments = !this.discoveredCheckpoints.has('Relicário de Cronos')
         ? [new CheckpointMonument(centerX, centerY + 80, 'Relicário de Cronos')]
         : [];
 
-      // Relicário das Areias de Cronos (Missão Separada para a Lente de Cronos)
+      // DUAS MISSÕES NA FASE 10:
+      // Missão 1: Relicário das Areias de Cronos (Sudeste) -> Lente de Cronos
+      // Missão 2: Altar dos Espectros de Cronos (Sudoeste) -> Poder dos 2 Fantasmas Invulneráveis [G]
       this.powerAltars = [
-        new PowerMissionAltar(centerX, centerY, 'CHRONOS_LENS', 'Relicário das Areias de Cronos', 'Absorver a Lente de Cronos', 'A Lente Espectral de Cronos revelará o Mirage verdadeiro entre os fantasmas!', '#facc15', '⏳')
+        new PowerMissionAltar(
+          31 * CONFIG.TILE_SIZE + 24, 19 * CONFIG.TILE_SIZE + 24,
+          'CHRONOS_LENS', 'Relicário das Areias de Cronos', 'Lente de Cronos',
+          'Absorver a Lente de Cronos',
+          'A Lente Espectral de Cronos revelará o Mirage verdadeiro entre os fantasmas!',
+          '#facc15', '⏳',
+          {
+            missionType: 'CHRONOS_RIFTS',
+            missionTitle: 'MISSÃO 1: PROVAÇÃO DA SINCRONIA TEMPORAL',
+            missionLore: 'A Lente de Cronos causou uma dobra instável no tempo. Feche e estabilize as 3 Fendas Temporais [E] espalhadas pelo templo em até 80 segundos antes do colapso temporal!'
+          }
+        ),
+        new PowerMissionAltar(
+          5 * CONFIG.TILE_SIZE + 24, 19 * CONFIG.TILE_SIZE + 24,
+          'GHOST_POWER', 'Altar dos Espectros de Cronos', 'Poder dos Fantasmas [G]',
+          'Canalizar os Fantasmas Espectrais [G]',
+          'Os Espectros Protetores foram sintonizados! Pressione [G] ou [B] para invocar 2 Fantasmas Invulneráveis que não tomam dano!',
+          '#38bdf8', '👻',
+          {
+            missionType: 'THUNDER_SPIRITS',
+            missionTitle: 'MISSÃO 2: PROVAÇÃO DOS ESPECTROS DE CRONOS',
+            missionLore: 'O Templo de Cronos vibra com ecos temporais! Sintonize as 2 Relíquias Espectrais [E] diante do altar para despertar 2 Fantasmas Protetores imunes a qualquer dano!'
+          }
+        )
       ];
-      if (this.player.hasChronosLens) this.powerAltars[0].claimed = true;
+      if (this.player.hasChronosLens) {
+        this.powerAltars[0].claimed = true;
+        this.powerAltars[0].missionState = 'COMPLETED';
+      }
+      if (this.player.hasGhostPower) {
+        this.powerAltars[1].claimed = true;
+        this.powerAltars[1].missionState = 'COMPLETED';
+      }
 
-      // Estela do Templo de Cronos
+      // Estela do Templo de Cronos detalhando o Enigma do Portal e as Duas Missões Secretas
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX, centerY - 64,
         'Estela do Templo de Cronos',
-        'ENIGMA DO PORTAL: Dispare o Raio Astral [C] para ativar os 3 Totens distantes sobre os fossos simultaneamente em até 6 segundos para abrir o Nexus de Mirage!\nMISSÃO DO RELICÁRIO: Aproxime-se do Relicário de Cronos [E] no centro para absorver a LENTE ESPECTRAL, capaz de desmascarar os clones de Mirage!'
+        'ENIGMA DO PORTAL: Dispare o Raio Astral [C] para ativar os 3 Totens distantes sobre os fossos simultaneamente em até 6 segundos para abrir o Nexus de Mirage!\nDUAS MISSÕES SECRETAS:\n• Sudeste (SE): Sincronia Temporal -> Estabilize as 3 Fendas Temporais com [E] para obter a LENTE DE CRONOS!\n• Sudoeste (SW): Provação dos Espectros -> Sintonize as 2 Relíquias Espectrais com [E] para despertar os 2 FANTASMAS INVULNERÁVEIS [G] (100% imunes a dano)!'
       );
 
       // 3 Totens Temporais de Cronos isolados sobre fossos
@@ -6636,7 +8930,7 @@ class GameEngine {
       // FASE 11: NEXUS DE CRONOS (5º CHEFE: MIRAGE, O SENHOR DOS REFLEXOS ILUSÓRIOS)
       this.audio.startBGM('BOSS');
       this.showAreaBanner('NEXUS TEMPORAL', '5º Chefe: Mirage, o Senhor dos Reflexos');
-      document.getElementById('area-indicator').textContent = '⏳ Nexus de Cronos';
+      document.getElementById('area-indicator').textContent = '📍 Fase 11: Chefe Mirage';
 
       // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
       this.checkpointMonuments = [];
@@ -6659,24 +8953,38 @@ class GameEngine {
       // FASE 12: LABIRINTO DAS SOMBRAS (MATRIZ BOOLEANA DE ORBES ESPECTRAIS)
       this.audio.startBGM('SHADOW');
       this.showAreaBanner('LABIRINTO DAS SOMBRAS', 'Matriz Espectral do Abismo');
-      document.getElementById('area-indicator').textContent = '📍 Labirinto das Sombras';
+      document.getElementById('area-indicator').textContent = '📍 Fase 12: Labirinto das Sombras';
 
       // Checkpoint do Labirinto (Desaparece ao ser descoberto!)
       this.checkpointMonuments = !this.discoveredCheckpoints.has('Lanterna do Vazio')
         ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Lanterna do Vazio')]
         : [];
 
-      // Braseiro da Chama Astral (Missão Separada para a Lanterna Astral da Verdade)
+      // Braseiro da Chama Astral (Escondido na Cripta Oculta da Luz Astral no Extremo Leste!)
       this.powerAltars = [
-        new PowerMissionAltar(centerX, centerY, 'ASTRAL_LANTERN', 'Braseiro da Chama Astral', 'Acender a Lanterna da Verdade', 'A Lanterna Astral da Verdade foi acesa! Imunidade total à lentidão do Vazio concedida!', '#22d3ee', '🕯️')
+        new PowerMissionAltar(
+          31 * CONFIG.TILE_SIZE + 24, 13 * CONFIG.TILE_SIZE + 24,
+          'ASTRAL_LANTERN', 'Braseiro da Chama Astral', 'Lanterna Astral da Verdade',
+          'Acender a Lanterna da Verdade',
+          'A Lanterna Astral da Verdade foi acesa! Imunidade total à lentidão do Vazio concedida!',
+          '#22d3ee', '🕯️',
+          {
+            missionType: 'SHADOW_LANTERN',
+            missionTitle: 'PROVAÇÃO DA LUZ NO VAZIO',
+            missionLore: 'O Braseiro Sagrado foi sufocado pelas trevas do abismo. Navegue pelas sombras da cripta, resgate as 3 Centelhas Astrais e traga-as de volta a este Braseiro!'
+          }
+        )
       ];
-      if (this.player.hasAstralLantern) this.powerAltars[0].claimed = true;
+      if (this.player.hasAstralLantern) {
+        this.powerAltars[0].claimed = true;
+        this.powerAltars[0].missionState = 'COMPLETED';
+      }
 
       // Tabuleta do Labirinto das Sombras
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 84, centerY - 60,
         'Tabuleta do Labirinto das Sombras',
-        'ENIGMA DO PORTAL: Ao tocar [E] ou atingir os 4 orbes da rede lógica com o Raio Astral [C], inverta os vizinhos até manter todos os 4 orbes acesos para abrir o Santuário de Nocturnus!\nMISSÃO DO BRASEIRO: Aproxime-se do Braseiro da Chama Astral [E] no centro para acender a LANTERNA ASTRAL e anular a paralisia do vácuo de Nocturnus!'
+        'ENIGMA DO PORTAL: Ao tocar [E] ou atingir os 4 orbes da rede lógica com o Raio Astral [C], inverta os vizinhos até manter todos os 4 orbes acesos para abrir o Santuário de Nocturnus!\nCRIPTA OCULTA DAS SOMBRAS: Explore os corredores sem saída no extremo leste para encontrar a Cripta do Braseiro Astral! Resgate as 3 Centelhas Astrais na escuridão com [E] para acender a LANTERNA ASTRAL [C]!'
       );
 
       // 4 Orbes Lógicos Interligados
@@ -6707,7 +9015,7 @@ class GameEngine {
       // FASE 13: SANTUÁRIO DO ABISMO (6º CHEFE: NOCTURNUS, O SOBERANO DO ABISMO)
       this.audio.startBGM('BOSS');
       this.showAreaBanner('SANTUÁRIO DO ABISMO', '6º Chefe: Nocturnus, Soberano do Abismo');
-      document.getElementById('area-indicator').textContent = '🌑 Santuário do Abismo';
+      document.getElementById('area-indicator').textContent = '📍 Fase 13: Chefe Nocturnus';
 
       // ARENA DO CHEFE: Sem checkpoints nas arenas de chefes!
       this.checkpointMonuments = [];
@@ -6727,13 +9035,15 @@ class GameEngine {
       }
 
     } else if (areaType === 'AETHER_CITADEL') {
-      // FASE 14: CIDADELA DO ÉTER (7º MEGA-CHEFE FINAL: AETHON, O ARQUITETO DAS DIMENSÕES)
+      // FASE 14: CIDADELA DO ÉTER (FASE DEDICADA DO ENIGMA DOS 4 MONÓLITOS!)
       this.audio.startBGM('AETHER');
-      this.showAreaBanner('CIDADELA DO ÉTER', 'Enigma do Arquiteto: Decifre os 4 Monólitos!');
-      document.getElementById('area-indicator').textContent = '📍 Cidadela do Éter';
+      this.showAreaBanner('CIDADELA DO ÉTER', '14ª Fase: O Enigma Dimensional dos 4 Monólitos');
+      document.getElementById('area-indicator').textContent = '📍 Fase 14: Cidadela do Éter (Enigma)';
 
-      // ARENA DO CHEFE FINAL: Sem checkpoints nas arenas de chefes!
-      this.checkpointMonuments = [];
+      // Checkpoint da Cidadela (Desaparece ao ser descoberto!)
+      this.checkpointMonuments = !this.discoveredCheckpoints.has('Pilar do Infinito')
+        ? [new CheckpointMonument(8 * CONFIG.TILE_SIZE, 14 * CONFIG.TILE_SIZE, 'Pilar do Infinito')]
+        : [];
 
       // Os 4 Monólitos Refratários do Enigma de Aethon:
       // Monólito 0: Noroeste (380, 220) - Runa Alfa (Fogo Carmesim) - Rotação inicial: 1 (Desalinhado, correto: 0 [/])
@@ -6750,7 +9060,48 @@ class GameEngine {
       this.puzzleMonument = new PuzzleTabletMonument(
         centerX - 90, centerY + 140,
         'Tabuleta da Ressonância Dimensional',
-        'ENIGMA DO ARQUITETO: Aethon repousa em estase tetradimensional sob um escudo cósmico! Ajuste a rotação dos 4 Monólitos Astrais [E] (Chama, Gelo, Trovão, Éter) e atire para que o feixe passe sucessivamente pelos 4 elementos em circuito. Ao ressoar nas 4 dimensões, o tiro quebrará o escudo cósmico de Aethon, forçando-o à batalha final!'
+        'ENIGMA DO ARQUITETO (FASE 14): Ajuste a rotação dos 4 Monólitos Astrais [E] (Chama, Gelo, Trovão, Éter) e atire com o Raio Astral [C] para conduzir o feixe em circuito fechado. Ao atingir a Ressonância Tetradimensional, o portal central para o Trono do Éter (Fase 15) se manifestará!'
+      );
+
+      // Sentinelas Astrais que defendem a Cidadela do Éter
+      this.enemies = [
+        new EnemyCreature(centerX - 120, centerY - 50, 'SHADOW'),
+        new EnemyCreature(centerX + 120, centerY - 50, 'SHADOW'),
+        new EnemyCreature(centerX, centerY + 140, 'SHADOW')
+      ];
+
+      // O Chefe Final Aethon agora tem fase própria (Fase 15: AETHER_THRONE)!
+      this.boss = null;
+
+      const m = this.aetherMonoliths;
+      const citadelUnlocked = Boolean(m && m.length === 4 && m[0].rotation === 0 && m[1].rotation === 1 && m[2].rotation === 0 && m[3].rotation === 1);
+      this.portal = new AreaPortal(
+        centerX, centerY - 40,
+        'AETHER_THRONE', 'Trono do Éter', true,
+        !citadelUnlocked, 'Alinhe os 4 Monólitos Astrais em circuito fechado [C]'
+      );
+
+    } else if (areaType === 'AETHER_THRONE') {
+      // FASE 15: TRONO DO ÉTER (7º MEGA-CHEFE FINAL: AETHON, O ARQUITETO DAS DIMENSÕES!)
+      this.audio.startBGM('AETHER');
+      this.showAreaBanner('TRONO DO ÉTER', '15ª Fase: Confronto Decisivo contra Aethon!');
+      document.getElementById('area-indicator').textContent = '📍 Fase 15: Chefe Final Aethon';
+
+      // ARENA DO CHEFE FINAL: Sem checkpoints nas arenas de chefes!
+      this.checkpointMonuments = [];
+
+      // Monólitos celestiais presentes na arena do Trono para quebra de escudo durante o combate
+      this.aetherMonoliths = [
+        new AetherMonolith(380, 220, 0, 0, 'Monólito Alfa (Chama)', '#ef4444', '♈'),
+        new AetherMonolith(770, 220, 1, 1, 'Monólito Beta (Gelo)', '#06b6d4', '♒'),
+        new AetherMonolith(770, 596, 2, 0, 'Monólito Gama (Trovão)', '#eab308', '⚡'),
+        new AetherMonolith(576, 596, 3, 1, 'Monólito Delta (Éter)', '#c084fc', '☯')
+      ];
+
+      this.puzzleMonument = new PuzzleTabletMonument(
+        centerX - 90, centerY + 140,
+        'Trono Cósmico de Aethon',
+        'BATALHA DECISIVA: Aethon repele ataques diretos com o Escudo Cósmico! Pressione [B] para desativar o Escudo de Aethon e desferir seus golpes com Espada e Magia!'
       );
 
       if (this.questStep >= 11) {
@@ -6761,12 +9112,16 @@ class GameEngine {
           bossHud.classList.remove('hidden');
         }
         this.boss = new BossAethon(centerX, centerY - 40);
-        this.boss.isStasis = true; // Inicia em estase cósmica (Enigma antes de despertar!)
-        this.enemies = []; // Sentinelas despertam com Aethon!
+        this.boss.isStasis = false; // Em combate total!
+        this.boss.shieldActive = true; // Escudo quebrado por Raio Astral harmonizado
+        this.enemies = [];
       }
     }
 
     this.updateHUD();
+    if (this.gameState === 'PLAYING') {
+      this.saveGame(false);
+    }
   }
 
   showAreaBanner(title, sub) {
@@ -6788,8 +9143,9 @@ class GameEngine {
         this.audio.playVictory();
         this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#38bdf8', speed: 120 });
-        this.showNotification('PORTAL DESBLOQUEADO!', 'O enigma dos cristais foi resolvido! O Santuário de Malakar está aberto! Visite o Altar Telúrico [E] para absorver o Pisão Sísmico [R]!');
+        this.showNotification('PORTAL DESBLOQUEADO!', 'O enigma dos cristais foi resolvido! O Santuário de Malakar está aberto! Inicie a Provação no Altar Telúrico [E] para conquistar o Pisão Sísmico [R]!');
         this.updateHUD();
+        this.saveGame(false);
       }
     } else if (this.currentArea === 'SKY_ISLANDS') {
       const allAligned = this.windCompasses.length > 0 && this.windCompasses.every(w => w.isAligned());
@@ -6799,8 +9155,9 @@ class GameEngine {
         this.audio.playVictory();
         this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#facc15', speed: 120 });
-        this.showNotification('PORTAL DESBLOQUEADO!', 'A Rosa dos Ventos convergiu e abriu o Trono de Valdor! Desembainhe a Espada Celeste [F] na Rocha Sagrada [E]!');
+        this.showNotification('PORTAL DESBLOQUEADO!', 'A Rosa dos Ventos convergiu e abriu o Trono de Valdor! Desafie o Julgamento da Tempestade na Rocha Sagrada [E] para conquistar a Espada Celeste [F]!');
         this.updateHUD();
+        this.saveGame(false);
       }
     } else if (this.currentArea === 'MAGMA_CORE') {
       const currentHeat = this.magmaValves.reduce((acc, v) => acc + (v.isOpen ? v.heatValue : 0), 0);
@@ -6811,8 +9168,9 @@ class GameEngine {
         this.audio.playVictory();
         this.camera.shake(16);
         this.particles.emit(this.portal.x, this.portal.y, 50, { color: '#f97316', speed: 130 });
-        this.showNotification('PORTAL DESBLOQUEADO!', 'A pressão térmica estabilizou em 10 ºC e abriu a arena de Kharon! Aproxime-se da Forja [E] para forjar a Lâmina do Fogo Estelar!');
+        this.showNotification('PORTAL DESBLOQUEADO!', 'A pressão térmica estabilizou em 10 ºC e abriu a arena de Kharon! Purifique as Feras de Magma e forje a Lâmina do Fogo Estelar na Forja [E]!');
         this.updateHUD();
+        this.saveGame(false);
       }
     } else if (this.currentArea === 'FROZEN_TUNDRA') {
       const runeActive = this.iceRune && this.iceRune.activated;
@@ -6822,8 +9180,9 @@ class GameEngine {
         this.audio.playVictory();
         this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#38bdf8', speed: 120 });
-        this.showNotification('PORTAL DESBLOQUEADO!', 'A refração da luz descongelou a passagem para a Arena de Trinit! Visite o Relicário Glacial [E] para despertar o Raio Astral [C]!');
+        this.showNotification('PORTAL DESBLOQUEADO!', 'A refração da luz descongelou a passagem para a Arena de Trinit! Supere a Provação da Luz no Relicário Glacial [E] para canalizar o Raio Astral [C]!');
         this.updateHUD();
+        this.saveGame(false);
       }
     } else if (this.currentArea === 'CHRONOS_TEMPLE') {
       const allChronos = this.chronosTotems.length === 3 && this.chronosTotems.every(t => t.activeTimer > 0);
@@ -6833,8 +9192,9 @@ class GameEngine {
         this.audio.playVictory();
         this.camera.shake(14);
         this.particles.emit(this.portal.x, this.portal.y, 45, { color: '#facc15', speed: 120 });
-        this.showNotification('PORTAL DESBLOQUEADO!', 'O alinhamento temporal abriu o Nexus de Mirage! Visite o Relicário das Areias de Cronos [E] para adquirir a Lente de Cronos!');
+        this.showNotification('PORTAL DESBLOQUEADO!', 'O alinhamento temporal abriu o Nexus de Mirage! Vença a Provação Temporal no Relicário de Cronos [E] para absorver a Lente de Cronos!');
         this.updateHUD();
+        this.saveGame(false);
       }
     } else if (this.currentArea === 'SHADOW_LABYRINTH') {
       const allOrbsOn = this.shadowOrbs.length === 4 && this.shadowOrbs.every(o => o.isOn);
@@ -6844,14 +9204,39 @@ class GameEngine {
         this.audio.playVictory();
         this.camera.shake(16);
         this.particles.emit(this.portal.x, this.portal.y, 50, { color: '#22d3ee', speed: 130 });
-        this.showNotification('PORTAL DESBLOQUEADO!', 'A matriz de orbes abriu o Santuário de Nocturnus! Aproxime-se do Braseiro da Chama Astral [E] para acender a Lanterna da Verdade!');
+        this.showNotification('PORTAL DESBLOQUEADO!', 'A matriz de orbes abriu o Santuário de Nocturnus! Vença a Provação das Sombras no Braseiro Astral [E] para acender a Lanterna da Verdade!');
         this.updateHUD();
+        this.saveGame(false);
+      }
+    } else if (this.currentArea === 'AETHER_CITADEL') {
+      const m = this.aetherMonoliths;
+      const isAligned = m && m.length === 4 && m[0].rotation === 0 && m[1].rotation === 1 && m[2].rotation === 0 && m[3].rotation === 1;
+      if (isAligned && this.portal.locked) {
+        this.portal.locked = false;
+        this.player.health = this.player.maxHealth;
+        this.audio.playVictory();
+        this.camera.shake(16);
+        this.particles.emit(this.portal.x, this.portal.y, 50, { color: '#c084fc', speed: 140 });
+        this.showNotification('PORTAL DO TRONO DESBLOQUEADO!', 'A Ressonância dos 4 Monólitos Astrais abriu o Trono do Éter (Fase 15)!');
+        this.updateHUD();
+        this.saveGame(false);
       }
     }
   }
 
   setupUI() {
+    const continueBtn = document.getElementById('continue-btn');
+    if (continueBtn) {
+      continueBtn.addEventListener('click', () => {
+        this.loadGame();
+      });
+    }
+
     document.getElementById('start-btn').addEventListener('click', () => {
+      if (this.hasSavedGame()) {
+        const confirmed = window.confirm('Deseja iniciar um Novo Jogo do início? Seu save anterior poderá ser substituído ao salvar novamente.');
+        if (!confirmed) return;
+      }
       this.audio.init();
       this.audio.startBGM('FOREST');
       document.getElementById('title-screen').classList.add('hidden');
@@ -6865,6 +9250,13 @@ class GameEngine {
         'Restaure o Totem do Bosque para dar início à sua jornada sagrada!'
       ]);
     });
+
+    const hudSaveBtn = document.getElementById('hud-save-btn');
+    if (hudSaveBtn) {
+      hudSaveBtn.addEventListener('click', () => {
+        this.saveGame(true);
+      });
+    }
 
     const audioBtn = document.getElementById('audio-toggle-btn');
     audioBtn.addEventListener('click', () => {
@@ -6882,8 +9274,28 @@ class GameEngine {
       this.respawnPlayer();
     });
 
+    const reloadSaveBtn = document.getElementById('reload-save-btn');
+    if (reloadSaveBtn) {
+      reloadSaveBtn.addEventListener('click', () => {
+        this.loadGame();
+      });
+    }
+
     document.getElementById('next-level-btn').addEventListener('click', () => {
       this.resetNewGamePlus();
+    });
+
+    // Salvamento Automático Garantido ao Fechar Aba ou Alternar App no Celular
+    window.addEventListener('beforeunload', () => {
+      if (this.gameState === 'PLAYING') {
+        this.saveGame(false);
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && this.gameState === 'PLAYING') {
+        this.saveGame(false);
+      }
     });
 
     const closePowerBtn = document.getElementById('close-power-banner-btn');
@@ -6987,6 +9399,40 @@ class GameEngine {
         this.gameState = 'PLAYING';
       });
     }
+
+    const closeTriadBtn = document.getElementById('close-triad-banner-btn');
+    if (closeTriadBtn) {
+      closeTriadBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('triad-unlock-banner').classList.add('hidden');
+        this.gameState = 'PLAYING';
+      });
+    }
+
+    const triadBanner = document.getElementById('triad-unlock-banner');
+    if (triadBanner) {
+      triadBanner.addEventListener('click', () => {
+        triadBanner.classList.add('hidden');
+        this.gameState = 'PLAYING';
+      });
+    }
+
+    const closeGhostBtn = document.getElementById('close-ghost-banner-btn');
+    if (closeGhostBtn) {
+      closeGhostBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('ghost-unlock-banner').classList.add('hidden');
+        this.gameState = 'PLAYING';
+      });
+    }
+
+    const ghostBanner = document.getElementById('ghost-unlock-banner');
+    if (ghostBanner) {
+      ghostBanner.addEventListener('click', () => {
+        ghostBanner.classList.add('hidden');
+        this.gameState = 'PLAYING';
+      });
+    }
   }
 
   triggerDialogue(name, avatar, lines) {
@@ -7005,28 +9451,34 @@ class GameEngine {
 
   updateDialogue(dt) {
     if (!this.currentDialogue) {
-      // Se não há diálogo comum mas algum banner de chefe está visível, fecha com qualquer tecla de ação
+      // Se não há diálogo comum mas algum banner de chefe ou poder está visível, fecha com qualquer tecla de ação
       const powerBanner = document.getElementById('power-unlock-banner');
       const swordBanner = document.getElementById('sword-unlock-banner');
       const burnBanner = document.getElementById('burn-unlock-banner');
       const beamBanner = document.getElementById('beam-unlock-banner');
       const chronosBanner = document.getElementById('chronos-unlock-banner');
       const shadowBanner = document.getElementById('shadow-unlock-banner');
+      const triadBanner = document.getElementById('triad-unlock-banner');
+      const ghostBanner = document.getElementById('ghost-unlock-banner');
       const pOpen = powerBanner && !powerBanner.classList.contains('hidden');
       const sOpen = swordBanner && !swordBanner.classList.contains('hidden');
       const bOpen = burnBanner && !burnBanner.classList.contains('hidden');
       const bmOpen = beamBanner && !beamBanner.classList.contains('hidden');
       const cOpen = chronosBanner && !chronosBanner.classList.contains('hidden');
       const shOpen = shadowBanner && !shadowBanner.classList.contains('hidden');
+      const tOpen = triadBanner && !triadBanner.classList.contains('hidden');
+      const gOpen = ghostBanner && !ghostBanner.classList.contains('hidden');
 
-      if (pOpen || sOpen || bOpen || bmOpen || cOpen || shOpen) {
-        if (this.input.consumeAttack() || this.input.consumeInteract() || this.input.consumeSpecial() || this.input.consumeDash() || this.input.consumeBeam()) {
+      if (pOpen || sOpen || bOpen || bmOpen || cOpen || shOpen || tOpen || gOpen) {
+        if (this.input.consumeAttack() || this.input.consumeInteract() || this.input.consumeSpecial() || this.input.consumeDash() || this.input.consumeBeam() || this.input.consumeTriad() || this.input.consumeGhost()) {
           if (pOpen) powerBanner.classList.add('hidden');
           if (sOpen) swordBanner.classList.add('hidden');
           if (bOpen) burnBanner.classList.add('hidden');
           if (bmOpen) beamBanner.classList.add('hidden');
           if (cOpen) chronosBanner.classList.add('hidden');
           if (shOpen) shadowBanner.classList.add('hidden');
+          if (tOpen) triadBanner.classList.add('hidden');
+          if (gOpen) ghostBanner.classList.add('hidden');
           this.gameState = 'PLAYING';
         }
       } else {
@@ -7158,6 +9610,72 @@ class GameEngine {
       }
     }
 
+    // Poder Glacial de Niflheim
+    const frostHud = document.getElementById('frost-skill-hud');
+    if (frostHud) {
+      if (this.player.hasGlacialFrostPower) {
+        frostHud.classList.remove('hidden');
+      } else {
+        frostHud.classList.add('hidden');
+      }
+    }
+
+    // Poder da Tríade Cósmica 3X [T] / [V]
+    const triadHud = document.getElementById('triad-skill-hud');
+    const touchTriad = document.getElementById('touch-triad');
+    if (this.player.hasTriadClonePower) {
+      if (triadHud) triadHud.classList.remove('hidden');
+      if (touchTriad) touchTriad.classList.remove('hidden');
+      const triadFill = document.getElementById('triad-fill');
+      if (triadFill) {
+        if (this.player.triadCloneTimer > 0) {
+          const tPct = (this.player.triadCloneTimer / 10.0);
+          triadFill.style.width = `${tPct * 100}%`;
+          triadFill.style.background = '#c084fc';
+        } else {
+          const tPct = Math.max(0, 1 - (this.player.triadCooldownTimer / 20.0));
+          triadFill.style.width = `${tPct * 100}%`;
+          triadFill.style.background = '#818cf8';
+        }
+      }
+    } else {
+      if (triadHud) triadHud.classList.add('hidden');
+      if (touchTriad) touchTriad.classList.add('hidden');
+    }
+
+    // Poder dos 2 Fantasmas Invulneráveis [G] / [B] (Fase 10 - Templo de Cronos)
+    const ghostHud = document.getElementById('ghost-skill-hud');
+    const touchGhost = document.getElementById('touch-ghost');
+    if (this.player.hasGhostPower) {
+      if (ghostHud) ghostHud.classList.remove('hidden');
+      if (touchGhost) touchGhost.classList.remove('hidden');
+      const ghostFill = document.getElementById('ghost-fill');
+      if (ghostFill) {
+        if (this.player.ghostPowerTimer > 0) {
+          const gPct = (this.player.ghostPowerTimer / this.player.ghostDuration);
+          ghostFill.style.width = `${gPct * 100}%`;
+          ghostFill.style.background = '#38bdf8';
+        } else {
+          const gPct = Math.max(0, 1 - (this.player.ghostCooldownTimer / this.player.ghostCooldown));
+          ghostFill.style.width = `${gPct * 100}%`;
+          ghostFill.style.background = '#818cf8';
+        }
+      }
+    } else {
+      if (ghostHud) ghostHud.classList.add('hidden');
+      if (touchGhost) touchGhost.classList.add('hidden');
+    }
+
+    // Botão touch para Desativar Escudo do Último Boss [B]
+    const touchBreakShield = document.getElementById('touch-break-shield');
+    if (touchBreakShield) {
+      if (this.boss && this.boss.shieldActive) {
+        touchBreakShield.classList.remove('hidden');
+      } else {
+        touchBreakShield.classList.add('hidden');
+      }
+    }
+
     document.getElementById('essence-counter').textContent = `${this.player.seedsCollected} / ${CONFIG.TOTAL_SEEDS_NEEDED}`;
 
     const questText = document.getElementById('quest-text');
@@ -7213,19 +9731,55 @@ class GameEngine {
         questText.textContent = 'Enfrente Nocturnus, o Soberano do Abismo no Santuário Umbral!';
       }
     } else if (this.questStep === 10) {
-      if (this.currentArea === 'AETHER_CITADEL' && this.boss && this.boss.isStasis) {
+      if (this.currentArea === 'AETHER_CITADEL') {
         const m = this.aetherMonoliths;
         const isAligned = m && m.length === 4 && m[0].rotation === 0 && m[1].rotation === 1 && m[2].rotation === 0 && m[3].rotation === 1;
         questText.textContent = isAligned
-          ? '⚡ Circuito dos 4 Monólitos Alinhado! Dispare o Raio Astral [C] no Monólito Noroeste (Alfa)!'
-          : '🧩 Enigma do Arquiteto: Alinhe os 4 Monólitos [E] para conduzir o Raio Astral [C] até Aethon!';
-      } else if (this.currentArea === 'AETHER_CITADEL' && this.boss && this.boss.shieldActive) {
-        questText.textContent = '🛡️ Escudo de Aethon Ativo! Refrate o Raio Astral [C] pelos 4 Monólitos para romper a barreira!';
+          ? '⚡ Circuito dos 4 Monólitos Alinhado! Dispare o Raio Astral [C] ou atravesse o portal central para o Trono de Aethon (Fase 15)!'
+          : '🧩 Enigma do Arquiteto (Fase 14): Alinhe os 4 Monólitos [E] em circuito para abrir o Trono de Aethon!';
+      } else if (this.currentArea === 'AETHER_THRONE') {
+        if (this.boss && this.boss.shieldActive) {
+          questText.textContent = '🛡️ Escudo de Aethon Ativo! Pressione [B] para desativar a Barreira Dimensional e atacar!';
+        } else {
+          questText.textContent = '⚔️ Aethon Vulnerável! Ataque com Cajado, Espada Celeste e Poder da Tríade 3X [T]!';
+        }
       } else {
-        questText.textContent = 'Enfrente Aethon, o Arquiteto das Dimensões na Cidadela do Éter!';
+        questText.textContent = 'Avance pela Cidadela do Éter e desafie o Arquiteto das Dimensões!';
       }
     } else {
-      questText.textContent = '✨ O Multiverso e todos os 14 reinos foram restaurados em harmonia suprema!';
+      questText.textContent = '✨ O Multiverso e todos os 15 reinos foram restaurados em harmonia suprema!';
+    }
+
+    const powerQuestContainer = document.getElementById('power-quest-container');
+    const powerQuestText = document.getElementById('power-quest-text');
+    if (powerQuestContainer && powerQuestText) {
+      if (this.powerAltars && this.powerAltars.length > 0) {
+        const activeAltar = this.powerAltars.find(a => a.missionState === 'ACTIVE');
+        if (activeAltar) {
+          powerQuestContainer.classList.remove('hidden');
+          powerQuestText.textContent = activeAltar.getQuestHUDText();
+        } else {
+          powerQuestContainer.classList.add('hidden');
+        }
+      } else if (this.currentArea === 'CAVE' && !this.player.hasAuroraGem) {
+        const activeCrystals = this.harmonicCrystals.filter(c => c.activated).length;
+        powerQuestContainer.classList.remove('hidden');
+        if (activeCrystals < 3) {
+          powerQuestText.textContent = `🔒 Baú da Aurora Selado: Harmonize os 3 Cristais (${activeCrystals}/3) para quebrar o selo!`;
+        } else {
+          powerQuestText.textContent = `✨ Selo do Baú Rompido! Abra o Baú central com [E] para resgatar a Gema da Aurora!`;
+        }
+      } else if (this.currentArea === 'MAGMA_CORE' && !this.player.hasBurnPower) {
+        const nearForge = this.forgeAltar && Math.hypot(this.player.x - this.forgeAltar.x, this.player.y - this.forgeAltar.y) < 85;
+        if (nearForge) {
+          powerQuestContainer.classList.remove('hidden');
+          powerQuestText.textContent = `🔥 Altar da Forja: Pressione [E] para forjar a Espada do Fogo Estelar!`;
+        } else {
+          powerQuestContainer.classList.add('hidden');
+        }
+      } else {
+        powerQuestContainer.classList.add('hidden');
+      }
     }
   }
 
@@ -7241,6 +9795,9 @@ class GameEngine {
     this.player.lives = 3;
     this.player.health = this.player.maxHealth;
     this.player.invulnerableTimer = 2.5;
+    this.player.ghostPowerTimer = 0;
+    this.player.ghosts = [];
+    this.player.ghostHitboxes = [];
     document.getElementById('game-over-screen').classList.add('hidden');
     if (this.activeCheckpoint) {
       this.loadArea(this.activeCheckpoint.area, this.activeCheckpoint.x, this.activeCheckpoint.y);
@@ -7257,6 +9814,9 @@ class GameEngine {
     this.player.lives = 3;
     this.player.health = this.player.maxHealth;
     this.player.seedsCollected = 0;
+    this.player.ghostPowerTimer = 0;
+    this.player.ghosts = [];
+    this.player.ghostHitboxes = [];
     this.activeCheckpoint = null;
     this.discoveredCheckpoints = new Set();
     const badge = document.getElementById('checkpoint-badge');
@@ -7275,8 +9835,20 @@ class GameEngine {
       this.input.update();
 
       if (this.gameState === 'PLAYING') {
+      // 0. Salvamento Contínuo a Toda Hora (Auto-Save Periódico de 4s)
+      this.autoSaveTimer += dt;
+      if (this.autoSaveTimer >= this.autoSaveInterval) {
+        this.autoSaveTimer = 0;
+        this.saveGame(false);
+      }
+
+      // Tecla de Atalho ou Botão Touch para Salvar Progresso [P] / [💾]
+      if (this.input.consumeSave()) {
+        this.saveGame(true);
+      }
+
       // 1. Atualizar Jogador, Projéteis e Ondas Sísmicas
-      this.player.update(this.input, this.map, dt, this.audio, this.particles, this.camera, this.projectiles, this.playerShockwaves, this.astralBeams);
+      this.player.update(this.input, this.map, dt, this.audio, this.particles, this.camera, this.projectiles, this.playerShockwaves, this.astralBeams, this);
 
       for (let i = this.projectiles.length - 1; i >= 0; i--) {
         const proj = this.projectiles[i];
@@ -7384,14 +9956,21 @@ class GameEngine {
       if (this.chest && !this.chest.opened) {
         const dist = Math.hypot(this.player.x - this.chest.x, this.player.y - this.chest.y);
         if (dist < 44 && this.input.consumeInteract()) {
-          this.chest.opened = true;
-          this.player.hasAuroraGem = true;
-          this.audio.playChestOpen();
-          this.camera.shake(6);
-          this.particles.emit(this.chest.x, this.chest.y, 25, { color: '#38bdf8', speed: 100 });
-          this.showNotification('GEMA DA AURORA!', 'Seu cajado agora dispara projéteis de feitiço à distância!');
-          this.checkBossPortalUnlock();
-          this.updateHUD();
+          const allHarmonized = this.harmonicCrystals.length > 0 && this.harmonicCrystals.every(c => c.activated);
+          if (!allHarmonized) {
+            this.audio.playHit();
+            this.camera.shake(4);
+            this.showNotification('BAÚ SELADO!', 'O Baú da Aurora está trancado por um campo rúnico! Harmonize os 3 Cristais Musicais (Safira, Topázio, Ametista) para quebrar o selo!');
+          } else {
+            this.chest.opened = true;
+            this.player.hasAuroraGem = true;
+            this.audio.playChestOpen();
+            this.camera.shake(6);
+            this.particles.emit(this.chest.x, this.chest.y, 40, { color: '#38bdf8', speed: 120 });
+            this.showNotification('PROVAÇÃO SUPERADA: GEMA DA AURORA!', 'A harmonia rúnica quebrou o selo! Seu cajado agora dispara feitiços à distância!');
+            this.checkBossPortalUnlock();
+            this.updateHUD();
+          }
         }
       }
 
@@ -7488,37 +10067,31 @@ class GameEngine {
       if (this.forgeAltar && !this.forgeAltar.used) {
         const nearForge = this.forgeAltar.update(this.player, dt);
         if (nearForge && this.input.consumeInteract()) {
-          const currentHeat = this.magmaValves.reduce((acc, v) => acc + (v.isOpen ? v.heatValue : 0), 0);
-          if (currentHeat !== 10) {
-            this.audio.playHit();
-            this.camera.shake(5);
-            this.showNotification('TEMPERATURA INSTÁVEL!', `O cadinho está a ${currentHeat} ºC. Regule as 4 caldeiras para exatamente 10 ºC!`);
-          } else {
-            this.forgeAltar.used = true;
-            this.player.swordLevel = 2; // Evolução para Espada do Fogo Estelar!
-            this.player.hasBurnPower = true; // Incineração Cósmica contra as sombras de Kharon!
-            this.player.activeWeapon = 'SWORD';
-            this.questStep = 6;
-            if (this.player.lives < this.player.maxLives) this.player.lives++;
-            this.player.health = this.player.maxHealth;
-            this.audio.playVictory();
-            this.camera.shake(12);
-            this.particles.emit(this.forgeAltar.x, this.forgeAltar.y, 45, { color: '#f97316', speed: 140 });
-            this.showNotification('ESPADA FORJADA!', 'Lâmina do Fogo Estelar forjada! Poder de queimadura contra Kharon ativo!');
-            document.getElementById('burn-unlock-banner').classList.remove('hidden');
-            this.gameState = 'DIALOGUE';
-            this.checkBossPortalUnlock();
-            this.updateHUD();
-          }
+          this.forgeAltar.used = true;
+          this.player.swordLevel = 2; // Evolução para Espada do Fogo Estelar!
+          this.player.hasBurnPower = true; // Incineração Cósmica contra as sombras de Kharon!
+          this.player.activeWeapon = 'SWORD';
+          this.questStep = 6;
+          if (this.player.lives < this.player.maxLives) this.player.lives++;
+          this.player.health = this.player.maxHealth;
+          this.audio.playVictory();
+          this.camera.shake(14);
+          this.particles.emit(this.forgeAltar.x, this.forgeAltar.y, 45, { color: '#f97316', speed: 140 });
+          this.showNotification('PROVAÇÃO SUPERADA: ESPADA FORJADA!', 'Lâmina do Fogo Estelar forjada! Poder de queimadura contra Kharon ativo!');
+          document.getElementById('burn-unlock-banner').classList.remove('hidden');
+          this.gameState = 'DIALOGUE';
+          this.checkBossPortalUnlock();
+          this.updateHUD();
+          this.saveGame(true, 'Lâmina do Fogo Estelar salva!');
         }
       }
 
       // 9.5 Interação com Altares Sagrados de Missão de Poder e Armas (Caverna, Céus, Tundra, Cronos, Sombras)
       if (this.powerAltars && this.powerAltars.length > 0) {
         for (let altar of this.powerAltars) {
-          const nearAltar = altar.update(this.player, dt);
-          if (nearAltar && !altar.claimed && this.input.consumeInteract()) {
-            altar.claim(this);
+          const nearAltar = altar.update(this.player, dt, this);
+          if (nearAltar && this.input.consumeInteract()) {
+            altar.interact(this);
           }
         }
       }
@@ -7542,7 +10115,8 @@ class GameEngine {
           const near = prism.update(this.player, dt);
           if (near && this.input.consumeInteract()) {
             prism.rotate(this.audio, this.particles);
-            this.showNotification('PRISMA AJUSTADO', `${prism.name}: Orientação rotacionada para ${prism.rotation === 0 ? '↗ /' : '↘ \\'}!`);
+            const dirDesc = prism.rotation === 0 ? 'Orientação [/] (Reflete Direita/Cima)' : 'Orientação [\\] (Reflete Esquerda/Baixo)';
+            this.showNotification('PRISMA AJUSTADO', `${prism.name}: ${dirDesc}!`);
           }
         }
       }
@@ -7606,13 +10180,29 @@ class GameEngine {
 
       // 16. Atualizar Inimigos Comuns
       for (let i = this.enemies.length - 1; i >= 0; i--) {
-        const drop = this.enemies[i].update(this.player, this.map, dt, this.audio, this.particles, this.camera, this.projectiles);
+        const enemy = this.enemies[i];
+        const drop = enemy.update(this.player, this.map, dt, this.audio, this.particles, this.camera, this.projectiles);
         if (drop) this.items.push(drop);
-        if (!this.enemies[i].alive) this.enemies.splice(i, 1);
+        if (!enemy.alive) {
+          if (enemy.isTrialGuardian && enemy.altarRef) {
+            enemy.altarRef.recordGuardianKill(this);
+          }
+          this.enemies.splice(i, 1);
+        }
       }
 
-      // 17. Atualizar Chefes (Malakar, Valdor, Kharon ou Aethon)
+      // 17. Atualizar Chefes (Malakar, Valdor, Kharon, Trinit, Mirage, Nocturnus ou Aethon)
       if (this.boss) {
+        // Desativar Escudo do Último Boss (Aethon) ao pressionar a tecla [B]!
+        if (this.input.consumeBreakShield()) {
+          if (this.boss.shieldActive && typeof this.boss.breakShield === 'function') {
+            this.boss.breakShield(this.audio, this.camera, this.particles, this);
+            this.showNotification('ESCUDO DESATIVADO [B]!', '🛡️ A Barreira Dimensional de Aethon foi desativada! Ataque agora!');
+          } else if (this.boss.isStasis && typeof this.boss.awaken === 'function') {
+            this.boss.awaken(this.audio, this.camera, this.particles, this);
+          }
+        }
+
         this.boss.update(this.player, this.map, dt, this.audio, this.particles, this.camera, this.projectiles, this.enemies, this);
 
         if (!this.boss.alive) {
@@ -7631,6 +10221,7 @@ class GameEngine {
             this.portal = new AreaPortal(centerX, centerY - 40, 'SKY_ISLANDS', 'Palácio dos Ventos', true);
             this.showNotification('MALAKAR PURIFICADO!', 'A Essência da Terra foi resgatada! (+1 Coração Máximo & Cura Total). Siga para o Palácio dos Ventos!');
             this.updateHUD();
+            this.saveGame(true, 'Malakar purificado! Progresso salvo!');
 
           } else if (this.currentArea === 'SKY_THRONE') {
             // CHEFE 2 PURIFICADO (VALDOR) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL & RESGATE DA ESSÊNCIA DA TEMPESTADE!
@@ -7647,6 +10238,7 @@ class GameEngine {
             this.portal = new AreaPortal(centerX, centerY - 40, 'MAGMA_CORE', 'Abismo de Magma', true);
             this.showNotification('VALDOR PURIFICADO!', 'A Essência da Tempestade foi resgatada! (+1 Coração Máximo & Cura Total). Siga para o Abismo de Magma!');
             this.updateHUD();
+            this.saveGame(true, 'Valdor purificado! Progresso salvo!');
 
           } else if (this.currentArea === 'VOID_CORE') {
             // CHEFE 3 PURIFICADO (KHARON) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL & RESGATE DA ESSÊNCIA DO FOGO!
@@ -7664,6 +10256,7 @@ class GameEngine {
             this.portal = new AreaPortal(centerX, centerY - 40, 'FROZEN_TUNDRA', 'Geleira de Niflheim', true);
             this.showNotification('KHARON PURIFICADO!', 'A Essência do Fogo Primordial foi resgatada! (+1 Coração Máximo & Cura Total). Siga para a Geleira de Niflheim!');
             this.updateHUD();
+            this.saveGame(true, 'Kharon purificado! Progresso salvo!');
 
           } else if (this.currentArea === 'GLACIAL_ARENA') {
             // CHEFE 4 PURIFICADO (TRINIT) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL & RESGATE DA ESSÊNCIA DO GELO!
@@ -7680,6 +10273,7 @@ class GameEngine {
             this.portal = new AreaPortal(centerX, centerY - 40, 'CHRONOS_TEMPLE', 'Templo de Cronos', true);
             this.showNotification('TRINIT PURIFICADO!', 'A Essência do Gelo Eterno foi resgatada! (+1 Coração Máximo & Cura Total). Siga para o Templo de Cronos!');
             this.updateHUD();
+            this.saveGame(true, 'Trinit purificado! Progresso salvo!');
 
           } else if (this.currentArea === 'CHRONOS_NEXUS') {
             // CHEFE 5 PURIFICADO (MIRAGE) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL & RESGATE DA ESSÊNCIA DO TEMPO!
@@ -7696,6 +10290,7 @@ class GameEngine {
             this.portal = new AreaPortal(centerX, centerY - 40, 'SHADOW_LABYRINTH', 'Labirinto das Sombras', true);
             this.showNotification('MIRAGE PURIFICADO!', 'A Essência do Tempo foi resgatada! (+1 Coração Máximo & Cura Total). Siga para o Labirinto das Sombras!');
             this.updateHUD();
+            this.saveGame(true, 'Mirage purificado! Progresso salvo!');
 
           } else if (this.currentArea === 'SHADOW_SANCTUM') {
             // CHEFE 6 PURIFICADO (NOCTURNUS) -> +1 CORAÇÃO MÁXIMO, CURA TOTAL & RESGATE DA ESSÊNCIA DO VÁCUO!
@@ -7713,8 +10308,9 @@ class GameEngine {
             this.portal = new AreaPortal(centerX, centerY - 40, 'AETHER_CITADEL', 'Cidadela do Éter', true);
             this.showNotification('NOCTURNUS PURIFICADO!', 'A Essência do Vácuo foi resgatada! (+1 Coração Máximo & Cura Total). O Portal Supremo da Cidadela foi liberado!');
             this.updateHUD();
+            this.saveGame(true, 'Nocturnus purificado! Progresso salvo!');
 
-          } else if (this.currentArea === 'AETHER_CITADEL') {
+          } else if (this.currentArea === 'AETHER_CITADEL' || this.currentArea === 'AETHER_THRONE') {
             // 7º MEGA-CHEFE FINAL DERROTADO: AETHON, O ARQUITETO DAS DIMENSÕES (VITÓRIA FINAL!)
             this.audio.playVictory();
             this.camera.shake(25);
@@ -7726,6 +10322,7 @@ class GameEngine {
             this.questStep = 11;
             this.showNotification('AETHON PURIFICADO!', 'Todas as 7 Essências Sagradas foram restauradas à Árvore da Vida!');
             this.updateHUD();
+            this.saveGame(true, 'Aethon purificado! Vitória final salva!');
 
             setTimeout(() => {
               this.gameState = 'VICTORY';
@@ -7733,10 +10330,10 @@ class GameEngine {
                 🌟 7 Colossos Sagrados Purificados: <b>MALAKAR, VALDOR, KHARON, TRINIT, MIRAGE, NOCTURNUS & AETHON</b><br>
                 ✨ 7 Essências Sagradas Restauradas: <b>TERRA, TEMPESTADE, FOGO, GELO, TEMPO, VÁCUO & ÉTER</b><br>
                 ⚔️ Arsenal Forjado nas Provações: <b>CAJADO, ESPADA DO FOGO ESTELAR & RAIO ASTRAL</b><br>
-                ⚡ Relíquias & Poderes Despertos: <b>PISÃO SÍSMICO [R], LENTE DE CRONOS & LANTERNA ASTRAL</b><br>
-                🧩 Enigmas Antigos Decifrados: <b>REFRAÇÃO GLACIAL, SINCRONIA DE CRONOS, MATRIZ DAS SOMBRAS & 4 MONÓLITOS</b><br>
+                👥 Relíquias & Poderes Despertos: <b>TRÍADE 3X [T], PISÃO SÍSMICO [R], GELO DE NIFLHEIM, LENTE & LANTERNA</b><br>
+                🧩 Enigmas Antigos Decifrados: <b>REFRAÇÃO GLACIAL, TEMPO DE CRONOS, MATRIZ DAS SOMBRAS & 4 MONÓLITOS</b><br>
                 🛡️ Vidas de Guardião Restantes: <b>${this.player.lives} / ${this.player.maxLives}</b><br>
-                🌌 14 Fases Épicas Conquistadas: <b>O EQUILÍBRIO DO COSMOS FOI RESTAURADO!</b>
+                🌌 15 Fases Épicas Conquistadas: <b>O EQUILÍBRIO DO COSMOS FOI RESTAURADO!</b>
               `;
               document.getElementById('victory-screen').classList.remove('hidden');
             }, 2500);
@@ -7753,6 +10350,7 @@ class GameEngine {
           this.particles.emit(this.seeds[i].x, this.seeds[i].y, 12, { color: '#4ade80', speed: 60 });
           this.seeds.splice(i, 1);
           this.updateHUD();
+          this.saveGame(false);
           if (this.player.seedsCollected === CONFIG.TOTAL_SEEDS_NEEDED) {
             this.showNotification('TODAS AS SEMENTES!', 'Restaure o Totem no centro do bosque!');
           }
@@ -7769,6 +10367,7 @@ class GameEngine {
             this.particles.emit(this.items[i].x, this.items[i].y, 8, { color: '#ef4444', speed: 40 });
             this.items.splice(i, 1);
             this.updateHUD();
+            this.saveGame(false);
           }
         } else if (!this.items[i].alive) {
           this.items.splice(i, 1);
@@ -7830,7 +10429,8 @@ class GameEngine {
 
     if (this.chest) {
       const nearChest = Math.hypot(this.player.x - this.chest.x, this.player.y - this.chest.y) < 44;
-      this.chest.draw(this.ctx, this.camera, nearChest);
+      const isLocked = Boolean(this.harmonicCrystals.length > 0 && !this.harmonicCrystals.every(c => c.activated));
+      this.chest.draw(this.ctx, this.camera, nearChest, isLocked);
     }
 
     // Tabuleta de Enigmas / Monólito Rúnico
@@ -7873,7 +10473,7 @@ class GameEngine {
     if (this.powerAltars && this.powerAltars.length > 0) {
       this.powerAltars.forEach(altar => {
         const nearAltar = Math.hypot(this.player.x - altar.x, this.player.y - altar.y) < 52;
-        altar.draw(this.ctx, this.camera, nearAltar);
+        altar.draw(this.ctx, this.camera, nearAltar, this.player);
       });
     }
 
@@ -7925,9 +10525,11 @@ class GameEngine {
       this.ctx.lineTo(m[2].x - this.camera.x, m[2].y - this.camera.y);
       // Gama para Delta
       this.ctx.lineTo(m[3].x - this.camera.x, m[3].y - this.camera.y);
-      // Delta para Aethon
+      // Delta para Aethon (ou Portal Central na Fase 14)
       if (this.boss) {
         this.ctx.lineTo(this.boss.x - this.camera.x, this.boss.y - this.camera.y);
+      } else if (this.portal) {
+        this.ctx.lineTo(this.portal.x - this.camera.x, this.portal.y - this.camera.y);
       }
       this.ctx.stroke();
       this.ctx.restore();
@@ -7970,6 +10572,36 @@ class GameEngine {
       grad.addColorStop(1, 'rgba(5, 8, 20, 0.95)');
 
       this.ctx.save();
+      this.ctx.fillStyle = grad;
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.restore();
+    }
+
+    // 8. Efeito de Névoa Escura do Labirinto (Missão da Lanterna Astral)
+    const shadowAltar = this.powerAltars && this.powerAltars.find(a => a.missionType === 'SHADOW_LANTERN' && a.darknessActive);
+    if (shadowAltar) {
+      const sx = this.player.x - this.camera.x;
+      const sy = this.player.y - this.camera.y;
+      const lightRadius = 220 + (shadowAltar.sparksFound * 60); // 220 -> 280 -> 340 -> 400px (bem visível!)
+
+      const grad = this.ctx.createRadialGradient(sx, sy, 50, sx, sy, lightRadius);
+      grad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      grad.addColorStop(0.7, 'rgba(8, 5, 20, 0.55)');
+      grad.addColorStop(1, 'rgba(4, 2, 12, 0.85)');
+
+      this.ctx.save();
+      this.ctx.fillStyle = grad;
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.restore();
+    }
+
+    // 9. Efeito de Sincronia Temporal (Missão de Cronos)
+    const chronosAltar = this.powerAltars && this.powerAltars.find(a => a.missionType === 'CHRONOS_RIFTS' && a.missionState === 'ACTIVE');
+    if (chronosAltar) {
+      this.ctx.save();
+      const grad = this.ctx.createRadialGradient(this.canvas.width / 2, this.canvas.height / 2, this.canvas.width * 0.35, this.canvas.width / 2, this.canvas.height / 2, this.canvas.width * 0.75);
+      grad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      grad.addColorStop(1, 'rgba(217, 119, 6, 0.16)');
       this.ctx.fillStyle = grad;
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       this.ctx.restore();
